@@ -1,8 +1,8 @@
 angular.module('group.services', ['ngResource'])
 .constant('source_path', 'api/v1/')
-.factory('Group', ['$resource', 'source_path',
-    function($resource, source_path){
-        return $resource(source_path + 'group/:pk/:action/', {}, {
+.factory('Group', ['$resource', 'source_path', 'API',
+    function($resource, source_path, API){
+        return $resource(API + source_path + 'group/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
@@ -21,37 +21,38 @@ angular.module('group.services', ['ngResource'])
             get_follows: {method:'GET', params:{pk: null, action: 'follow_groups'}, responseType:'json'},
     });
 }])
-.factory('GroupPhoto', ['$resource', 'source_path',
-    function($resource, source_path){
-        return $resource(source_path + 'group-photo/:pk/', {}, {
+.factory('GroupPhoto', ['$resource', 'source_path', 'API',
+    function($resource, source_path, API){
+        return $resource(API + source_path + 'group-photo/:pk/', {}, {
             update: {method: 'PATCH'},
             remove: {method: 'DELETE'},
     });
 }])
-.factory('Tag', ['$resource', 'source_path',
-    function($resource, source_path){
-        return $resource(source_path + 'tag/:pk/:action/', {}, {
+.factory('Tag', ['$resource', 'source_path', 'API',
+    function($resource, source_path, API){
+        return $resource(API + source_path + 'tag/:pk/:action/', {}, {
             update: {method: 'PATCH'},
             remove: {method: 'DELETE'},
     });
 }])
-.factory('Member', ['$resource', 'source_path',
-    function($resource, source_path){
-        return $resource(source_path + 'member/short_list/', {}, {
+.factory('Member', ['$resource', 'source_path', 'API',
+    function($resource, source_path, API){
+        return $resource(API + source_path + 'member/short_list/', {}, {
             query: {method:'GET', responseType:'json', isArray:true},
     });
 }])
-.factory('Visitor', ['$resource', 'source_path',
-    function($resource, source_path){
-        return $resource(source_path + 'visitor/:pk/:action/', {}, {
+.factory('Visitor', ['$resource', 'source_path', 'API',
+    function($resource, source_path, API){
+        return $resource(API, source_path + 'visitor/:pk/:action/', {}, {
             follow_user: {method: 'GET', params: {action:'follow_user'}},
             unfollow_user: {method: 'GET', params: {action:'unfollow_user'}},
             get_follow_users: {method:'GET', params:{pk: null, action: 'follow_users'}, responseType:'json'},
             get_followers: {method:'GET', params:{pk: null, action: 'followers'}, responseType:'json'},
         });
 }])
-.factory('MultipartForm', ['$http', function ($http){
+.factory('MultipartForm', ['$http', 'API', function ($http, API){
     return function(method, form_id, url){
+        url = API + url;
         if (form_id){
             var form = document.querySelector(form_id);
             var formData = new FormData(form);
@@ -68,16 +69,3 @@ angular.module('group.services', ['ngResource'])
         return $http(req);
     }
 }]);
-
-/*Example of MultipartForm usage:
-    var url = '/api/v1/group/';
-    var url2 = '/api/v1/group/1/create_photo/'
-    MultipartForm('#group_form', url).then(function(response) {
-        $rootScope.alerts.push({ type: 'success', msg: 'Your drone was successfully added!'});
-            $location.path('/group');
-        },
-        function(response) {
-            $scope.error = response.data;
-        }
-    );
-*/
