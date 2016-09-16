@@ -43,7 +43,7 @@ angular.module('group.services', ['ngResource'])
 }])
 .factory('Visitor', ['$resource', 'source_path', 'API',
     function($resource, source_path, API){
-        return $resource(API, source_path + 'visitor/:pk/:action/', {}, {
+        return $resource(API + source_path + 'visitor/:pk/:action/', {}, {
             follow_user: {method: 'GET', params: {action:'follow_user'}},
             unfollow_user: {method: 'GET', params: {action:'unfollow_user'}},
             get_follow_users: {method:'GET', params:{pk: null, action: 'follow_users'}, responseType:'json'},

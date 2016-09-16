@@ -20,7 +20,7 @@ angular.module('store.services', ['ngResource'])
     });
 }])
 .factory('Category', ['$resource', 'catalog_path', 'API',
-    function($resource, catalog_path. API){
+    function($resource, catalog_path, API){
         return $resource(API + catalog_path + 'categories/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},

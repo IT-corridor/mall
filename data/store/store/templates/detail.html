@@ -1,0 +1,70 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="text-center wrapper-md">
+                <a class="btn btn-info" data-ng-href="#!/stores/my/edit">{{ 'STORE.UPDATE.HEADER' | translate }}</a>
+                <button class="btn btn-primary"
+                        data-ng-click="open_modal('brand')">{{ 'STORE.MY.ADD_BRAND' | translate }}</button>
+                <button class="btn btn-info"
+                        data-ng-click="open_modal('promotion')">{{ 'STORE.MY.ADD_PROMOTION' | translate }}</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-offset-2 col-md-8">
+            <img data-ng-src="{{ r.post }}" class="w-full" alt="{{ r.name }}">
+            <div class="clear m-t-n-xxl" style="position: relative;">
+                <div class="pull-left pull-none-xs text-center m-l-xxl">
+                    <a href class="m-b-md inline m btn btn-md btn-success btn-rounded">
+                        <span class="h3 block font-bold">{{ r.follower_count }}</span>
+                        <small>Follower(s)</small>
+                    </a>
+                    <a href class="m-b-md inline m btn btn-md btn-success btn-rounded">
+                        <span class="h3 block font-bold">{{ r.photo_count }}</span>
+                        <small>Photo(s)</small>
+                    </a>
+                </div>
+                <a href class="thumb-lg pull-right m-r">
+                    <img ng-src="{{ r.photo }}" class="img-circle">
+                </a>
+
+            </div>
+            <div style="font-size: 20px;  padding: 20px;" class="m-t-n-xxl bg-info lter">
+                <p class="m-t-lg">
+                    {{ r.introduction }}
+                </p>
+            </div>
+            <div class="clear" style="height: 250px;" data-map-address data-address="r.address"
+                 data-title="r.name"
+                 data-img="r.photo"></div>
+            <img nf-if="{{ r.newest_promotion }}" data-ng-src="{{ r.newest_promotion }}" class="w-full">
+            <div class="hbox hbox-auto-xs hbox-auto-sm timeline-center">
+                <!-- .col -->
+                <div class="col">
+                    <div class="wrapper">
+                        <ul class="timeline">
+                            <li class="tl-header">
+                                <div class="btn btn-info">Now</div>
+                            </li>
+                            <li class="tl-item" ng-repeat="event in r.events">
+                                <div class="tl-wrap" ng-class="event_type(event.type)">
+                                    <span class="tl-date">{{ event.create_date | date:'yyyy.MM.dd' }}</span>
+                                    <div class="tl-content panel padder b-a">
+                                        <span class="arrow left pull-up hidden-left"></span>
+                                        <span class="arrow right pull-up visible-left"></span>
+                                        <div class="text-lt">{{ event.description }}</div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="tl-header">
+                                <div class="btn btn-sm btn-default btn-rounded">more</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+        </div>
+    </div>
+
+</div>

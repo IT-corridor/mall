@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="row m-b-md">
+        <div class="col-md-12">
+            <input type="text" id="commodity" data-ng-model="commodity" class="form-control" placeholder="{{ placeholder }}"
+           data-ng-change="get_results(commodity)" data-ng-model-options="{ debounce: 750 }">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3 col-xs-3" data-ng-repeat="item in r.results">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">{{ item.title }}
+                    <span class="pull-right" data-ng-click="select_item($index)">
+                        <i class="fa fa-plus"></i>
+                    </span>
+                </h3>
+              </div>
+              <div class="panel-body">
+                <div class="text-center">
+                    <img data-ng-src="{{ item.crop }}" alt="{{ item.title }}">
+                    <div class="m-t-md">
+                        <ul class="list-inline">
+                            <li>{{ 'COMMODITY.FORM.COLOR' | translate }}</li>
+                            <li data-ng-repeat="color in item.colors track by color.id">
+                                <span style="color: {{ color.html }}" class="fa-stack">
+                                  <i class="fa fa-circle fa-stack-2x"></i>
+                                </span>
+                            </li>
+                        </ul>
+                        <p>{{ 'COMMODITY.FORM.KIND' | translate }}:
+                            <span class="text-info">{{ item.kind.title }}</span></p>
+                    </div>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" data-ng-if="r.results.length > 0">
+        <div class="col-md-12 col-xs-12">
+            <div class="text-center">
+                <div class="btn btn-primary" data-ng-click="load_more()" data-ng-disabled="enough">{{ 'LOAD_MORE' | translate }}</div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="modal-header">
+    <button type="button" class="close" data-ng-click="cancel()"><span aria-hidden="true">&times;</span>
+        <span class="sr-only">{{ 'NAVBAR.MODAL.CLOSE' | translate }}</span></button>
+    <h3 class="modal-title">{{ 'STORE.MY.ADD_PROMOTION' | translate }}</h3>
+</div>
+<form class="form-horizontal" data-ng-submit="create()" id="promotion_form">
+    <input type="hidden" value="{{ store }}" name="store_id">
+    <div class="modal-body">
+        <table class="table">
+            <tr>
+                <td>{{ 'STORE.FORM.POSTER' | translate }}:</td>
+                <td>
+                    <input type="file" name="post" required aria-required="true" accept="image/*">
+                    <p class="text-danger"
+                       data-ng-repeat="e in error.post">{{ e }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ 'STORE.FORM.DESCRIPTION' | translate }}:</td>
+                <td><textarea name="description" class="form-control" required></textarea>
+                    <p class="text-danger" data-ng-repeat="e in error.title">{{ e }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ 'STORE.FORM.START_DATE' | translate }}:</td>
+                <td><input type="date" name="start_date" class="form-control" required>
+                    <p class="text-danger" data-ng-repeat="e in error.priority">{{ e }}</p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="submit"><i class="fa fa-sign-in"></i>
+            {{ 'FORM.SUBMIT' | translate }}</button>
+    </div>
+</form>

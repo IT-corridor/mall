@@ -1,0 +1,217 @@
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n h3">Dashboard</h1>
+    <div style="margin-top: 10px;">
+        <span><b>Date: </b></span>
+        <select ng-model="data.year" ng-options="x for x in years" ng-change="date_change()">
+        </select> <span>/</span>
+        <select ng-model="data.month" ng-options="x for x in months" ng-click="date_change()">
+        </select>
+    </div>
+</div>
+<div class="wrapper-md">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">Store Followers ( {{ data.year }} / {{ data.month }})</div>
+                <div class="panel-body">
+                    <div ui-jq="plot" ui-options="
+              [
+                { data: {{ data.store_followers }}, points: { show: true, radius: 6}, splines: { show: true, tension: 0.45, lineWidth: 3, fill: 0 } }
+              ], 
+              {
+                colors: ['#23b7e5'],
+                series: { shadowSize: 3 },
+                xaxis:{ 
+                  font: { color: '#333' },
+                  position: 'bottom',                  
+                },
+                yaxis:{ font: { color: '#333' } },
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                tooltip: true,
+                tooltipOpts: { content: '%y.0 user(s) followed your store on %x.0th',  defaultTheme: false, shifts: { x: 0, y: 20 } }
+              }
+            " style="height:200px" ui-refresh="data.store_followers">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    Group Followers ( {{ data.year }} / {{ data.month }})
+                    <select ng-model="data.group_now" ng-options="x for x in data.groups" class="col-md-2 pull-right">
+                    </select>
+                </div>
+                <div class="panel-body">
+                    <div ui-jq="plot" ui-options="
+              [
+                { data: {{ data.group_followers[data.group_now] }}, points: { show: true, radius: 6}, splines: { show: true, tension: 0.45, lineWidth: 3, fill: 0 } }
+              ],
+              {
+                colors: ['#7266ba'],
+                series: { shadowSize: 3 },
+                xaxis:{
+                  font: { color: '#333' },
+                  position: 'bottom',
+                },
+                yaxis:{ font: { color: '#333' } },
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                tooltip: true,
+                tooltipOpts: { content: '%y.0 user(s) followed your group on %x.0th',  defaultTheme: false, shifts: { x: 0, y: 20 } }
+              }
+            " style="height:200px" ui-refresh="data.group_followers[data.group_now]">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    Photo Fans ( {{ data.year }} / {{ data.month }})
+                    <select ng-model="data.photo_now" ng-options="x for x in data.photos" class="col-md-2 pull-right">
+                    </select>
+                </div>
+                <div class="panel-body">
+                    <div ui-jq="plot" ui-options="
+              [
+                { data: {{ data.photo_fans[data.photo_now] }}, points: { show: true, radius: 6}, splines: { show: true, tension: 0.45, lineWidth: 3, fill: 0 } }
+              ],
+              {
+                colors: ['#27c24c'],
+                series: { shadowSize: 3 },
+                xaxis:{
+                  font: { color: '#333' },
+                  position: 'bottom',
+                },
+                yaxis:{ font: { color: '#333' } },
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                tooltip: true,
+                tooltipOpts: { content: '%y.0 user(s) liked your photo on %x.0th',  defaultTheme: false, shifts: { x: 0, y: 20 } }
+              }
+            " style="height:200px" ui-refresh="data.photo_fans[data.photo_now]">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    Photo Clones ( {{ data.year }} / {{ data.month }})
+                    <select ng-model="data.photo_c_now" ng-options="x for x in data.photos_c"
+                            class="col-md-2 pull-right">
+                    </select>
+                </div>
+                <div class="panel-body">
+                    <div ui-jq="plot" ui-options="
+              [
+                { data: {{ data.photo_clones[data.photo_c_now] }}, points: { show: true, radius: 6}, splines: { show: true, tension: 0.45, lineWidth: 3, fill: 0 } }
+              ],
+              {
+                colors: ['#fad733'],
+                series: { shadowSize: 3 },
+                xaxis:{
+                  font: { color: '#333' },
+                  position: 'bottom',
+                },
+                yaxis:{ font: { color: '#333' } },
+                grid: { hoverable: true, clickable: true, borderWidth: 0, color: '#ccc' },
+                tooltip: true,
+                tooltipOpts: { content: '%y.0 user(s) liked your photo on %x.0th',  defaultTheme: false, shifts: { x: 0, y: 20 } }
+              }
+            " style="height:200px" ui-refresh="data.photo_clones[data.photo_c_now]">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">Store ( {{ data.year }} / {{ data.month }})</div>
+                <table st-table="rowCollectionBasic" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Followers</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in data.store_followers" st-select-row="row">
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    Group
+                    <select ng-model="data.group_now" ng-options="x for x in data.groups" class="col-xs-8 pull-right">
+                    </select>
+                </div>
+                <table st-table="rowCollectionBasic" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Followers</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in data.group_followers[data.group_now]" st-select-row="row">
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    Photo
+                    <select ng-model="data.photo_now" ng-options="x for x in data.photos" class="col-xs-8 pull-right">
+                    </select>
+                </div>
+                <table st-table="rowCollectionBasic" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Fans</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in data.photo_fans[data.photo_now]" st-select-row="row">
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">
+                    Photo
+                    <select ng-model="data.photo_c_now" ng-options="x for x in data.photos_c"
+                            class="col-xs-8 pull-right">
+                    </select>
+                </div>
+                <table st-table="rowCollectionBasic" class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Clones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="row in data.photo_clones[data.photo_c_now]" st-select-row="row">
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

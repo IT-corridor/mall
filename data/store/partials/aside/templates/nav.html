@@ -1,0 +1,143 @@
+<!-- list -->
+<ul class="nav">
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+        <span translate="ASIDE.NAV.HEADER" class="ng-scope">Navigation</span>
+    </li>
+    <li>
+        <a data-ng-href="#!/dashboard" class="auto">
+            <i class="glyphicon glyphicon-stats icon text-primary-dker"></i>
+            <span class="font-bold" translate="ASIDE.DASHBOARD">Dashboard</span>
+        </a>
+    </li>
+    <li data-ng-init="menu.photo = false">
+        <a data-ng-click="menu.photo = !menu.photo">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="fa fa-camera text-primary-dker"></i>
+            <span class="font-bold" translate="ASIDE.PHOTO.TITLE">Photos</span>
+        </a>
+        <ul class="nav dk" data-ng-class="{'nav-sub': !menu.photo}">
+            <li class="nav-sub-header">
+                <a href>
+                    <span translate="ASIDE.PHOTO.TITLE">Photos</span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/group">
+                    <span translate="ASIDE.PHOTO.ALL_GROUPS">All Wardrobes</span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/my_groups">
+                    <span translate="ASIDE.PHOTO.MY_GROUPS">My Wardrobes</span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/group/create">
+                    <span translate="ASIDE.PHOTO.ADD_GROUP">Add A Wardrobes</span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/photo/newest">
+                    <span translate="ASIDE.PHOTO.DISCOVERY">Discovery</span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/photo/liked">
+                    <span translate="ASIDE.PHOTO.LIKED">Favorite</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li data-ng-init="menu.commodity = false">
+        <a data-ng-click="menu.commodity = !menu.commodity">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="fa fa-book text-success"></i>
+            <span class="font-bold" translate="ASIDE.COMMODITY.TITLE">Commodities</span>
+        </a>
+        <ul class="nav dk" data-ng-class="{'nav-sub': !menu.commodity}">
+            <li class="nav-sub-header">
+                <a href>
+                    <span translate="ASIDE.COMMODITY.TITLE">Commodities</span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/stores/my/commodities/">
+                    <span translate="ASIDE.COMMODITY.MY">My Commodities</span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/commodities/add/">
+                    <span translate="ASIDE.COMMODITY.ADD">Add a Commodity</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li data-ng-init="menu.article = false">
+        <a data-ng-click="menu.article = !menu.article">
+            <span class="pull-right text-muted">
+                <i class="fa fa-fw fa-angle-right text"></i>
+                <i class="fa fa-fw fa-angle-down text-active"></i>
+            </span>
+            <i class="fa fa-newspaper-o text-success"></i>
+            <span class="font-bold" translate="ASIDE.ARTICLE.TITLE"></span>
+        </a>
+        <ul class="nav dk" data-ng-class="{'nav-sub': !menu.article}">
+            <li>
+                <a data-ng-href="#!/article/">
+                    <span translate="ASIDE.ARTICLE.MY"></span>
+                </a>
+            </li>
+            <li>
+                <a data-ng-href="#!/article/add/">
+                    <span translate="ASIDE.ARTICLE.ADD"></span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li data-ng-init="menu.store = false">
+        <a data-ng-click="menu.store = !menu.store">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="fa fa-shopping-cart text-info"></i>
+            <span class="font-bold"
+                  translate="ASIDE.STORE.TITLE">My Store</span>
+        </a>
+        <ul class="nav dk" data-ng-class="{'nav-sub': !menu.store}">
+            <li class="nav-sub-header">
+                <a href>
+                    <span translate="ASIDE.STORE.TITLE">My Store</span>
+                </a>
+            </li>
+            <li data-ng-if="visitor.store">
+                <a data-ng-href="#!/stores/my/">
+                    <span translate="ASIDE.STORE.OVERVIEW">Overview</span>
+                </a>
+            </li>
+            <li data-ng-if="visitor.store">
+                <a data-ng-href="#!/stores/my/edit">
+                    <span translate="ASIDE.STORE.EDIT">Edit</span>
+                </a>
+            </li>
+            <li data-ng-if="!visitor.store">
+                <a data-ng-href="#!/stores/create">
+                    <span translate="ASIDE.STORE.ADD">Add</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li>
+        <a data-ng-href="#!/chat" class="auto">
+            <i class="icon-bubbles text-primary-dker"></i>
+            <span class="font-bold" translate="ASIDE.CHAT">Chat</span>
+        </a>
+    </li>
+</ul>
+<!-- / list -->

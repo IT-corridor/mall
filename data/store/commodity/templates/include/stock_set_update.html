@@ -1,0 +1,43 @@
+<div>
+    <form data-ng-submit="update()">
+        <h2>{{ 'COMMODITY.FORM.STOCKS' | translate }}</h2>
+        <table class="table table-condensed table-bordered">
+            <tr class="info">
+                <th>{{ 'COMMODITY.FORM.COLOR' | translate }}</th>
+                <th>{{ 'COMMODITY.FORM.EXTRA_COLOR' | translate }}</th>
+                <th>{{ 'COMMODITY.FORM.SIZE' | translate }}</th>
+                <th>{{ 'COMMODITY.FORM.AMOUNT' | translate }}</th>
+                <th>{{ 'FORM.DELETE' | translate }}</th>
+            </tr>
+            <tr data-ng-repeat="stock in stockset">
+                <td>
+                    <select class="form-control rounded" style="background-color: {{ item.html }}" data-ng-model="stock.color" data-ng-options="item.id as item.title for item in color_list">
+                        <option value="">{{ 'COMMODITY.FORM.EMPTY' | translate }}</option>
+                    </select>
+                </td>
+                <td>
+
+                    <input type="color" data-ng-model="stock.extra_color">
+
+                </td>
+                <td>
+                    <select class="form-control rounded" data-ng-model="stock.size" data-ng-options="item.id as item.title for item in size_list">
+                        <option value="">{{ 'COMMODITY.FORM.EMPTY' | translate }}</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" class="form-control rounded" data-ng-model="stock.amount">
+                </td>
+                <td class="text-center text-danger"><span data-ng-click="remove($index)"><i class="fa fa-times"></i></span></td>
+            </tr>
+            <tr>
+                <td colspan="4"><span class="text-primary" data-ng-click="add_stock()"><i class="fa fa-plus"></i>&nbsp;{{ 'COMMODITY.FORM.ANOTHER_STOCK' | translate }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <button class="btn btn-primary">{{ 'SUBMIT' | translate }}</button>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>

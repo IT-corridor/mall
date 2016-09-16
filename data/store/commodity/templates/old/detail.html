@@ -1,0 +1,61 @@
+<div class="container" data-ng-if="commodity">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ 'COMMODITY.DETAIL.HEADER' | translate }} - {{ commodity.name }}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5 text-center">
+            <div data-ng-if="current_photo">
+                <img style="max-height: 450px;" class="img-responsive img-center" data-ng-src="{{ current_photo }}" alt="{{ commodity.name }}">
+            </div>
+            <ul class="list-inline m-t-md">
+                <li data-ng-repeat="photo in commodity.gallery_set">
+                    <img class="img-responsive img-thumbnail"
+                         data-ng-src="{{ photo.crop }}" data-ng-click="set_current_photo(photo)"
+                         alt="{{ commodity.name }}-{{ $index }}">
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-7">
+            <table class="table table-condensed table-responsive bg-white">
+                <tr>
+                    <th>{{ 'COMMODITY.MY_LIST.TABLE.NAME' | translate }}</th>
+                    <td>{{ commodity.name }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'COMMODITY.FORM.CATEGORY' | translate }}</th>
+                    <td>{{ commodity.kind.category.title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'COMMODITY.FORM.KIND' | translate }}</th>
+                    <td>{{ commodity.kind.title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'COMMODITY.FORM.BRAND' | translate }}</th>
+                    <td>{{ commodity.brand.title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'COMMODITY.FORM.COLOR' | translate }}</th>
+                    <td>
+                        <span style="border-bottom: 4px solid {{ commodity.color.html }}">
+                            {{ commodity.color.title }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th>{{ 'COMMODITY.FORM.SIZE' | translate }}</th>
+                    <td>{{ commodity.size.title }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'COMMODITY.FORM.SEASON' | translate }}</th>
+                    <td>{{ commodity.season_text }}</td>
+                </tr>
+                <tr>
+                    <th>{{ 'COMMODITY.FORM.YEAR' | translate }}</th>
+                    <td>{{ commodity.year }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

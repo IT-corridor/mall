@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="wrapper-md">
+        <form data-ng-submit="update_group()" name="form" id="group_form">
+        <div class="panel panel-default" data-ng-class="{ hidden: is_owner === false }">
+            <div class="panel-heading font-bold">{{ 'GROUP.MANAGE.HEADER' | translate }}</div>
+            <div class="panel-body">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ 'GROUP.FORM.TITLE' | translate }}</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" data-ng-model="data.title"
+                                   class="form-control rounded">
+                            <p class="text-danger"
+                               data-ng-repeat="e in error.title">{{ e }}</p>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ 'GROUP.FORM.DESCRIPTION' | translate }}</label>
+                        <div class="col-sm-10">
+                            <textarea name="description"
+                                      data-ng-model="data.description"
+                                      class="form-control"></textarea>
+                            <p class="text-danger"
+                               data-ng-repeat="e in error.description">{{ e }}</p>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ 'GROUP.FORM.IS_PRIVATE' | translate }}</label>
+                        <div class="col-sm-10">
+                            <label class="i-switch bg-info m-t-xs m-r">
+                                <input name="is_private" type="checkbox"
+                                       data-ng-init="data.is_private = false"
+                                       data-ng-model="data.is_private"
+                                       value="{{ data.is_private }}">
+                                <i></i>
+                            </label>
+                            <p class="text-danger"
+                               data-ng-repeat="e in error.is_private">{{ e }}</p>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ 'GROUP.FORM.MEMBERS' | translate }}</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <member-list data-member="member" data-placeholder="'Start typing...'"></member-list>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" data-ng-click="member_add()" type="button">{{ 'FORM.ADD' | translate }}</button>
+                                </span>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-10" data-ng-if="members.length == 0">
+                                    <h4>{{ 'GROUP.FORM.NO_MEMBERS' | translate }}</h4>
+                                </div>
+                                <div class="col-sm-10 col-xs-12">
+                                    <div class="row" data-ng-repeat="person in r.members">
+                                        <div class="hbox wrapper-sm">
+                                            <div class="col v-middle thumb-md m-l">
+                                                <div class="">
+                                                    <img data-ng-src="{{ person.thumb }}" class="pull-left img-circle" alt="{{ person.username }}">
+                                                </div>
+                                            </div>
+                                            <div class="col v-middle">
+                                                <h4 class="h4 font-bold wrapper-sm">{{ person.username }}</h4>
+                                            </div>
+                                            <div class="col v-middle thumb-xs">
+                                                <span class="text-muted text-center" data-ng-click="member_remove(person.id)"><i class="fa fa-times fa-2x"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+            <div class="panel-footer">
+                <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                        <button class="btn btn-danger" type="button" data-ng-click="remove_group()">{{ 'FORM.DELETE' | translate }}</button>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <div class="pull-right">
+                            <a data-ng-href="#!/my_groups" class="btn btn-default">{{ 'FORM.CANCEL' | translate }}</a>
+                        <button type="submit" class="btn btn-primary">{{ 'FORM.SUBMIT' | translate }}
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
