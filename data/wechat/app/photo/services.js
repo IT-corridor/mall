@@ -1,8 +1,8 @@
 angular.module('photo.services', ['ngResource', 'common.services'])
 .constant('source_path', 'api/v1/')
-.factory('Photo', ['$resource', 'source_path',
-    function($resource, source_path){
-        return $resource(source_path + 'photo/:pk/:action/', {}, {
+.factory('Photo', ['$resource', 'source_path', 'API',
+    function($resource, source_path, API){
+        return $resource(API + source_path + 'photo/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
@@ -18,9 +18,9 @@ angular.module('photo.services', ['ngResource', 'common.services'])
             article_photos: {method: 'GET', params: {action: 'article_photos'}, responseType: 'json'},
     });
 }])
-.factory('Comment', ['$resource', 'source_path',
-    function($resource, source_path){
-        return $resource(source_path + 'comment/:pk/:action/', {}, {
+.factory('Comment', ['$resource', 'source_path', 'API',
+    function($resource, source_path, API){
+        return $resource(API + source_path + 'comment/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null}, responseType:'json', isArray: true},
             update: {method: 'PATCH'},
             save: {method: 'POST'},

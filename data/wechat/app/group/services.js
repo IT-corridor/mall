@@ -51,8 +51,9 @@ angular.module('group.services', ['ngResource'])
         });
 }])
 .factory('MultipartForm', ['$http', 'API', function ($http, API){
-    return function(method, form_id, url){
-        url = API + url;
+    return function(method, form_id, url, raw_url){
+
+        url = (raw_url) ? url : API + url;
         if (form_id){
             var form = document.querySelector(form_id);
             var formData = new FormData(form);

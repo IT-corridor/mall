@@ -1,9 +1,9 @@
 angular.module('store.services', ['ngResource'])
 .constant('store_path', '/account/stores/')
 .constant('catalog_path', '/catalog/')
-.factory('Store', ['$resource', 'store_path',
-    function($resource, store_path){
-        return $resource(store_path + ':pk/:action/', {}, {
+.factory('Store', ['$resource', 'store_path', 'API',
+    function($resource, store_path, API){
+        return $resource(API + store_path + ':pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
@@ -19,54 +19,54 @@ angular.module('store.services', ['ngResource'])
 
     });
 }])
-.factory('Category', ['$resource', 'catalog_path',
-    function($resource, catalog_path){
-        return $resource(catalog_path + 'categories/:pk/:action/', {}, {
+.factory('Category', ['$resource', 'catalog_path', 'API',
+    function($resource, catalog_path. API){
+        return $resource(API + catalog_path + 'categories/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
             remove: {method: 'DELETE'},
     });
 }])
-.factory('Kind', ['$resource', 'catalog_path',
-    function($resource, catalog_path){
-        return $resource(catalog_path + 'kinds/:pk/:action/', {}, {
+.factory('Kind', ['$resource', 'catalog_path', 'API',
+    function($resource, catalog_path, API){
+        return $resource(API + catalog_path + 'kinds/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
             remove: {method: 'DELETE'},
     });
 }])
-.factory('Brand', ['$resource', 'catalog_path',
-    function($resource, catalog_path){
-        return $resource(catalog_path + 'brands/:pk/:action/', {}, {
+.factory('Brand', ['$resource', 'catalog_path', 'API',
+    function($resource, catalog_path, API){
+        return $resource(API + catalog_path + 'brands/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
             remove: {method: 'DELETE'},
     });
 }])
-.factory('Size', ['$resource', 'catalog_path',
-    function($resource, catalog_path){
-        return $resource(catalog_path + 'sizes/:pk/:action/', {}, {
+.factory('Size', ['$resource', 'catalog_path', 'API',
+    function($resource, catalog_path, API){
+        return $resource(API + catalog_path + 'sizes/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
             remove: {method: 'DELETE'},
     });
 }])
-.factory('Color', ['$resource', 'catalog_path',
-    function($resource, catalog_path){
-        return $resource(catalog_path + 'colors/:pk/:action/', {}, {
+.factory('Color', ['$resource', 'catalog_path', 'API',
+    function($resource, catalog_path, API){
+        return $resource(API + catalog_path + 'colors/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             update: {method: 'PATCH'},
             save: {method: 'POST'},
             remove: {method: 'DELETE'},
     });
 }])
-.factory('Commodity', ['$resource', 'catalog_path',
-    function($resource, catalog_path){
-        return $resource(catalog_path + 'commodities/:pk/:action/', {}, {
+.factory('Commodity', ['$resource', 'catalog_path', 'API',
+    function($resource, catalog_path, API){
+        return $resource(API + catalog_path + 'commodities/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json'},
             verbose: {method: 'GET', params: {action: 'verbose'}, responseType: 'json'},
             nearby_stores: {method: 'GET', params: {action: 'nearby_stores'}, responseType: 'json', isArray: true},
