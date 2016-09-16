@@ -1,0 +1,49 @@
+<div class="container" data-ng-if="commodity">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ 'COMMODITY.DETAIL.HEADER' | translate }}</h2>
+        </div>
+    </div>
+    <div class="row m-b-md">
+        <div class="col-md-12">
+            <div>
+            <div uib-carousel active="0" template-url="/static/store/partials/carousel/carousel.html">
+              <div uib-slide ng-repeat="item in commodity.gallery_set track by item.id" index="$index"
+                template-url="/static/store/partials/carousel/slide.html">
+                <img ng-src="{{ item.thumb }}" style="margin:auto; max-height: 500px;" class="img-responsive">
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>{{ commodity.name }}</h1>
+            <h3>{{ commodity.season_text }}&nbsp; {{ commodity.year }}</h3>
+            <p data-ng-if="commodity.description">{{ commodity.description }}</p>
+
+            <h4>{{ 'COMMODITY.FORM.COLORS' | translate }}:</h4>
+            <ul class="list-inline">
+                <li data-ng-repeat="item in commodity.colors track by item.id">
+                    <span style="color: {{ item.html }}" class="fa-stack">
+                      <i class="fa fa-circle fa-stack-2x"></i>
+                    </span>
+                </li>
+            </ul>
+
+            <h4>{{ 'COMMODITY.FORM.SIZES' | translate }}:</h4>
+
+            <ul class="list-inline">
+                <li data-ng-repeat="item in commodity.sizes track by item.id">
+                    <span class="fa-stack">
+                      <i class="fa fa-circle fa-stack-2x" style="color: #fff;"></i>
+                        <span class="fa-stack-1x">{{ item.title }}</span>
+                    </span>
+                </li>
+            </ul>
+            <h4>{{ 'COMMODITY.FORM.BRAND' | translate }}: {{ commodity.brand.title }}</h4>
+            <h4>{{ 'COMMODITY.FORM.CATEGORY' | translate }}: {{ commodity.kind.category.title }}</h4>
+            <h4>{{ 'COMMODITY.FORM.KIND' | translate }}: {{ commodity.kind.title }}</h4>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class="pinGrid" data-masonry='{ "transitionDuration" : "0.4s" , "itemSelector" : ".tile", "percentPosition": "true"}'>
+    <div class="pin animate tile" data-masonry-tile data-ng-repeat="photo in r.results">
+        <div class="b-b b-light m-b-xs wrapper-xs photo-owner">
+            <a data-ng-href="#!/group/?owner={{ photo.owner.pk }}" class="pull-left thumb-xs avatar m-r">
+                <img data-ng-src="{{ photo.owner.thumb }}" alt="{{ photo.owner.username }}" data-ng-class="{'img-circle': !photo.owner.is_store}">
+            </a>
+            <div class="clear">
+                <div id="photo-o-name">{{ photo.owner.username }}</div>
+                <div class="user-follow-status">
+                    <span data-ng-if="!photo.owner_followed" data-ng-click="follow_user(photo.visitor, $index)"><i class="icon-user-follow"></i></span>
+                    <span data-ng-if="photo.owner_followed" data-ng-click="unfollow_user(photo.visitor, $index)"><i class="icon-user-following"></i></span>
+                </div>
+            </div>
+        </div>
+        <a data-ng-href="#!/photo/{{ photo.id }}">
+            <img data-ng-if="!photo.original && photo.thumb" data-ng-src="{{ photo.thumb }}" alt="{{ photo.title }}" class="img-pin">
+            <img data-ng-if="photo.original && !photo.thumb" data-ng-src="{{ photo.origin.thumb }}" alt="{{ photo.title }}" class="img-pin">
+            <div data-ng-if="!photo.original && !photo.thumb">
+                <div class="text-center purple-50 r r-3x b b-light empty-cover-xs empty-cover-md"></div>
+            </div>
+        </a>
+        <div data-ng-if="photo.original">
+            <div id="photo-origin-owner-section" class="b-b b-light m-b-xs wrapper-xs">
+                <a data-ng-href="#!/group/?owner={{ photo.origin.owner.pk }}" class="pull-left thumb-xs avatar m-r">
+                    <img data-ng-src="{{ photo.origin.owner.thumb }}" alt="{{ photo.origin.owner.username }}" id="img-square" data-ng-class="{'img-circle': !photo.origin.owner.is_store}">
+                </a>
+                <div class="clear">
+                    <div id="photo-origin-owner-username">{{ photo.origin.owner.username }}</div>
+                    <div class="user-follow-status">
+                        <span data-ng-if="!photo.creator_followed" data-ng-click="follow_user(photo.origin.owner.pk, $index, true)"><i class="icon-user-follow"></i></span>
+                        <span data-ng-if="photo.creator_followed" data-ng-click="unfollow_user(photo.origin.owner.pk, $index, true)"><i class="icon-user-following"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div data-ng-if="!photo.original">
+            <div id="photo-origin-owner-section" class="b-b b-light m-b-xs wrapper-xs">
+                <a data-ng-href="#!/group/?owner={{ photo.owner.pk }}" class="pull-left thumb-xs avatar m-r">
+                    <img data-ng-src="{{ photo.owner.thumb }}" alt="{{ photo.owner.username }}" id="img-square" data-ng-class="{'img-circle': !photo.owner.is_store}">
+                </a>
+                <div class="clear">
+                    <div id="photo-origin-owner-username">{{ photo.owner.username }}</div>
+                    <div class="user-follow-status">
+                        <span data-ng-if="!photo.owner_followed" data-ng-click="follow_user(photo.visitor, $index)"><i class="icon-user-follow"></i></span>
+                        <span data-ng-if="photo.owner_followed" data-ng-click="unfollow_user(photo.visitor, $index)"><i class="icon-user-following"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="b-b b-light" data-ng-if="photo.title">{{ photo.title }}</p>
+        <p class="b-b b-light" data-ng-if="!photo.title && photo.origin.title">{{ photo.origin.title }}</p>
+      <div  class="b-b b-light photo-description" data-ng-if="photo.descr"> {{ photo.descr }}</div>
+        <div  class="b-b b-light photo-description" data-ng-if="!photo.descr && photo.origin.descr"> {{ photo.descr.descr }}</div>
+        <ul class="list-inline text-muted text-center small">
+            <li><i class="fa fa-floppy-o"></i> {{ photo.clone_count }}</li>
+            <li><i class="fa fa-heart-o"></i> {{ photo.like_count }}</li>
+            <li><i class="fa fa-share-alt"></i></li>
+        </ul>
+    </div>
+</div>

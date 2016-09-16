@@ -1,0 +1,18 @@
+<div class="container" data-ng-if="article">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ article.title }}</h2>
+            <div ng-bind-html="description"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5 text-center">
+            <li data-ng-repeat="photo in article.photos">
+                <h2>{{photo.title}}</h2>
+                <img class="img-responsive img-thumbnail"
+                     data-ng-src="{{ photo.cover }}" data-ng-click="set_current_photo(photo)"
+                     alt="{{ photo.title }}-{{ $index }}">
+            </li>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,115 @@
+input[type=range] {
+  width: 300px; }
+
+ul[rn-carousel] {
+  padding: 0;
+  white-space: nowrap;
+  position: relative;
+  -webkit-perspective: 1000px;
+  -ms-perspective: 1000px;
+  perspective: 1000px;
+  -ms-touch-action: pan-y;
+  touch-action: pan-y; 
+  margin-bottom: 0;
+}
+  ul[rn-carousel] > li {
+    color: black;
+    -webkit-backface-visibility: hidden;
+    -ms-backface-visibility: hidden;
+    backface-visibility: hidden;
+    overflow: visible;
+    vertical-align: top;
+    position: absolute;
+    left: 0;
+    right: 0;
+    white-space: normal;
+    padding: 0 10px;
+    margin: 0;
+    list-style-type: none;
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    overflow: hidden; }
+    ul[rn-carousel] > li > .slide-div {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      border: 1px solid #e0e0e0;
+    }
+    ul[rn-carousel] > li > .slide-div > img {
+      height: 100%;
+      border: 1px solid #ff4343;
+    }
+/* prevent flickering when moving buffer */
+ul[rn-carousel-buffered] > li {
+  display: none; }
+
+ul[rn-carousel-transition="hexagon"] {
+  overflow: visible; }
+
+/* indicators */
+div.rn-carousel-indicator{
+  border-bottom: 1px solid #ececec;
+  padding-top: 3px;
+  padding-bottom: 17px;
+}
+div.rn-carousel-indicator span {
+  cursor: pointer;
+  color: transparent;
+  font-size: 2px;
+  line-height: 1;
+  width: 23px;
+  height: 23px;
+  background-color: #c1c1c1;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 7px;}
+  div.rn-carousel-indicator span.active {
+    color: transparent;
+    background-color: #fe8a71; }
+
+/* prev/next controls */
+.rn-carousel-control {
+  -webkit-transition: opacity 0.2s ease-out;
+  transition: opacity 0.2s ease-out;
+  font-size: 2rem;
+  position: absolute;
+  top: 40%;
+  opacity: 1;
+  cursor: pointer; }
+  .rn-carousel-control:hover {
+    opacity: 1; }
+  .rn-carousel-control.rn-carousel-control-prev {
+    font-family: 'themify';
+    font-size: 32px;
+    color: #fff;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    left: 0; 
+    background-color: rgba(64, 64, 76, 0.5);
+    padding: 10px 4px}
+    .rn-carousel-control.rn-carousel-control-prev:before {
+      content: "\e64a"; }
+  .rn-carousel-control.rn-carousel-control-next {
+    font-family: 'themify';
+    font-size: 32px;
+    color: #fff;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    right: 0; 
+    background-color: rgba(64, 64, 76, 0.5);
+    padding: 10px 4px}
+    .rn-carousel-control.rn-carousel-control-next:before {
+      content: "\e649"; }
+
+/*# sourceMappingURL=angular-carousel.css.map */

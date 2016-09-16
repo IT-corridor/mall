@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">{{ 'PHOTO.EDIT.HEADER' | translate }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        <hr>
+        <div class="col-md-12">
+            <form data-ng-submit="update()">
+                <table class="table">
+                    <tr>
+                        <td>{{ 'PHOTO.FORM.TITLE' | translate }}:</td>
+                        <td><input type="text" class="form-control" data-ng-model="photo.title"></td>
+                    </tr>
+                    <tr>
+                        <td>{{ 'PHOTO.FORM.DESCRIPTION' | translate }}:</td>
+                        <td><textarea class="form-control" data-ng-model="photo.description"></textarea></td>
+                    </tr>
+                </table>
+                <ul class="text-center list-inline">
+                    <li><button class="btn btn-primary btn-lg">{{ 'FORM.UPDATE' | translate }}</button></li>
+                    <li><a data-ng-href="#!/photo/{{ photo.id }}" class="btn btn-default btn-lg">
+                        {{ 'FORM.CANCEL' | translate }}</a></li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</div>

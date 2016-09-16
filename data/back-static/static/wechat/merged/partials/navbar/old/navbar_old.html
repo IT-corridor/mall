@@ -1,0 +1,68 @@
+<nav class="navbar navbar-fixed-top purple-400" data-ng-class="{ 'navbar-shrink': change_class }">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed m-n"
+                    data-ng-init="isCollapsed = false"
+                    data-ng-click="isCollapsed = !isCollapsed"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand" href="#!/"><img style="min-height:40px;"
+                                                    src="{{ THEME }}images/logo_circle_48.png"
+                                                    alt="{{ brand_text }}"></a>
+        </div>
+        <ul class="nav navbar-nav box-shadow" data-uib-collapse="isCollapsed">
+            <li><a data-ng-href="#!/mirror">Mirror</a></li>
+            <li><a data-ng-href="#!/photo">Photos</a></li>
+            <li><a data-ng-href="#!/group">Groups</a></li>
+        </ul>
+        <form class="navbar-form navbar-form-sm navbar-left" role="search"
+              data-uib-collapse="isCollapsed">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control input-sm bg-light no-border rounded padder"
+                           placeholder="Search projects...">
+                    <span class="input-group-btn">
+                    <button type="submit" class="btn btn-sm bg-light rounded"><i
+                            class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <ul class="nav navbar-nav navbar-right box-shadow"
+            data-uib-collapse="isCollapsed">
+            <li class="dropdown" data-uib-dropdown data-is-open="status.isopen"
+                data-ng-if="visitor">
+                <a href id="visitor_item" class="dropdown-toggle clear"
+                   role="button" data-uib-dropdown-toggle
+                   data-ng-disabled="disabled">
+
+                <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                    <img data-ng-src="{{ visitor.thumb }}"
+                         alt="{{ visitor.username }}">
+                    <i class="on md b-white bottom"></i>
+                </span>
+                    <span class="hidden-sm hidden-md">{{ visitor.username }}</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu animated fadeInRight w"
+                    data-uib-dropdown-menu role="menu"
+                    aria-labelledby="visitor_item">
+                    <li role="menuitem"><a data-ng-href="#!/profile/">
+                        <i class="fa fa-user"></i> My Profile</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li role="menuitem">
+                        <a data-ng-click="logout()" data-ng-href="#!/">
+                            <i class="fa fa-sign-out"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+

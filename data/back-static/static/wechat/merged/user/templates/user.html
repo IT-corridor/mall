@@ -1,0 +1,89 @@
+<wx-self data-visitor="visitor"></wx-self>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <h1 class="text-center">{{ 'USER.ME.HEADER' | translate }}</h1>
+        </div>
+    </div>
+    <div class="row m-t-xxl">
+        <div class="col-md-12 col-xs-12">
+            <ul class="text-center list-inline">
+                <li data-ng-if="me.phone"><a class="btn btn-info" data-ng-href="#!/me/change_password">
+                    {{ 'USER.PASSWORD.HEADER' | translate }}
+                    </a>
+                </li>
+                <li data-ng-if="!me.phone"><a class="btn btn-info" data-ng-href="#!/me/bind_phone">
+                    {{ 'USER.SET_PASSWORD.HEADER' | translate }}
+                    </a>
+                </li>
+                <li><a class="btn btn-info" data-ng-href="#!/group/create">
+                    {{ 'GROUP.CREATE.HEADER' | translate }}
+                    </a>
+                </li>
+                <li>
+                    <button class="btn btn-primary" data-ng-click="sync-profile()">
+                        {{ 'USER.ME.CONNECT' | translate }}
+                    </button>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" id="avatar_form" data-ng-submit="update_avatar()">
+                <div class="modal-body">
+                    <p class="text-danger">{{ error.detail }}</p>
+                    <table class="table">
+                        <tr>
+                            <td><img class="img-center img-responsive" data-ng-src="{{ me.thumb + '?' + random }}" alt="{{ me.username }}">
+                                <label>{{ 'USER.FORM.AVATAR' | translate }}
+                                    <input id="avatar" type="file" name="avatar" data-ng-disabled="wait">
+                                </label>
+                                <p class="text-danger" data-ng-repeat="e in error.avatar">{{ e }}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" data-ng-disabled="wait"><i class="fa fa-check"></i> {{ 'FORM.SUBMIT' | translate }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" id="user_form" data-ng-submit="update_profile()">
+                <div class="modal-body">
+                    <p class="text-danger">{{ error.detail }}</p>
+                    <table class="table">
+                        <tr>
+                            <td>
+                                <input type="text" data-ng-model="me.username" name="username" class="form-control" data-ng-disabled="wait" placeholder="{{ 'USER.FORM.USERNAME' | translate }}" required>
+                                <p class="text-danger" data-ng-repeat="e in error.username">{{ e }}</p>
+                            </td>
+                        </tr>
+                        <tr data-ng-if="me.phone">
+                            <td>
+                                <input type="text" data-ng-model="me.phone" name="phone" class="form-control" data-ng-disabled="wait" placeholder="{{ 'USER.FORM.PHONE' | translate }}" required>
+                                <p class="text-danger" data-ng-repeat="e in error.phone">{{ e }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" data-ng-model="me.email" name="email" class="form-control" data-ng-disabled="wait" placeholder="{{ 'USER.FORM.EMAIL' | translate }}">
+                                <p class="text-danger" data-ng-repeat="e in error.email">{{ e }}</p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit" data-ng-disabled="wait"><i class="fa fa-check"></i> {{ 'FORM.SUBMIT' | translate }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

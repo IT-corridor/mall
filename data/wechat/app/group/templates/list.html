@@ -1,0 +1,61 @@
+<div class="container">
+<div data-ng-if="r.$resolved && r.results.length > 0">
+    <div class="row">
+        <div class="col-md-3 col-xs-6 wrapper-sm" data-ng-repeat="group in r.results">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    {{ ( group.title ) ? group.title : 'Untitled' }}
+                </div>
+                <div class="group-xs group-md">
+                    <div class="hbox">
+                        <div class="col v-middle wrapper-xs">
+                            <div class="pre-img">
+                                <a data-ng-href="#!group/{{ group.id }}/photo">
+                                    <img data-ng-if="group.thumb" class="img-center r r-3x b b-light" style="width: 100%;" data-ng-src="{{ group.thumb }}" alt="{{ group.title }}">
+
+                                    <div data-ng-if="!group.thumb" class="text-center purple-50 r r-3x b b-light empty-cover-xs empty-cover-md">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-b-sm m-n img-wrap-xs img-wrap-md">
+                    <div class="col-md-4 col-xs-4 wrapper-xs" data-ng-repeat="item in group.overview">
+                        <img class="img-center img-responsive" data-ng-src="{{ item.crop }}" alt="..." >
+                    </div>
+                    <div class="col-md-4 col-xs-4 wrapper-xs" style="height: 100%;" data-ng-repeat="item in group.empty_array">
+                            <div class="purple-50" style="max-width: 100%; height: 100%; position: relative;"></div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <h6><span><i class="fa fa-clock-o"></i> {{ group.activity }}</span>
+                        <span class="pull-right"><i class="fa fa-picture-o"></i> {{ group.photo_count }}</span></h6>
+                    <h6>
+                        <span class="text-muted"><i class="fa fa-user">&nbsp;{{ group.owner_name }}</i></span>
+                        <span class="pull-right" data-ng-if="visitor.pk == group.owner"><a data-ng-href="#!/group/{{ group.id }}/manage"><i class="fa fa-edit"></i></a></span>
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center m-t">
+        <p><button data-ng-disabled="enough" data-ng-click="get_more()" class="btn btn-lg btn-primary">{{ 'LOAD_MORE' | translate }}</button>
+        </p>
+        <ul class="pagination m-t">
+            <li><a data-ng-href="{{ page_link }}page=1">&lt;&lt;</a></li>
+            <li><a data-ng-if="r.previous_page" data-ng-href="{{ page_link }}page={{ r.previous_page }}">&lt;</a></li>
+            <li data-ng-repeat="i in prev_pages"><a data-ng-href="{{ page_link }}page={{ i }}">{{ i }}</a></li>
+            <li class="active"><a href="#">{{ r.current }}</a></li>
+            <li data-ng-repeat="i in next_pages"><a data-ng-href="{{ page_link }}page={{ i }}">{{ i }}</a></li>
+            <li><a data-ng-if="r.next_page" data-ng-href="{{ page_link }}page={{ r.next_page }}">&gt;</a></li>
+            <li><a data-ng-href="{{ page_link }}page={{ r.total }}">&gt;&gt;</a></li>
+        </ul>
+    </div>
+</div>
+<div class="row" data-ng-if="!r">
+    <div class="col-md-12">
+        <h1 class="text-center">{{ 'GROUP.LIST.NO_GROUP' | translate }}</h1>
+    </div>
+</div>
+</div>

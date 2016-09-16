@@ -1,0 +1,76 @@
+<div class="container" data-ng-if="r.$resolved">
+    <div class="row m-t-md">
+        <div class="col-md-12">
+            <div class="form-group text-center">
+                <a class="btn btn-success" data-ng-href="#!/commodities/add"><i class="fa fa-plus fa-2x"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="m-t-md"></div>
+            <div class="pinGridWrapper" data-ng-if="r">
+                <div class="pinGrid"
+                     data-masonry='{ "transitionDuration" : "0.4s" , "itemSelector" : ".tile", "percentPosition": "true"}'>
+                    <div class="pin animate tile" data-masonry-tile data-ng-repeat="commodity in r.results">
+                        <a data-ng-href="#!/commodities/{{ commodity.id }}">
+                            <img data-ng-if="commodity.cover" data-ng-src="{{ commodity.cover }}" alt="{{ commodity.name }}" class="img-pin">
+                        </a>
+                        <h3 class="b-b b-light font-bold">{{ commodity.name }}</h3>
+                        <table class="table table-condensed table-responsive bg-white">
+                            <tr>
+                                <th>{{ 'COMMODITY.MY_LIST.TABLE.NAME' | translate }}</th>
+                                <td>{{ commodity.name }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'COMMODITY.FORM.CATEGORY' | translate }}</th>
+                                <td>{{ commodity.kind.category.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'COMMODITY.FORM.KIND' | translate }}</th>
+                                <td>{{ commodity.kind.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'COMMODITY.FORM.BRAND' | translate }}</th>
+                                <td>{{ commodity.brand.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'COMMODITY.FORM.COLOR' | translate }}</th>
+                                <td>
+                                    <span style="border-bottom: 4px solid {{ commodity.color.html }}">
+                                        {{ commodity.color.title }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'COMMODITY.FORM.SIZE' | translate }}</th>
+                                <td>{{ commodity.size.title }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'COMMODITY.FORM.SEASON' | translate }}</th>
+                                <td>{{ commodity.season_text }}</td>
+                            </tr>
+                            <tr>
+                                <th>{{ 'COMMODITY.FORM.YEAR' | translate }}</th>
+                                <td>{{ commodity.year }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center m-t">
+    <p><button data-ng-disabled="enough" data-ng-click="get_more()" class="btn btn-lg btn-primary">{{ 'LOAD_MORE' | translate }}</button>
+    </p>
+    <ul class="pagination m-t">
+        <li><a data-ng-href="{{ page_link }}page=1">&lt;&lt;</a></li>
+        <li><a data-ng-if="r.previous_page" data-ng-href="{{ page_link }}page={{ r.previous_page }}">&lt;</a></li>
+        <li data-ng-repeat="i in prev_pages"><a data-ng-href="{{ page_link }}page={{ i }}">{{ i }}</a></li>
+        <li class="active"><a href="#">{{ r.current }}</a></li>
+        <li data-ng-repeat="i in next_pages"><a data-ng-href="{{ page_link }}page={{ i }}">{{ i }}</a></li>
+        <li><a data-ng-if="r.next_page" data-ng-href="{{ page_link }}page={{ r.next_page }}">&gt;</a></li>
+        <li><a data-ng-href="{{ page_link }}page={{ r.total }}">&gt;&gt;</a></li>
+    </ul>
+</div>
+</div>

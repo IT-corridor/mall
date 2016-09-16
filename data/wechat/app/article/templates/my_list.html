@@ -1,0 +1,71 @@
+<div class="container" data-ng-if="r.$resolved">
+    <div class="row m-t-md">
+        <div class="col-md-12">
+            <div class="form-group text-center">
+                <a class="btn btn-success" data-ng-href="#!/commodities/add"><i class="fa fa-plus fa-2x"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-bordered table-condensed table-responsive bg-white">
+                <tr>
+                    <th>{{ 'COMMODITY.MY_LIST.TABLE.COVER' | translate }}</th>
+                    <th>{{ 'COMMODITY.MY_LIST.TABLE.NAME' | translate }}</th>
+                    <th>{{ 'COMMODITY.FORM.CATEGORY' | translate }}</th>
+                    <th>{{ 'COMMODITY.FORM.KIND' | translate }}</th>
+                    <th>{{ 'COMMODITY.FORM.BRAND' | translate }}</th>
+                    <th>{{ 'COMMODITY.FORM.COLOR' | translate }}</th>
+                    <th>{{ 'COMMODITY.FORM.SIZE' | translate }}</th>
+                    <th>{{ 'COMMODITY.FORM.SEASON' | translate }}</th>
+                    <th>{{ 'COMMODITY.FORM.YEAR' | translate }}</th>
+                    <th>{{ 'COMMODITY.MY_LIST.TABLE.ACTIONS' | translate }}</th>
+                </tr>
+                <tr data-ng-repeat="item in r.results">
+                    <td class="text-center">
+                        <img data-ng-if="item.cover" class="img-responsive img-center"
+                             data-ng-src="{{ item.cover }}" alt="{{ item.name }}">
+                        <div data-ng-if="!item.cover">
+                            <span class="fa-stack fa-3x">
+                                <i class="fa fa-camera fa-stack-1x"></i>
+                                <i class="fa fa-ban fa-stack-2x text-muted"></i>
+                            </span>
+                        </div>
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.kind.category.title }}</td>
+                    <td>{{ item.kind.title }}</td>
+                    <td>{{ item.brand.title }}</td>
+                    <td class="text-center">
+                        <div style="border: 2px solid {{ item.color.html }}">
+                            {{ item.color.title }}
+                        </div>
+                    </td>
+                    <td>{{ item.size.title }}</td>
+                    <td>{{ item.season_text }}</td>
+                    <td>{{ item.year }}</td>
+                    <td class="text-center">
+                        <ul class="list-inline">
+                            <li><a data-ng-href="#!/commodities/{{ item.id }}" class="btn btn-sm btn-primary input-sm"><i class="fa fa-eye"></i></a></li>
+                            <li><a data-ng-href="#!/commodities/{{ item.id }}/edit" class="btn btn-sm btn-info input-sm"><i class="fa fa-edit"></i></a></li>
+                            <li><button class="btn btn-sm btn-danger input-sm"><i class="fa fa-times"></i></button></li>
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="text-center m-t">
+    <p><button data-ng-disabled="enough" data-ng-click="get_more()" class="btn btn-lg btn-primary">{{ 'LOAD_MORE' | translate }}</button>
+    </p>
+    <ul class="pagination m-t">
+        <li><a data-ng-href="{{ page_link }}page=1">&lt;&lt;</a></li>
+        <li><a data-ng-if="r.previous_page" data-ng-href="{{ page_link }}page={{ r.previous_page }}">&lt;</a></li>
+        <li data-ng-repeat="i in prev_pages"><a data-ng-href="{{ page_link }}page={{ i }}">{{ i }}</a></li>
+        <li class="active"><a href="#">{{ r.current }}</a></li>
+        <li data-ng-repeat="i in next_pages"><a data-ng-href="{{ page_link }}page={{ i }}">{{ i }}</a></li>
+        <li><a data-ng-if="r.next_page" data-ng-href="{{ page_link }}page={{ r.next_page }}">&gt;</a></li>
+        <li><a data-ng-href="{{ page_link }}page={{ r.total }}">&gt;&gt;</a></li>
+    </ul>
+</div>
+</div>

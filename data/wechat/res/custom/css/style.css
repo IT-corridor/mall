@@ -1,0 +1,129 @@
+.absolute {
+    position: absolute;
+}
+.relative {
+    position: relative;
+}
+.img-center {margin:0 auto;}
+
+.row-label {
+    background-color: rgba(224, 224, 224, 0.5);
+}
+
+.thumbnail-x a img{
+    height: 200px;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.img-center {margin:0 auto;}
+.fixed-alerts { position: fixed; z-index:99; top: 120px;}
+
+body {
+    padding-top: 50px;
+    padding-bottom: 70px;
+}
+
+/* Group */
+
+.group-crop {
+    width: 100%;
+}
+
+.p-r-none {
+    padding-right: 0;
+}
+@media (max-width: 767px) {
+    .no-img-xs{
+        line-height: 45px;
+        width: 45px;
+        height: 45px;
+        overflow: hidden;
+    }
+    .img-wrap-xs {
+        height: 60px;
+        overflow: hidden;
+    }
+    .empty-xs {
+        height: 296px;
+    }
+    .pre-img-xs {
+        height: 162px;
+        overflow: hidden;
+    }
+    .group-xs{
+        height: 150px;
+        overflow: hidden;
+    }
+    .empty-cover-xs {
+        height: 146px;
+    }
+
+}
+
+@media (min-width: 992px) {
+    .no-img-md{
+        line-height: 79px;
+        width: 79px;
+        height: 79px;
+    }
+    .img-wrap-md {
+        height: 90px;
+        overflow: hidden;
+
+    }
+    .empty-md {
+        height: 376px;
+    }
+    .pre-img-md {
+        height: 180px;
+        overflow: hidden;
+    }
+    .group-md{
+        height: 200px;
+        overflow: hidden;
+    }
+    .empty-cover-md {
+        height: 195px;
+    }
+}
+
+.group-bottom{
+    padding-top: 0;
+}
+.dashed {
+    border: 3px dashed;
+}
+
+.empty {
+    padding: 2px;
+}
+.empty > div{
+    height: 100%;
+}
+
+.screensaver {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    z-index: 10;
+    visibility: hidden;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+.visible {
+    visibility: visible;
+}
+
+.photo-detail {
+    position: absolute;
+    z-index: 11;
+    top: 0;
+    left: 0;
+    padding-bottom: 50px;
+}
+
+.inverted-logo{
+    filter: invert(60%);
+    -webkit-filter: invert(60%);
+}

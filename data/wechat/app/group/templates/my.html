@@ -1,0 +1,109 @@
+<div class="header">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-9 col-md-9">
+				<div class="header-left">
+					<i class="icon-ti ti-angle-left" aria-hidden="true" data-ng-click="back()" role="button" tabindex="0"></i>
+					<div class="header-title">
+						<a data-ng-href="#" class="ng-binding" href="#">{{ 'GROUP.MY.HEADER' | translate }} ({{ r.count }})</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-3 col-md-3">
+				<div class="header-plus">
+					<a data-ng-href="#!/group/create"><i class="icon-ti ti-plus"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container">
+	<div class="row">
+
+		<div class="col-md-12" data-ng-repeat="group in r.results">
+			<!-- header -->
+			<div class="row wardrobe-group-header">
+				<div class="col-xs-8 col-sm-8 col-md-8">
+					<div class="wardrobe-group-title">
+						<a data-ng-href="#!/group/{{ group.id }}/photo">{{ ( group.title ) ? group.title : 'Untitled' }}</a>
+						<br><span class="wardrobe-group-title-span">{{ 'GROUP.LIST.PHOTO_COUNT' | translate: group }}</span>
+					</div>
+				</div>
+				<div class="col-xs-4 col-sm-4 col-md-4">
+					<div class="wardrobe-group-dots" data-uib-dropdown style="position: relative;">
+						<a href id="group-dropdown{{ group.id }}" data-uib-dropdown-toggle>
+							<span class="icon-dot"></span>
+							<span class="icon-dot"></span>
+							<span class="icon-dot"></span>
+						</a>
+						<ul class="dropdown-menu" data-uib-dropdown-menu aria-labelledby="group-dropdown{{ group.id }}">
+							<li><span><i class="fa fa-user-plus"></i> {{ 'GROUP.MY.INVITE' | translate }}</span></li>
+							<li data-ng-click="remove($index)"><span><i class="fa fa-trash"></i> {{ 'GROUP.MY.DELETE' | translate }}</span></li>
+							<li data-ng-if="group.is_private" data-ng-click="toggle_privacy($index)" class="fa fa-unlock"><span><i></i>{{ 'GROUP.MY.SET_PUBLIC' | translate }}</span></li>
+							<li data-ng-if="!group.is_private" data-ng-click="toggle_privacy($index)" class="fa fa-lock"><span><i></i>{{ 'GROUP.MY.SET_PRIVATE' | translate }}</span></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<!-- main -->
+			<div class="container">
+				<div class="row">
+
+					<div class="wardrobe-group-row">
+
+						<div class="wardrobe-group-column col-1">
+							<div class="wardrobe-group-segment" data-ng-repeat="item in group.overview">
+								<div class="wardrobe-group-content">
+									<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
+								</div>
+							</div>
+						</div>
+
+						<div class="wardrobe-group-column col-2">
+							<div class="wardrobe-group-segment" data-ng-repeat="item in group.overview">
+								<div class="wardrobe-group-content">
+									<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
+								</div>
+							</div>
+						</div>
+
+						<div class="wardrobe-group-column col-3">
+							<div class="wardrobe-group-segment" data-ng-repeat="item in group.overview">
+								<div class="wardrobe-group-content">
+									<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<!-- wardrobe-group-row -->
+
+				</div>
+				<!-- row -->
+			</div>
+			<!-- container -->
+
+			<!-- footer -->
+			<div class="row wardrobe-group-footer">
+				<div class="col-xs-10 col-sm-11 col-lg-11 wardrobe-group-description">{{ group.description }}</div>
+				<div class="col-xs-2 col-sm-1 col-lg-1 wardrobe-group-description-edit">
+					<a data-ng-href="#!/group/{{ group.id }}/manage"><i class="icon-pencil"></i></a>
+				</div>
+			</div>
+
+			<div class="row wardrobe-group-bottom">
+				<div class="com-md-12">
+					<p class="pull-left">{{ 'GROUP.LIST.MEMBER_COUNT' | translate: group }}</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="row" data-ng-if="enough">
+		<div class="col-md-12 col-xs-12">
+			<p class="text-center"><img class="inverted-logo" data-ng-src="{{ THEME }}images/logo_circle_48.png"></p>
+		</div>
+	</div>
+</div>

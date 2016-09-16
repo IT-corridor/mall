@@ -1,0 +1,122 @@
+<div class="photo-detail">
+    <div data-ng-if="photo">
+        <div class="wrapper-md">
+        <div class="col-md-12 col-xs-12 m-t-sm">
+            <ul class="list-inline text-center">
+                <li>
+                    <button class="btn btn-info" data-ng-click="back()"><i
+                            class="fa fa-arrow-left fa-2x"></i></button>
+                </li>
+                <li><a class="btn btn-warning"
+                       data-ng-class="{'disabled': !is_owner}"
+                       data-ng-href="#!/photo/{{ photo.id }}/edit/"><i
+                        class="fa fa-edit fa-2x"></i></a></li>
+                <li>
+                    <button class="btn btn-danger"
+                            data-ng-disabled="!is_owner"
+                            data-ng-click="remove()"><i
+                            class="fa fa-trash-o fa-2x"></i></button>
+                </li>
+            </ul>
+        </div>
+        <div class="panel">
+            <div>
+                <img class="img-responsive img-center"
+                     data-ng-src="{{ photo.photo }}"
+                     alt="{{ photo.title }}">
+            </div>
+            <div class="wrapper-lg">
+                <h4 class="m-t-none">{{ (photo.title) ? photo.title : '' }}</h4>
+                <div data-ng-if="photo.description">
+                    <p>{{ photo.description }}</p>
+                </div>
+                <div class="line line-lg b-b b-light"></div>
+                <ul class="text-muted list-inline">
+                    <li>
+                        <i class="pull-left thumb-xxs avatar">
+                            <img data-ng-src="{{ photo.owner.thumb }}"
+                                 class="img-circle" alt="{{ photo.owner.username">
+                        </i>
+                        <a class="m-r-sm"> {{ photo.owner.username }}</a>
+                    </li>
+                    <li>
+                        <i class="fa fa-clock-o text-muted"></i> {{
+                        photo.create_date| date : 'longDate': '+0800' }}
+                    </li>
+                    <li>
+                        <a href="" class="m-l-sm"><i
+                                class="fa fa-comment-o text-muted"></i>
+                            {{ photo.comments.length }}</a>
+                    </li>
+                    <li>
+                        <a data-ng-click="like_photo()"><i
+                                class="fa fa-heart"></i> {{ photo.like_count }}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- .comment-list -->
+    <div class="row">
+        <div class="m-b b-l m-l-xs streamline col-md-12 col-xs-12">
+            <div class="wrapper-xs" data-ng-repeat="comment in photo.comments">
+                <a class="pull-left thumb-sm avatar m-l-n-md">
+                    <img data-ng-src="{{ comment.author_data.thumb }}"
+                         class="img-circle" alt="...">
+                </a>
+                <div class="m-l-lg panel b-a">
+                    <div class="panel-heading pos-rlt b-b b-light">
+                        <span class="arrow left"></span>
+                        <a href=""><strong>{{ comment.author_data.username
+                            }}</strong></a>
+                        <label data-ng-if="comment.author == photo.visitor"
+                               class="label bg-info m-l-xs">Owner</label>
+                        <span class="text-muted m-l-sm pull-right">
+                            <i class="fa fa-clock-o"></i>
+                            {{ comment.create_date| date : 'longDate': '+0800' }}
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        <div>{{ comment.message }}</div>
+                        <div class="m-t-sm">
+                            <a ui-toggle-class
+                               data-ng-click="like_comment($index, comment.id)"
+                               class="btn btn-default btn-xs active">
+                                <i class="fa fa-star-o text-muted text"></i>
+                                <i class="fa fa-star text-danger text-active"></i>
+                                Like {{ comment.like }}
+                            </a>
+                            <a href class="btn btn-default btn-xs">
+                                <i class="fa fa-mail-reply text-muted"></i>
+                                Reply
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-12">
+            <div class="clearfix m-b-lg">
+                <a class="pull-left thumb-sm avatar">
+                    <img data-ng-src="{{ visitor.thumb }}" alt class="img-circle">
+                </a>
+                <div class="m-l-xxl">
+                    <form class="m-b-none" data-ng-submit="comment()">
+                        <div class="input-group">
+                            <input type="text" class="form-control input-lg"
+                                   data-ng-model="new_message"
+                                   placeholder="Input your comment here">
+                          <span class="input-group-btn">
+                            <button class="btn btn-info btn-lg"
+                                    type="submit">POST</button>
+                          </span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

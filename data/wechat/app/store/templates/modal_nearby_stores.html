@@ -1,0 +1,23 @@
+<div class="modal-header" style="background: #fe8a71; color:white;">
+    <button type="button" class="close" data-ng-click="cancel()"><span aria-hidden="true">&times;</span>
+        <span class="sr-only">{{ 'NAVBAR.MODAL.CLOSE' | translate }}</span></button>
+    <h3 class="modal-title">Nearby Store List</h3>
+</div>
+<div class="modal-body">
+    <div class="row" ng-repeat="store in nearby_stores">
+        <div class="col-xs-3">
+            <a ng-click="store_profile(store.id)">
+                <img src="{{ store.photo }}" class="img-responsive" style="margin-top: 10px;">
+            </a>
+        </div>
+        <div class="col-xs-7">
+            <h4>{{ store.name }}</h4>
+            <small>{{ store.address }}</small>
+        </div>
+        <div class="col-xs-2" style="padding: 0;text-align: center">
+            <div style="margin-top: 15px;"><i class="fa fa-map-marker"></i></div>
+            <span>{{ store.distance | currency:'' }}Km</span>
+        </div>
+        <div class="col-xs-12"><hr></div>
+    </div>
+</div>

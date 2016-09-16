@@ -1,0 +1,37 @@
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url('../fonts/sourcesanspro/sourcesanspro-light.woff') format('woff');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url('../fonts/sourcesanspro/sourcesanspro.woff') format('woff');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url('../fonts/sourcesanspro/sourcesanspro-bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Open Sans Light';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Open Sans Light'), local('OpenSansLight'), url('../fonts/opensans/OpenSansLight.woff') format('woff');
+}
+@font-face {
+  font-family: 'Open Sans Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Open Sans Regular'), local('OpenSansRegular'), url('../fonts/opensans/OpenSansRegular.woff') format('woff')
+}
+@font-face {
+  font-family: 'Open Sans Bold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Open Sans Bold'), local('OpenSansBold'), url('../fonts/opensans/OpenSansBold.woff') format('woff') 
+}

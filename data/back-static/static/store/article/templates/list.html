@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 col-xs-6 wrapper-sm" data-ng-repeat="article in r.results">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b>{{ ( article.title ) ? article.title : 'Untitled' }}</b>
+                </div>
+                <div class="group-xs group-md">
+                    <div class="hbox">
+                        <div class="col v-middle wrapper-xs">
+                            <div class="pre-img">
+                                <a data-ng-href="#!article/{{ article.id }}">
+                                    <img data-ng-if="article.thumb" class="img-center r r-3x b b-light" style="width: 100%;" data-ng-src="{{ article.thumb }}" alt="{{ article.title }}">
+
+                                    <div data-ng-if="!article.thumb" class="text-center purple-50 r r-3x b b-light empty-cover-xs empty-cover-md">
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row m-b-sm m-n">
+                    <div class="col-md-12 col-xs-12 wrapper-xs text-center group-bottom">
+                        <a class="btn btn-default btn-lg input-lg form-control" data-ng-href="#!/article/{{ article.id }}/update"><i class="fa fa-edit"></i>&nbsp; Edit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

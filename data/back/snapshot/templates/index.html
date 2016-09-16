@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:ng="http://angularjs.org" data-ng-app="app.main">
+    <head>
+        <meta charset="utf-8">
+        <meta name="fragment" content="!" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
+        <meta name="description" content="Atyichu">
+        {% load i18n %}
+        {% load static from staticfiles %}
+        <link rel="stylesheet" href="{{ STATIC_URL }}lib/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}lib/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}lib/themify-icons/themify-icons.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}lib/assets/simple-line-icons/css/simple-line-icons.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}lib/assets/animate/animate.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}theme/css/font.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}theme/css/app.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}theme/css/md.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}custom/css/style.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}custom/css/animations.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}custom/css/grid.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}newdesign/css/style.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}lib/toastr/toastr.min.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}lib/angular-carousel/angular-carousel.css">
+        {% verbatim %}
+        <title data-ng-bind="site"></title>
+        <!--<base href="/app/">-->
+
+        {% endverbatim %}
+    </head>
+    <body id="app" class="app purple-50">
+        <div data-d-navbar></div>
+        <noscript><h4 class="text-danger">{% trans 'This site requires JavaScript to be enabled' %}</h4></noscript>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-xs-12 fixed-alerts">
+                    <div data-d-alerts></div>
+                </div>
+            </div>
+        </div>
+        <div data-ng-if="!visitor" class="m-t-md" data-user-sign></div>
+        <div data-ng-if="!visitor" class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="text-center m-t-md">
+                        <div id="qr"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content" class="view-container">
+            <div data-ng-if="visitor_resolved === true" data-ng-view class="view-frame"></div>
+        </div>
+        <div data-ng-if="visitor_resolved === true" data-d-footer></div>
+        <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular-cookies.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular-route.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular-resource.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular-sanitize.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular-animate.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular-aria.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/angular-touch.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/ui-bootstrap-tpls-2.1.3.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/other/angular-translate.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/other/angular-translate.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/angular-carousel/angular-carousel.js"></script>
+        <script src="{{ STATIC_URL }}lib/angularjs/other/ngStorage.js"></script>
+        <script src="{{ STATIC_URL }}lib/masonry.pkgd.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/imagesloaded.pkgd.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/jquery/jquery.js"></script>
+        <script src="{{ STATIC_URL }}lib/toastr/pusher.min.js"></script>
+        <script src="{{ STATIC_URL }}lib/toastr/toastr.min.js"></script>
+
+        <script src="{{ STATIC_URL }}wechat/merged/app.modules.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/app.constants.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/app.routes.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/app.controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/asyncload/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/alert/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/auth/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/common/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/footer/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/navbar/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/weixin/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/selfie/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/common/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/mirror/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/mirror/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/article/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/article/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/notification/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/notification/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/photo/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/photo/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/photo/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/user/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/user/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/user/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/group/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/group/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/group/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/store/services.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/store/controllers.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/grid/directives.js"></script>
+        <script src="{{ STATIC_URL }}wechat/merged/partials/tencent/directives.js"></script>
+    </body>
+</html>

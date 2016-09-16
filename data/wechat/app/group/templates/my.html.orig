@@ -1,0 +1,72 @@
+<wx-self data-visitor="visitor" data-ng-if="bar == 'verbose'"></wx-self>
+<<<<<<< HEAD
+
+=======
+>>>>>>> remotes/origin/dan
+<div class="my-wardrobes-header">
+	<i class="fa fa-angle-left" aria-hidden="true" data-ng-click="back()" role="button" tabindex="0"></i>
+
+	<div class="m-w-r-title">
+		<a data-ng-href="#" class="m-r-sm ng-binding" href="#">{{ 'GROUP.MY.HEADER' | translate }} ({{ r.count }})</a>
+	</div>
+
+	<div class="create-wardrobe-plus">
+		<a data-ng-href="#!/group/create"><i class="fa fa-plus-circle fa-5x"></i></a>
+	</div>
+
+</div>
+
+<div class="container pull-left wardrobes">
+
+	<div class="row">
+
+		<div class=" wrapper-sm wardrobe-groups nopadding" data-ng-repeat="group in r.results">
+			<div class="bg-white lter r r-3x">
+				<div class="wardrobe-group-header">
+					<div class="font-bold wrapper-xs wardrobe-group-title" style="padding-top: 10px;">
+						{{ ( group.title ) ? group.title : 'Untitled' }}
+						<br><i>{{ 'GROUP.LIST.PHOTO_COUNT' | translate: group }}</i>
+
+					</div>
+
+					<div data-uib-dropdown style="position: relative;">
+						<a href id="group-dropdown{{ group.id }}" data-uib-dropdown-toggle>
+							<i class="fa fa-ellipsis-h"></i>
+						</a>
+						<ul class="dropdown-menu" data-uib-dropdown-menu aria-labelledby="group-dropdown{{ group.id }}">
+							<li><span><i class="fa fa-user-plus"></i> {{ 'GROUP.MY.INVITE' | translate }}</span></li>
+							<li data-ng-click="remove($index)"><span><i class="fa fa-trash"></i> {{ 'GROUP.MY.DELETE' | translate }}</span></li>
+							<li data-ng-if="group.is_private" data-ng-click="toggle_privacy($index)" class="fa fa-unlock"><span><i></i>{{ 'GROUP.MY.SET_PUBLIC' | translate }}</span></li>
+							<li data-ng-if="!group.is_private" data-ng-click="toggle_privacy($index)" class="fa fa-lock"><span><i></i>{{ 'GROUP.MY.SET_PRIVATE' | translate }}</span></li>
+						</ul>
+					</div>
+				</div>
+				<div class="row m-b-sm m-n img-wrap-md pull-left">
+					<div class="col-md-4 col-xs-4 wrapper-xs" data-ng-repeat="item in group.overview">
+						<div class="hbox">
+							<div class="col v-middle">
+								<img class="img-center img-responsive r r-3x" data-ng-src="{{ item.crop }}" alt="...">
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="wardrobe-group-footer">
+					<div class="wardrobe-group-description">{{ group.description }}</div>
+					<div class="wardrobe-group-description-edit">
+						<a data-ng-href="#!/group/{{ group.id }}/manage"><i class="icon-pencil"></i></a>
+					</div>
+				</div>
+
+				<div class="wardrobe-group-bottom">
+					<p class="pull-left">{{ 'GROUP.LIST.MEMBER_COUNT' | translate: group }}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" data-ng-if="enough">
+		<div class="col-md-12 col-xs-12">
+			<p class="text-center"><img class="inverted-logo" data-ng-src="{{ THEME }}images/logo_circle_48.png"></p>
+		</div>
+	</div>
+</div>
