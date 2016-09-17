@@ -1,5 +1,5 @@
 angular.module('article.services', ['ngResource'])
-    .constant('article_path', '/api/v1/')
+    .constant('article_path', 'api/v1/')
     .factory('Article', ['$resource', 'article_path',
         function ($resource, article_path) {
             return $resource(article_path + 'article/:pk/:action/', {}, {

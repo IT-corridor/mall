@@ -1,6 +1,6 @@
 angular.module('store.services', ['ngResource'])
-.constant('store_path', '/account/stores/')
-.constant('catalog_path', '/catalog/')
+.constant('store_path', 'account/stores/')
+.constant('catalog_path', 'catalog/')
 .factory('Store', ['$resource', 'store_path', 'API',
     function($resource, store_path, API){
         return $resource(API + store_path + ':pk/:action/', {}, {

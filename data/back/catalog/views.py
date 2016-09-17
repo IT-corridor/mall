@@ -86,9 +86,11 @@ class PromotionViewSet(viewsets.ModelViewSet):
                                         store_id=int(data['store_id']),
                                         description=data['description'],
                                         start_date=data['start_date'])
+
+        descr = 'New promotion will start on {}!'.format(data['start_date'])
         models.Event.objects.create(store_id=int(data['store_id']),
                                     type='promotion',
-                                    description='New promotion will start on {}!'.format(data['start_date']))
+                                    description=descr)
         return Response(data='success')
 
 
@@ -130,12 +132,13 @@ class GalleryViewSet(viewsets.ModelViewSet):
         if count >= photo_limit:
             raise ValidationError(_('You can`t add more photos.'))
 
+        context = {'request': request}
         response_data = []
         for n, k in enumerate(files.keys()):
             if n > (photo_limit - count):
                 break
             data = {'commodity': commodity, 'photo': files[k]}
-            serializer = self.serializer_class(data=data)
+            serializer = self.serializer_class(data=data, context=context)
             serializer.is_valid(True)
             serializer.save()
             response_data.append(serializer.data)
@@ -203,11 +206,13 @@ class CommodityViewSet(ReferenceMixin, PaginationMixin, viewsets.ModelViewSet):
         files = self.request.FILES.copy()
         files.pop('color_pic', None)
         photo_limit = 5
+        context = {'request': self.request}
         for n, k in enumerate(files.keys()):
             if n > photo_limit:
                 break
             data = {'commodity': commodity.id, 'photo': files[k]}
-            serializer = serializers.GallerySerializer(data=data)
+            serializer = serializers.GallerySerializer(data=data,
+                                                       context=context)
             serializer.is_valid(True)
             serializer.save()
 
@@ -218,7 +223,8 @@ class CommodityViewSet(ReferenceMixin, PaginationMixin, viewsets.ModelViewSet):
 
             for stock_data in stock_set:
                 stock_data['commodity'] = commodity.id
-                serializer = serializers.StockSerializer(data=stock_data)
+                serializer = serializers.StockSerializer(data=stock_data,
+                                                         context=context)
                 serializer.is_valid(True)
                 serializer.save()
 

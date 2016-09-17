@@ -3,7 +3,7 @@ from .local_rq_settings import *
 
 SECRET_KEY = 'g%vsow(2i!3k_*+o=$1rp5hm=9+ivwpqbk0grvs8=pgo=4c$vh'
 DEBUG = True
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -37,8 +37,8 @@ DATABASES = {
     }
 }
 
-STATIC_ROOT = os.path.join(RESOURCE_DIR, 'static_dev')
-STATICFILES_DIRS = (os.path.join(RESOURCE_DIR, 'static'),)
+STATIC_ROOT = os.path.join(RESOURCE_DIR, 'static')
+STATICFILES_DIRS = (os.path.join(RESOURCE_DIR, 'static_dev'),)
 MEDIA_ROOT = os.path.join(RESOURCE_DIR, 'media')
 LOCALE_PATHS = (os.path.join(RESOURCE_DIR, 'locale'),)
 
@@ -46,26 +46,45 @@ LOCALE_PATHS = (os.path.join(RESOURCE_DIR, 'locale'),)
 
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'tmp', 'default'),
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 0,
+        },
     },
     'pending': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'tmp', 'pending'),
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 1,
+        },
     },
     'pending_phones': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'tmp', 'pending_phones'),
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 2,
+        },
     },
     'verify_phones': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'tmp', 'verify_phones'),
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 3,
+        },
     },
-
+    'redis-cache': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': 'localhost:6379',
+        'OPTIONS': {
+            'DB': 4,
+        },
+    }
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-
+#SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+#SESSION_COOKIE_DOMAIN = ['127.0.0.1']
+SESSION_COOKIE_HTTPONLY = False
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'tmp', 'email')
 
@@ -80,3 +99,6 @@ IMAGGA_LANG = 'zh_chs'
 
 TAO_SMS_KEY = '23438643'
 TAO_SMS_SECRET = '785f1713c9472a73596336a9f5e3eeeb'
+
+CORS_ORIGIN_WHITELIST = ('127.0.0.1:8001', '127.0.0.1:8002')
+CORS_ALLOW_CREDENTIALS = True

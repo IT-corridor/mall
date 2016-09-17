@@ -1,9 +1,0 @@
-<div data-uib-dropdown data-keyboard-nav>
-    <input type="text" id="member" data-ng-model="member" class="form-control" placeholder="{{ placeholder }}"
-           data-ng-change="get_results(member)" data-ng-focus="on_focus()" data-ng-blur="on_blur()" data-uib-dropdown-toggle
-           data-ng-model-options="{ debounce: 750 }">
-    <ul class="dropdown-menu" role="listbox" data-ng-show="results.length > 0 && is_visible" aria-labelledby="member">
-        <li role="option" data-ng-mouseenter="set_active($index)" data-ng-class="{'active': active == $index }" data-ng-click="select_item($index)" data-ng-repeat="item in results"><a href tabindex="{{ $index }}">{{ item.username }}</a>
-        </li>
-    </ul>
-</div>

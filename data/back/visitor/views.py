@@ -120,9 +120,9 @@ def index(request):
 
 def openid(request):
     """ OAuth2 handler for weixin """
-    redirect = reverse('index')
+    # TODO: RESOLVE WITH CORS!!!
+    redirect = 'www.atyichu.com'
     qr = request.GET.get("qr", None)
-
     response = HttpResponseRedirect(redirect + '#!/')
 
     if request.user.is_authenticated():
@@ -188,6 +188,76 @@ def openid(request):
 
 
 @api_view(['POST'])
+def openid_api(request):
+    """ To continue authentication via Wecha / weixin you need pass a code
+    code -- A code from wexin (to obtain access_token).
+    So you need a code.
+    Important to use same API KEY and SECRET as We use at django app.
+    :return: visitor data.
+    """
+    if request.user.is_authenticated():
+        return Response({'error': _('Already authenticated.')}, 400)
+
+    code = request.data.get("code", None)
+
+    if not code:
+        return Response({'error': _('You don`t have weixin code.')}, 400)
+
+    weixin_oauth = WeixinBackend()
+    backend = 'weixin'
+    try:
+        token_data = weixin_oauth.get_access_token(code)
+    except TypeError:
+        return Response({'error': _('You got error trying to get openid')},
+                        400)
+
+    user_info = weixin_oauth.get_user_info(token_data['access_token'],
+                                           token_data['openid'])
+    data = {'avatar_url': user_info.get('headimgurl'),
+            'nickname': user_info.get('nickname'),
+            'unionid': token_data['unionid'],
+            'extra': {
+                'openid': token_data['openid'],
+                'access_token': token_data['access_token'],
+                'expires_in': token_data['expires_in'],
+                'refresh_token': token_data['refresh_token'],
+                'backend': backend,
+            }
+    }
+
+    context = {'request': request}
+
+    try:
+        extra = VisitorExtra.objects.get(openid=token_data['openid'],
+                                         backend=backend)
+        s = VisitorExtraSerializer(instance=extra, data=data['extra'],
+                                   partial=True)
+        s.is_valid(raise_exception=True)
+        s.save()
+        visitor = extra.weixin.visitor
+        # Remove after WIPE
+        visitor_data = {'nickname': data['nickname'],
+                        'unionid': data['unionid']}
+
+        visitor_s = VisitorSerializer(instance=visitor, data=visitor_data,
+                                      partial=True, context=context)
+        visitor_s.is_valid(raise_exception=True)
+        visitor = visitor_s.save()
+    except VisitorExtra.DoesNotExist:
+        visitor_s = VisitorSerializer(data=data, context=context)
+        visitor_s.is_valid(raise_exception=True)
+        visitor = visitor_s.save()
+        extra = None
+
+    if not extra:
+        extra = visitor.weixin.visitorextra_set.get(backend=backend)
+    user = authenticate(weixin=extra.openid, backend=backend)
+    login(request, user)
+
+    return Response(visitor_s.data)
+
+
+@api_view(['POST'])
 @permission_classes((IsVisitorSimple,))
 def update_visitor(request):
     """ Updating user data from weixin. Sync.
@@ -214,8 +284,9 @@ def update_visitor(request):
         'avatar_url': user_info.get('headimgurl'),
         'nickname': user_info.get('nickname'),
     }
-    serializer = VisitorSerializer(instance=visitor,
-                                   data=user_data, partial=True)
+    context = {'request': request}
+    serializer = VisitorSerializer(instance=visitor, data=user_data,
+                                   partial=True, context=context)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(data=serializer.data)
@@ -226,7 +297,8 @@ def update_visitor(request):
 def get_me(request):
     """ Provides personal user data, username and thumb """
     visitor = request.user.visitor
-    serializer = VisitorSerializer(instance=visitor)
+    context = {'request': request}
+    serializer = VisitorSerializer(instance=visitor, context=context)
     check_unread_notification(request.user)
 
     return Response(data=serializer.data)
@@ -235,10 +307,12 @@ def get_me(request):
 def test_auth(request):
     host = request.get_host()
     if host == '127.0.0.1:8000':
+        redirect_to = '127.0.0.1:8001' if request.GET.get('store') \
+            else '127.0.0.1:8002'
         extra = VisitorExtra.objects.get(backend='weixin', openid='weixin')
         user = authenticate(weixin=extra.openid)
         login(request, user)
-        response = HttpResponseRedirect('/#!/')
+        response = HttpResponseRedirect(redirect_to)
         return response
     raise PermissionDenied
 
@@ -272,8 +346,9 @@ class ProfileViewSet(viewsets.GenericViewSet):
     def retrieve(self, request, pk=None):
         """ retreive visitor information, may be useless. """
         queryset = self.get_queryset()
+        context = {'request': request}
         visitor = get_object_or_404(queryset, pk=pk)
-        serializer = self.get_serializer(visitor)
+        serializer = self.get_serializer(visitor, context=context)
         return Response(serializer.data)
 
     @list_route(methods=['get'])
@@ -281,8 +356,9 @@ class ProfileViewSet(viewsets.GenericViewSet):
         """ Retrieve information about own profile (visitor).
         Works only for authenticated user."""
         queryset = self.get_queryset()
+        context = {'request': request}
         visitor = get_object_or_404(queryset, pk=request.user.id)
-        serializer = self.get_serializer(visitor)
+        serializer = self.get_serializer(visitor, context=context)
         return Response(serializer.data)
 
     def create(self, request):
@@ -313,8 +389,10 @@ class ProfileViewSet(viewsets.GenericViewSet):
             raise ValidationError({'phone':
                                        _('You can`t change phone '
                                          'before you bind it')})
+        context = {'request': request}
         serializer = self.get_serializer(instance=user.visitor,
-                                         data=request.data, partial=True)
+                                         data=request.data,
+                                         partial=True, context=context)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -340,10 +418,12 @@ class ProfileViewSet(viewsets.GenericViewSet):
         status = 400
         s = self.get_serializer(data=self.request.data)
         s.is_valid(raise_exception=True)
+        context = {'request': request}
         try:
             user = authenticate(phone=s.data['phone'],
                                 password=s.data['password'])
-            serializer = VisitorSerializer(instance=user.visitor)
+            serializer = VisitorSerializer(instance=user.visitor,
+                                           context=context)
             data = serializer.data
             login(request, user)
         except Exception as e:

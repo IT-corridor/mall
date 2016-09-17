@@ -10,9 +10,12 @@ GUNICORN=gunicorn
 
 cd $DJANGODIR
 
+echo $USER
+
 RUNDIR=$(dirname $SOCKFILE)
 test -d $RUNDIR || mkdir -p $RUNDIR
 exec $GUNICORN "${DJANGO_WSGI_MODULE}:application" \
   --env DJANGO_SETTINGS_MODULE=settings.local \
   --workers $NUM_WORKERS \
   --bind "unix:${SOCKFILE}" \
+#  --user vagrant

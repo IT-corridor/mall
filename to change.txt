@@ -1,3 +1,4 @@
-/home/niklak2/repositories/atyichu/businesscenter/settings/local.py
-/home/niklak2/repositories/atyichu/businesscenter/settings/production_test.py
-/home/niklak2/repositories/mall/data/back/snapshot/views.py
+/atyichu/businesscenter/settings/local.py
+/atyichu/businesscenter/settings/production_test.py
+/atyichu/businesscenter/visitor/urls.py
+/atyichu/businesscenter/visitor/views.py

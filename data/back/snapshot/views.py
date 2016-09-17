@@ -434,9 +434,11 @@ class PhotoViewSet(PaginationMixin, viewsets.ModelViewSet):
         except Photo.DoesNotExist:
             return Response(data={'error': _('Photo does not exist')})
 
+        context = {'request': request}
         serializer = serializers.PhotoSerializer(instance=photo,
                                                  data=request.data,
-                                                 partial=True)
+                                                 partial=True,
+                                                 context=context)
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -467,10 +469,10 @@ class PhotoViewSet(PaginationMixin, viewsets.ModelViewSet):
 
         if visitor.pk != photo.visitor_id:
             return Response(data={'error': _('Only the owner can edit photo')})
-
+        context = {'request': request}
         serializer = serializers.PhotoSerializer(instance=photo,
                                                  data=request.data,
-                                                 partial=True)
+                                                 partial=True, context=context)
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -579,8 +581,8 @@ class PhotoViewSet(PaginationMixin, viewsets.ModelViewSet):
                 'title': title,
                 'article': obj.article,
                 'description': description}
-
-        serializer = self.serializer_class(data=data)
+        context = {'request': request}
+        serializer = self.serializer_class(data=data, context=context)
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -785,6 +787,7 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         return qs
 
     def get_serializer_class(self):
+        # SET up a serializer map
         if self.request.method == 'GET' and not self.kwargs.get('pk', None):
             return serializers.GroupListSerializer
         return serializers.GroupDetailSerializer
@@ -804,8 +807,8 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         data = request.data
         data['group'] = self.get_object().id
         data['visitor'] = self.request.user.id
-
-        serializer = serializers.PhotoSerializer(data=data)
+        context = {'request': request}
+        serializer = serializers.PhotoSerializer(data=data, context=context)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=201)
@@ -933,11 +936,13 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
     def visitor_list(self, request, *args, **kwargs):
         """ Representation of visitor list. Only visitors """
         status = 400
+        context = {'request': request}
+
         try:
             q = request.query_params['q']
             qs = Visitor.objects.filter(~Q(pk=request.user.id) &
                                         Q(user__username__startswith=q))[:5]
-            serializer = VisitorShortSerializer(qs, many=True)
+            serializer = VisitorShortSerializer(qs, many=True, context=context)
             data = serializer.data
             status = 200
         except KeyError as e:
@@ -948,12 +953,13 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
     def vendor_list(self, request, *args, **kwargs):
         """ Representation of vendor list """
         status = 400
+        context = {'request': request}
         try:
             q = request.query_params['q']
             qs = Vendor.objects.filter(~Q(pk=request.user.id) &
                                        Q(store__brand_name__startswith=q))[:5]
 
-            serializer = VendorStoreSerializer(qs, many=True)
+            serializer = VendorStoreSerializer(qs, many=True, context=context)
             data = serializer.data
             status = 200
         except KeyError as e:
@@ -973,12 +979,13 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
             .distinct()
         serializer_class = self.get_serializer_class()
         page = self.paginate_queryset(qs)
+        context = {'request': request}
 
         if page is not None:
-            serializer = serializer_class(page, many=True)
+            serializer = serializer_class(page, many=True, context=context)
             return self.get_paginated_response(serializer.data)
 
-        serializer = serializer_class(qs, many=True)
+        serializer = serializer_class(qs, many=True, context=context)
         return Response(serializer.data)
 
     @list_route(methods=['get'])
@@ -1005,7 +1012,8 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
             serializer = serializer_class(page, many=True)
             return self.get_paginated_response(serializer.data)
 
-        serializer = serializer_class(qs, many=True)
+        context = {'request': request}
+        serializer = serializer_class(qs, many=True, context=context)
         return Response(serializer.data)
 
     @detail_route(methods=['get'])
@@ -1335,12 +1343,6 @@ def get_signature(request):
 
     js_info = jsapi.get_signature(url=url, ticket=ticket)
     return Response(data=js_info)
-
-
-def index(request):
-    """ A simple view, which presents only a starting template.
-     It is an entry. Later should be migrate to static service like Nginx."""
-    return render(request, 'index.html')
 
 
 def get_nickname(user):

@@ -304,7 +304,8 @@ class GroupListSerializer(GroupSerializer):
 
     def get_overview(self, obj):
         qs = obj.photo_set.all()[0:7]
-        serializer = PhotoCropSerializer(instance=qs, many=True)
+        serializer = PhotoCropSerializer(instance=qs, many=True,
+                                         context=self.context)
         return serializer.data
 
     class Meta:

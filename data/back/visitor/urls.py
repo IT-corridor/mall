@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^login/$', views.login_view, name='login'),
     url(r'^logout/$', views.logout_view, name='logout'),
     url(r'^openid$', views.openid, name='openid'),
+    url(r'^openid_api$', views.openid_api, name='openid_api'),
     url(r'^dummy/$', views.dummy_api, name='dummy'),
     url(r'^is_authenticated/$', views.is_authenticated, name='is_auth'),
     url(r'^me/$', views.get_me, name='me'),

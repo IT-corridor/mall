@@ -48,8 +48,9 @@ class StoreViewSet(OwnerCreateMixin,
         if 'photo' not in request.data:
             raise ValidationError({'photo': _('This parameter is required.')})
         obj = self.get_object()
+        context = {'request': request}
         serializer = self.serializer_class(instance=obj, data=request.data,
-                                           partial=True)
+                                           partial=True, context=context)
 
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -191,7 +192,9 @@ def login_view(request):
 
         if hasattr(user, 'vendor'):
             vendor = user.vendor
-            serializer = serializers.VendorBriefSerializer(instance=vendor)
+            context = {'request': request}
+            serializer = serializers.VendorBriefSerializer(instance=vendor,
+                                                           context=context)
             data.update(serializer.data)
             status = 200
             login(request, user)
@@ -212,7 +215,9 @@ def get_my_vendor(request):
     """ Provides personal vendor data, username and thumb """
     # TODO: Optimize queryset
     vendor = request.user.vendor
-    serializer = serializers.VendorBriefSerializer(instance=vendor)
+    context = {'request': request}
+    serializer = serializers.VendorBriefSerializer(instance=vendor,
+                                                   context=context)
     return Response(data=serializer.data)
 
 

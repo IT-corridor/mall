@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
+service redis-server restart
+
 service supervisor restart
-supervisorctl update
 
 nginx -t
 service nginx restart
