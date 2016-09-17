@@ -24,6 +24,7 @@ app.factory('httpRequestInterceptor', function() {
     return {
         request: function(config) {
             config.headers['X-Requested-With'] = 'XMLHttpRequest';
+            config.withCredentials = true;
             return config;
         }
     };
