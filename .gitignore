@@ -118,3 +118,4 @@ crashlytics-build.properties
 /deploy/config.json
 *.sqlite3
 /data/back/tmp/*
+/.vagrant/

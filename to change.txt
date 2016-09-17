@@ -1,0 +1,3 @@
+/home/niklak2/repositories/atyichu/businesscenter/settings/local.py
+/home/niklak2/repositories/atyichu/businesscenter/settings/production_test.py
+/home/niklak2/repositories/mall/data/back/snapshot/views.py
