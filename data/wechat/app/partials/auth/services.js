@@ -76,7 +76,7 @@ auth.factory('Auth', ['$rootScope', '$cookies', '$window', '$location', '$route'
         auth.login_handler = function () {
             var WxLoginScript = LoadScript('http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js');
             WxLoginScript.then(function (success) {
-                var url = encodeURIComponent(API + "/visitor/openid?qr=1");
+                var url = encodeURIComponent(API + "visitor/openid?qr=1");
                 var login = new WxLogin({
                     id: "qr",
                     appid: "wx6ad4cd8923e9ea5e",
@@ -101,7 +101,7 @@ auth.factory('Auth', ['$rootScope', '$cookies', '$window', '$location', '$route'
                 auth_promise.then(function (result) {
                     if (!result.is_authenticated) {
                         if (IsSmartDevice()) {
-                            $window.location.replace(API + "/visitor/");
+                            $window.location.replace(API + "visitor/");
                         }
                         else {
                             self.login_handler();
