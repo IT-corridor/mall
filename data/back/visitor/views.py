@@ -121,7 +121,7 @@ def index(request):
 def openid(request):
     """ OAuth2 handler for weixin """
     # TODO: RESOLVE WITH CORS!!!
-    redirect = 'www.atyichu.com'
+    redirect = 'http://www.atyichu.com'
     qr = request.GET.get("qr", None)
     response = HttpResponseRedirect(redirect + '#!/')
 
