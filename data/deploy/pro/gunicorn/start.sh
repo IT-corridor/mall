@@ -1,7 +1,7 @@
 #!/bin/bash
 
 NAME=mall_api
-BASEDIR=/home/django/
+BASEDIR=/home/django
 DJANGODIR="${BASEDIR}/mall/back"
 ENVDIR="${BASEDIR}/venv"
 SOCKFILE="/tmp/${NAME}.sock"
