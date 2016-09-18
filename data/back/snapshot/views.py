@@ -820,15 +820,16 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         qs = Photo.p_objects.select_related('visitor__visitor',
                                             'visitor__vendor')
         qs = qs.filter(group=group)
+        context = {'request': request}
         serializer_class = serializers.PhotoListSerializer
         # qs = self.filter_queryset(qs)
         page = self.paginate_queryset(qs)
 
         if page is not None:
-            serializer = serializer_class(page, many=True)
+            serializer = serializer_class(page, many=True, context=context)
             return self.get_paginated_response(serializer.data)
 
-        serializer = serializer_class(qs, many=True)
+        serializer = serializer_class(qs, many=True, context=context)
         return Response(serializer.data)
 
     @detail_route(methods=['post'])

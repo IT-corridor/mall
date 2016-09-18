@@ -30,10 +30,12 @@ INSTALLED_APPS = [
     'visitor',
     'snapshot',
     'utils',
-    'django_rq'
+    'django_rq',
+    'corsheaders',
 ]
 
 ALLOWED_HOSTS = ['.atyichu.com']
+
 USE_X_FORWARDED_HOST = True
 ADMINS = ((data['ADMIN'], data['ADMIN_EMAIL']),
           ('Dan', 'dan8931484@gmail.com'))   # hide
@@ -120,3 +122,7 @@ IMAGGA_LANG = 'zh_chs'
 
 TAO_SMS_KEY = data['TAO_SMS_KEY']
 TAO_SMS_SECRET = data['TAO_SMS_SECRET']
+
+# CORS
+CORS_ORIGIN_WHITELIST = ('atyichu.com', 'www.atyichu.com', 'store.atyichu.com')
+CORS_ALLOW_CREDENTIALS = True

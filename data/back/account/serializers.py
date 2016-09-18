@@ -155,7 +155,8 @@ class StorePhotoSerializer(serializers.ModelSerializer):
 
     def get_overview(self, obj):
         qs = obj.vendor.user.photo_set.all()[:4]
-        serializer = PhotoCropSerializer(instance=qs, many=True)
+        serializer = PhotoCropSerializer(instance=qs, many=True,
+                                         context=self.context)
         return serializer.data
 
     class Meta:

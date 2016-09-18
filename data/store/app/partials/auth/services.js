@@ -35,7 +35,6 @@ function($rootScope, $cookies, $location, $translate, IsAuthenticated,
          MyVendor, Login, Logout){
     var auth = {};
     auth.get = function(key){
-        console.log($cookies.getObject(key));
         return $cookies.getObject(key) ? $cookies.getObject(key) : null;
     };
     auth.set = function(user){

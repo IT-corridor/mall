@@ -109,7 +109,9 @@ class StoreViewSet(OwnerCreateMixin,
     @detail_route(methods=['get'])
     def overview(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = serializers.StorePhotoSerializer(instance)
+        context = {'request': request}
+        serializer = serializers.StorePhotoSerializer(instance,
+                                                      context=context)
         return Response(serializer.data)
 
     def get_response_by_owner(self, queryset, serializer_class):
