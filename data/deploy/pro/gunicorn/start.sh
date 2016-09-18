@@ -15,6 +15,6 @@ source "${ENVDIR}/bin/activate"
 RUNDIR=$(dirname $SOCKFILE)
 test -d $RUNDIR || mkdir -p $RUNDIR
 exec $GUNICORN "${DJANGO_WSGI_MODULE}:application" \
-  --env DJANGO_SETTINGS_MODULE=settings.local \
+  --env DJANGO_SETTINGS_MODULE=settings.production \
   --workers $NUM_WORKERS \
   --bind "unix:${SOCKFILE}" \
