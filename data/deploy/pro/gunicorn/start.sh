@@ -2,8 +2,8 @@
 
 NAME=mall_api
 BASEDIR=/home/django
-DJANGODIR="${BASEDIR}/mall/back"
 ENVDIR="${BASEDIR}/venv"
+DJANGODIR="${BASEDIR}/mall/data/back"
 SOCKFILE="/tmp/${NAME}.sock"
 NUM_WORKERS=3
 DJANGO_WSGI_MODULE="back.wsgi"
