@@ -7,7 +7,7 @@ DJANGODIR="${BASEDIR}/mall/data/back"
 SOCKFILE="/tmp/${NAME}.sock"
 NUM_WORKERS=3
 DJANGO_WSGI_MODULE="back.wsgi"
-GUNICORN=GUNICORN=${ENVDIR}/bin/gunicorn
+GUNICORN=${ENVDIR}/bin/gunicorn
 
 cd $DJANGODIR
 source "${ENVDIR}/bin/activate"
