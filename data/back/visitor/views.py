@@ -115,7 +115,7 @@ def index(request):
                                       reverse('visitor:openid'))
     redirect_url += '?url={}'.format(url)
     #mail_admins('redirect is', redirect_url)
-    redirect_url = 'http://api.atyichu.com/visitor/openid'
+    redirect_url = 'http://www.atyichu.com/visitor/openid'
     #mail_admins('actual redirect is', redirect_url)
     url = weixin_oauth2.get_authorize_uri(redirect_url)
     return HttpResponseRedirect(url)
@@ -124,6 +124,7 @@ def index(request):
 def openid(request):
     """ OAuth2 handler for weixin """
     # TODO: RESOLVE WITH CORS!!!
+    mail_admins('openid', ' In action!')
     redirect = 'http://www.atyichu.com'
     qr = request.GET.get("qr", None)
     response = HttpResponseRedirect(redirect + '#!/')
