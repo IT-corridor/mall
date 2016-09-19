@@ -30,6 +30,12 @@
   src: local('Open Sans Regular'), local('OpenSansRegular'), url('../fonts/opensans/OpenSansRegular.woff') format('woff')
 }
 @font-face {
+  font-family: 'Open Sans Semibold';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Open Sans Semibold'), local('OpenSansSemibold'), url('../fonts/opensans/OpenSansSemiBold.woff') format('woff') 
+}
+@font-face {
   font-family: 'Open Sans Bold';
   font-style: normal;
   font-weight: normal;

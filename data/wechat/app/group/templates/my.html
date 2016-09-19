@@ -1,17 +1,19 @@
-<div class="header">
+<div class="header border-btm">
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-9 col-md-9">
 				<div class="header-left">
 					<i class="icon-ti ti-angle-left" aria-hidden="true" data-ng-click="back()" role="button" tabindex="0"></i>
-					<div class="header-title">
+					<div class="header-left-title">
 						<a data-ng-href="#" class="ng-binding" href="#">{{ 'GROUP.MY.HEADER' | translate }} ({{ r.count }})</a>
 					</div>
 				</div>
 			</div>
 			<div class="col-xs-3 col-md-3">
-				<div class="header-plus">
-					<a data-ng-href="#!/group/create"><i class="icon-ti ti-plus"></i></a>
+				<div class="header-right">
+					<div class="header-right-plus">
+						<a data-ng-href="#!/group/create"><i class="icon-ti ti-plus"></i></a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -23,15 +25,15 @@
 
 		<div class="col-md-12" data-ng-repeat="group in r.results">
 			<!-- header -->
-			<div class="row wardrobe-group-header">
+			<div class="row">
 				<div class="col-xs-8 col-sm-8 col-md-8">
-					<div class="wardrobe-group-title">
+					<div class="group-title">
 						<a data-ng-href="#!/group/{{ group.id }}/photo">{{ ( group.title ) ? group.title : 'Untitled' }}</a>
-						<br><span class="wardrobe-group-title-span">{{ 'GROUP.LIST.PHOTO_COUNT' | translate: group }}</span>
+						<br><span class="group-title-span">{{ 'GROUP.LIST.PHOTO_COUNT' | translate: group }}</span>
 					</div>
 				</div>
 				<div class="col-xs-4 col-sm-4 col-md-4">
-					<div class="wardrobe-group-dots" data-uib-dropdown style="position: relative;">
+					<div class="group-dots" data-uib-dropdown>
 						<a href id="group-dropdown{{ group.id }}" data-uib-dropdown-toggle>
 							<span class="icon-dot"></span>
 							<span class="icon-dot"></span>
@@ -48,52 +50,45 @@
 			</div>
 
 			<!-- main -->
-			<div class="container">
-				<div class="row">
 
-					<div class="wardrobe-group-row">
+			<div class="flex-row">
 
-						<div class="wardrobe-group-column col-1">
-							<div class="wardrobe-group-segment" data-ng-repeat="item in group.overview">
-								<div class="wardrobe-group-content">
-									<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
-								</div>
-							</div>
+				<div class="flex-column col-1">
+					<div class="flex-segment" data-ng-repeat="item in group.overview">
+						<div class="flex-content">
+							<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
 						</div>
-
-						<div class="wardrobe-group-column col-2">
-							<div class="wardrobe-group-segment" data-ng-repeat="item in group.overview">
-								<div class="wardrobe-group-content">
-									<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
-								</div>
-							</div>
-						</div>
-
-						<div class="wardrobe-group-column col-3">
-							<div class="wardrobe-group-segment" data-ng-repeat="item in group.overview">
-								<div class="wardrobe-group-content">
-									<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
-								</div>
-							</div>
-						</div>
-
 					</div>
-					<!-- wardrobe-group-row -->
-
 				</div>
-				<!-- row -->
+
+				<div class="flex-column col-2">
+					<div class="flex-segment" data-ng-repeat="item in group.overview">
+						<div class="flex-content">
+							<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
+						</div>
+					</div>
+				</div>
+
+				<div class="flex-column col-3">
+					<div class="flex-segment" data-ng-repeat="item in group.overview">
+						<div class="flex-content">
+							<img class="img-responsive" data-ng-src="{{ item.crop }}" alt="...">
+						</div>
+					</div>
+				</div>
+
 			</div>
-			<!-- container -->
+
 
 			<!-- footer -->
-			<div class="row wardrobe-group-footer">
-				<div class="col-xs-10 col-sm-11 col-lg-11 wardrobe-group-description">{{ group.description }}</div>
-				<div class="col-xs-2 col-sm-1 col-lg-1 wardrobe-group-description-edit">
+			<div class="row group-footer">
+				<div class="col-xs-10 col-sm-11 col-lg-11 group-description">{{ group.description }}</div>
+				<div class="col-xs-2 col-sm-1 col-lg-1 group-description-edit">
 					<a data-ng-href="#!/group/{{ group.id }}/manage"><i class="icon-pencil"></i></a>
 				</div>
 			</div>
 
-			<div class="row wardrobe-group-bottom">
+			<div class="row group-bottom">
 				<div class="com-md-12">
 					<p class="pull-left">{{ 'GROUP.LIST.MEMBER_COUNT' | translate: group }}</p>
 				</div>

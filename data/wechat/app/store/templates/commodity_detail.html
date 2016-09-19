@@ -6,16 +6,16 @@
                 <div class="col-xs-8 col-md-8">
                     <div class="header-left">
                         <i class="icon-ti ti-angle-left" aria-hidden="true" data-ng-click="back()" role="button" tabindex="0"></i>
-                        <div class="header-title">
+                        <div class="header-left-title">
                             <h2 class="header-title-h2">{{ 'COMMODITY.DETAIL.HEADER' | translate }}</h2>
                         </div>
                     </div>
                 </div>
                 <div class="col-xs-4 col-md-4">
-                    <div class="header-icons">
-                        <span><a data-ng-href="#!/photo/{{ photo.id }}/share/"><i class="fa fa-floppy-o"></i></a></span>
-                        <span><i class="icon-share"></i></span>
-                        <span data-ng-click="read_article(photo.article.pk)" data-ng-if="photo.article" class="btn btn-default btn-sm" style="margin-left:10px; margin-top:-3px;"><b>Read it</b></span>
+                    <div class="header-right">
+                            <span><a data-ng-href="#!/photo/{{ photo.id }}/share/"><i class="fa fa-floppy-o"></i></a></span>
+                            <span><i class="icon-share"></i></span>
+                            <span data-ng-click="read_article(photo.article.pk)" data-ng-if="photo.article" class="btn btn-default btn-sm" style="margin-left:10px; margin-top:-3px;"><b>Read it</b></span>
                     </div>
                 </div>
             </div>
