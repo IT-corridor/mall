@@ -133,3 +133,4 @@ CORS_ORIGIN_WHITELIST = ('atyichu.com',
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_COOKIE_DOMAIN = ".atyichu.com"
+SESSION_COOKIE_DOMAIN = ".atyichu.com"
