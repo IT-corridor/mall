@@ -150,6 +150,7 @@ class PhotoListSerializer(serializers.ModelSerializer):
                                                 read_only=True,
                                                 context=self.context)
             return serializer.data
+
         elif hasattr(obj.visitor, 'vendor'):
             serializer = StoreShortSerializer(instance=obj.visitor.vendor.store,
                                               read_only=True,

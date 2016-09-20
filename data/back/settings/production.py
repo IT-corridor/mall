@@ -131,3 +131,5 @@ CORS_ORIGIN_WHITELIST = ('atyichu.com',
                          'open.weixin.qq.com',
                          )
 CORS_ALLOW_CREDENTIALS = True
+
+CSRF_COOKIE_DOMAIN = ".atyichu.com"
