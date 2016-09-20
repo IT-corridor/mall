@@ -73,11 +73,13 @@ class CommentSerializer(serializers.ModelSerializer):
     def get_author_data(self, obj):
         if hasattr(obj.author, 'visitor'):
             serializer = VisitorSerializer(instance=obj.author.visitor,
-                                           read_only=True)
+                                           read_only=True,
+                                           context=self.context)
             return serializer.data
         elif hasattr(obj.author, 'vendor'):
             serializer = StoreShortSerializer(instance=obj.author.vendor.store,
-                                              read_only=True)
+                                              read_only=True,
+                                              context=self.context)
             return serializer.data
         else:
             return
