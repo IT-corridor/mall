@@ -142,5 +142,5 @@ CORS_ALLOW_HEADERS = (
     'accept',
     'origin',
     'authorization',
-    'X-CSRFToken'
+    'x-csrftoken'
 )
