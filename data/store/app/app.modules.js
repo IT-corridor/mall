@@ -2,6 +2,7 @@ var app = angular.module('app.main', [
     'ngAnimate',
     'ngSanitize',
     'ngAria',
+    'ngCookies',
     'ngTouch',
     'ui.bootstrap',
     'asyncload.services',
@@ -16,10 +17,11 @@ var app = angular.module('app.main', [
     'grid',
     'common.directives',
 ]);
-app.factory('httpRequestInterceptor', function () {
+app.factory('httpRequestInterceptor', function($cookies) {
     return {
-        request: function (config) {
+        request: function(config) {
             config.headers['X-Requested-With'] = 'XMLHttpRequest';
+            config.headers['X-CSRFToken'] = $cookies.get('csrftoken');
             config.withCredentials = true;
             return config;
         }
@@ -44,8 +46,6 @@ app.run(function($rootScope) {
 });
 app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('httpRequestInterceptor');
-    $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-    $httpProvider.defaults.xsrfCookieName = 'csrftoken';
     $httpProvider.useApplyAsync(true);
 });
 app.config(function($resourceProvider) {
