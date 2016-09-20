@@ -133,3 +133,14 @@ UMENG_APP_MASTER_SECRET = 'ydcfc8leufv2efcm4slwmhb2pfffaiop'
 PUSHER_APP_ID = '236840'
 PUSHER_KEY = "4c8e6d909a1f7ccc44ed"
 PUSHER_SECRET = "119328e419074c206e29"
+
+#CORS
+
+CORS_ALLOW_HEADERS = (
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'X-CSRFToken'
+)
