@@ -95,6 +95,7 @@ left: 4% !important;
 .pin #photo-origin-owner-section .thumb-xs.avatar,
 .pin .photo-owner .thumb-xs.avatar {
 	width: 28px;
+	height: 28px;
 	margin-right:8px;
 }
 .pin .user-follow-status {

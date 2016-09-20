@@ -109,6 +109,12 @@ hr {
 	.main-right .glyphicon-heart{
 		vertical-align: middle;
 	}
+		.photo-like-gray{
+			color: #8f8f8f;
+		}
+		.photo-like-red{
+			color: #fd8970;
+		}
 	.main-right .icon-share{
 		vertical-align: middle;
 	}
@@ -126,7 +132,7 @@ hr {
 	.map{
 		background-color: #ececec;
 	}
-	.photo .flex-content img{
+	.photos .flex-content img{
 		width: 100%;
 		height: auto;
 	}

@@ -81,6 +81,14 @@
 		    font-size: 20px;
 		    padding-left: 6px;
 		}
+	.main .photo {
+	    height: auto;
+	    overflow: hidden;
+	}
+	.main .photo img{
+		height: auto;
+		width: 100%;
+	}
 	.main-photo-title {
 	    font-size: 20px;
 	}
@@ -95,7 +103,7 @@
 	.map{
 		height: 112px;
 	}
-	.flex-row.photo, .flex-column.photo{
+	.flex-row.photos, .flex-column.photos{
 		height: 112px;
 	}
 	.comments-heading{
@@ -333,6 +341,10 @@
 			font-size: 26px;
 			padding-left: 17px;
 		}
+	.main .photo img{
+		height: 100%;
+		width: auto;
+	}
 	.main-photo-title {
 	    font-size: 32px;
 	}
@@ -345,7 +357,11 @@
 	.map {
 	    height: 212px;
 	}
-	.flex-row.photo, .flex-column.photo {
+	.photos .flex-content img{
+		width: 100%;
+		height: auto;
+	}
+	.flex-row.photos, .flex-column.photos {
 	    height: 212px;
 	}
 	.comments-comment {
