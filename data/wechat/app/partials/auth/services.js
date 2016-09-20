@@ -89,7 +89,6 @@ auth.factory('Auth', ['$rootScope', '$cookies', '$window', '$location', '$route'
         };
         auth.get_user = function () {
             /*The main authentication logic */
-            console.log('get user trigger');
             var self = this;
             if (this.user && !$rootScope.visitor) {
 
@@ -108,7 +107,6 @@ auth.factory('Auth', ['$rootScope', '$cookies', '$window', '$location', '$route'
                         }
                     }
                     else {
-                        console.log('getting personal data');
                         Me.get(
                             function (success) {
                                 self.set(success);
