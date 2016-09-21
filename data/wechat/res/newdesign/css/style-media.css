@@ -82,7 +82,7 @@
 		    padding-left: 6px;
 		}
 	.main .photo {
-	    height: auto;
+	    height: 400px;
 	    overflow: hidden;
 	}
 	.main .photo img{
