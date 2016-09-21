@@ -126,7 +126,7 @@ TAO_SMS_SECRET = data['TAO_SMS_SECRET']
 # CORS
 CORS_ORIGIN_WHITELIST = ('atyichu.com',
                          'www.atyichu.com',
-                         'store.atyichu.com'
+                         'store.atyichu.com',
                          'weixin.qq.com',
                          'open.weixin.qq.com',
                          )
