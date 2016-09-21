@@ -499,7 +499,7 @@ class ProfileViewSet(viewsets.GenericViewSet):
          we assume that this is a new phone and we should not have
          related record with it.
         """
-        is_exists = request.data.pop('is_exists', False)
+        is_exists = request.data.get('is_exists', False)
         serializer = PhoneSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         phone = serializer.data['phone']
