@@ -101,8 +101,8 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 # Static files will be serving by the proxy server
 # and it have to be outside of the project root
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(RESOURCE_DIR, 'static')
+MEDIA_ROOT = os.path.join(RESOURCE_DIR, 'media')
 
 EMAIL_BACKEND = 'django_mailgun_mime.backends.MailgunMIMEBackend'
 MAILGUN_API_KEY = data['MAILGUN_API_KEY']
