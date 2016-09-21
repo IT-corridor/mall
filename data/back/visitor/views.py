@@ -370,7 +370,7 @@ class ProfileViewSet(viewsets.GenericViewSet):
         SIGN UP: Step 3
         Important: this handler will take phone value only from cache.
         """
-        data = request.data
+        data = request.data.copy()
         sessionid = request.session.session_key
         phones_vault = PhonesVault()
         data['phone'] = phones_vault.get_verify_by_sessionid(sessionid)
