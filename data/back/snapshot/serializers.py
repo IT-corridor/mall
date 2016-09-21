@@ -16,7 +16,8 @@ def get_owner(obj, context):
     # Looks like serializers do not support multiple inheritance
     if hasattr(obj.visitor, 'visitor'):
         serializer = VisitorShortSerializer(instance=obj.visitor.visitor,
-                                            read_only=True)
+                                            read_only=True,
+                                            context=context)
         return serializer.data
     elif hasattr(obj.visitor, 'vendor'):
         serializer = StoreShortSerializer(
