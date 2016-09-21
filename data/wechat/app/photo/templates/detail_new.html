@@ -33,9 +33,11 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="photo">
-					<img data-ng-if="!photo.original && photo.photo" class="img-responsive img-center" data-ng-src="{{ photo.photo }}" alt="{{ photo.title }}">
-					<img data-ng-if="photo.origin.photo" class="img-responsive img-center" data-ng-src="{{ photo.origin.photo }}" alt="{{ photo.origin.title }}">
+				<div class="row">
+					<div class="photo">
+						<img data-ng-if="!photo.original && photo.photo" class="img-responsive img-center" data-ng-src="{{ photo.photo }}" alt="{{ photo.title }}">
+						<img data-ng-if="photo.origin.photo" class="img-responsive img-center" data-ng-src="{{ photo.origin.photo }}" alt="{{ photo.origin.title }}">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -102,8 +104,8 @@
 					<p class="main-photo-description">{{ photo.origin.description }}</p>
 				</div>
 			</div>
+			<hr>
 		</div>
-		<hr>
 		<div class="row"> <!-- what is this the block? -->
 			<h4 class="text-center" data-ng-if="photo.link_set.length > 0">{{ 'PHOTO.EDIT.LINKS' | translate }}</h4>
 			<div class="col-md-4" data-ng-repeat="link in photo.link_set">
@@ -177,21 +179,13 @@
 						</div>
 					</div>
 
-				</div><!-- wardrobe-group-row -->
-
-
-				<div class="col-md-3 col-xs-3" style="height: 100px;" data-ng-repeat="item in store.empty_array">
-					<div class="hbox">
-						<div class="col v-middle">
-							<div class="purple-50" style="max-width: 100px; height: 100%; position: relative; margin: 0 auto;"></div>
-						</div>
-					</div>
 				</div>
 
 			</div>
 		</div>
-		<hr class="m-t-md m-b-sm">
-
+		<div class="row">
+			<hr class="m-t-md m-b-sm">
+		</div>
 		<div class="row">
 			<div class="comments col-md-12 col-xs-12">
 				<h4 class="comments-heading">Comments ({{ photo.comments.length }})</h4>
@@ -215,7 +209,9 @@
 
 		<div class="row">
 			<div class="col-md-12">
-				<hr>
+				<div class="row">
+					<hr class="m-t-md m-b-sm">
+				</div>
 				<h3 class="text-center related-photos">{{ 'PHOTO.DETAIL.SIMILAR' | translate }}</h3>
 				<div data-ng-if="r" data-ng-include="PATH +'photo/templates/include/masonry_list.html'"></div>
 			</div>
