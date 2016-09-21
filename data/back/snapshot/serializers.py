@@ -9,7 +9,7 @@ from account.serializers import StoreShortSerializer
 from catalog.serializers import CommodityLinkSerializer
 
 
-def get_owner(obj):
+def get_owner(obj, context):
     """ Serializing data, depending of the user instance type.
     Only for photo serializers. """
     # TODO: add context instance
@@ -21,7 +21,9 @@ def get_owner(obj):
     elif hasattr(obj.visitor, 'vendor'):
         serializer = StoreShortSerializer(
             instance=obj.visitor.vendor.store,
-            read_only=True)
+            read_only=True,
+            context=context
+        )
         data = serializer.data
         data['is_store'] = True
         return data
@@ -106,7 +108,7 @@ class PhotoOriginalSerializer(serializers.ModelSerializer):
     owner = serializers.SerializerMethodField(read_only=True)
 
     def get_owner(self, obj):
-        return get_owner(obj)
+        return get_owner(obj, self.context)
 
     def get_descr(self, obj):
         if obj.description:
