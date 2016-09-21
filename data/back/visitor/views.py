@@ -191,6 +191,7 @@ def openid(request):
 
 
 @api_view(['POST'])
+@permission_classes((AllowAny,))
 def openid_api(request):
     """ To continue authentication via Wecha / weixin you need pass a code
     code -- A code from wexin (to obtain access_token).
@@ -373,11 +374,11 @@ class ProfileViewSet(viewsets.GenericViewSet):
         sessionid = request.session.session_key
         phones_vault = PhonesVault()
         data['phone'] = phones_vault.get_verify_by_sessionid(sessionid)
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         visitor = serializer.save()
         user = authenticate(phone=visitor.phone,
-                            password=request.data['password'])
+                            password=data['password'])
         login(request, user)
         url = reverse('visitor:me')
         return HttpResponseRedirect(url)
