@@ -135,7 +135,7 @@ class PhotoListSerializer(serializers.ModelSerializer):
     """ Works only with PhotoManager or ActivePhotoManager """
     owner = serializers.SerializerMethodField(read_only=True)
     descr = serializers.SerializerMethodField(read_only=True)
-    origin = PhotoOriginalSerializer(source='original', read_only=True)
+    origin = serializers.SerializerMethodField(read_only=True)
     comment_count = serializers.IntegerField(read_only=True)
     clone_count = serializers.SerializerMethodField(read_only=True)
     like_count = serializers.IntegerField(read_only=True)
@@ -145,6 +145,12 @@ class PhotoListSerializer(serializers.ModelSerializer):
     def get_descr(self, obj):
         if obj.description:
             return truncatechars_html(obj.description, 150)
+
+    def get_origin(self, obj):
+        serializer = PhotoOriginalSerializer(instance=obj.original,
+                                             read_only=True,
+                                             context=self.context)
+        return serializer.data
 
     def get_owner(self, obj):
         if hasattr(obj.visitor, 'visitor'):
