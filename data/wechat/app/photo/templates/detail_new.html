@@ -104,9 +104,13 @@
 					<p class="main-photo-description">{{ photo.origin.description }}</p>
 				</div>
 			</div>
-			<hr>
 		</div>
-		<div class="row"> <!-- what is this the block? -->
+
+		<div class="row">
+			<hr data-ng-if="photo.title || photo.article.title || photo.origin.title || photo.description || photo.article.descr || photo.origin.description">
+		</div>
+
+		<div class="row">
 			<h4 class="text-center" data-ng-if="photo.link_set.length > 0">{{ 'PHOTO.EDIT.LINKS' | translate }}</h4>
 			<div class="col-md-4" data-ng-repeat="link in photo.link_set">
 				<div class="media">
@@ -131,8 +135,8 @@
 
 		<div data-ng-if="photo.is_store === false && !photo.address" class="row">
 			<div class="col-xs-6">
-				<button class="btn btn-default" ng-click="open_modal('address')">
-					<img src="//res/theme/images/map_pin.jpg" class="img-circle thumb-xs">
+				<button class="btn btn-default btn-add-location" ng-click="open_modal('address')" style="">
+					<img src="/res/theme/images/map_pin.jpg" class="img-circle thumb-xs">
 					<span style="margin-left: 10px;">Add Map Location </span>
 				</button>
 			</div>
@@ -143,7 +147,6 @@
 				<div class="map" data-map-address data-address="photo.address"></div>
 			</div>
 		</div>
-
 
 		<div data-ng-if="photo.is_store === true && store.$resolved === true" class="row">
 			<div class="col-xs-6 col-md-6">
