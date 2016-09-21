@@ -20,7 +20,7 @@ angular.module('app.route', [
             controller: 'CtrlFlotChart',
         }).
         when('/chat/', {
-            templateUrl: PATH + '../chat/index.html',
+            templateUrl: PATH + '../res/chat/index.html',
             controller: 'CtrlChat',
         }).
         when('/stores/create/', {

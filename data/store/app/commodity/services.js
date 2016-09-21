@@ -37,7 +37,7 @@ angular.module('commodity.services', ['ngResource'])
     });
 }])
 .factory('Size', ['$resource', 'catalog_path', 'API',
-    function($resource, catalog_path){
+    function($resource, catalog_path, API){
         return $resource(API + catalog_path + 'sizes/:pk/:action/', {}, {
             query: {method:'GET', params:{pk: null, action: null}, responseType:'json', isArray: true},
             update: {method: 'PATCH'},

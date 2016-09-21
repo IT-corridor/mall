@@ -1,11 +1,11 @@
 angular.module('dashboard.controllers', ['dashboard.services', 'ui.load', 'ui.jq'])
     .constant('JQ_CONFIG', {
-        plot: ['../static/lib/jquery/flot/jquery.flot.js',
-            '../static/lib/jquery/flot/jquery.flot.pie.js',
-            '../static/lib/jquery/flot/jquery.flot.resize.js',
-            '../static/lib/jquery/flot.tooltip/js/jquery.flot.tooltip.min.js',
-            '../static/lib/jquery/flot.orderbars/js/jquery.flot.orderBars.js',
-            '../static/lib/jquery/flot-spline/js/jquery.flot.spline.min.js'],
+        plot: ['../res/lib/jquery/flot/jquery.flot.js',
+            '../res/lib/jquery/flot/jquery.flot.pie.js',
+            '../res/lib/jquery/flot/jquery.flot.resize.js',
+            '../res/lib/jquery/flot.tooltip/js/jquery.flot.tooltip.min.js',
+            '../res/lib/jquery/flot.orderbars/js/jquery.flot.orderBars.js',
+            '../res/lib/jquery/flot-spline/js/jquery.flot.spline.min.js'],
     })
     .controller('CtrlFlotChart', ['$scope', '$rootScope', 'Dashboard',
         function ($scope, $rootScope, Dashboard) {
