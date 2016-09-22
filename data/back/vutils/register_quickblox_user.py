@@ -6,7 +6,7 @@ import json
 import requests
 
 from hashlib import sha1
-from snapshot.views import get_nickname
+from vutils.utils import get_nickname
 
 
 def get_qb_token():
@@ -40,13 +40,17 @@ def is_ascii(s):
 
 
 def user_signup_qb(user):
+    full_name = get_nickname(user)
+    login = user.username.replace(' ', '')
+
+    if not full_name:
+        print login, '$$$ Not vendor or visitor'
+        return
+
     token = get_qb_token()
     url = 'http://api.quickblox.com/users.json'
     header = {"QB-Token": token,
               "Content-Type": "application/json"}
-
-    full_name = get_nickname(user)
-    login = user.username.replace(' ', '')
 
     if not is_ascii(full_name) and len(full_name) < 3:
         full_name += '_' * (3-len(full_name))
@@ -61,7 +65,4 @@ def user_signup_qb(user):
             'full_name': full_name}}
 
         res = requests.post(url=url, headers=header, data=json.dumps(params))
-        # res_json = res.json()
         print login, '@@', full_name, '===', res.json()
-
-

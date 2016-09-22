@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from .utils import create_thumb, create_crop, cleanup_files, cleanup_if_none, \
     max_ratio, create_cover
+from vutils.register_quickblox_user import user_signup_qb
 
 
 def create_thumb_avatar(sender, **kwargs):
@@ -82,3 +83,9 @@ def cleanup_if_avatar_is_none(sender, **kwargs):
     instance = kwargs.get('instance', None)
     if instance:
         cleanup_if_none(instance, 'avatar')
+
+
+def register_quickblox(sender, **kwargs):
+    instance = kwargs.get('instance', None)
+    if instance:
+        user_signup_qb(instance)

@@ -8,5 +8,5 @@ def trigger_notification(channel, event, msg, type_, id_, time_):
                       secret=settings.PUSHER_SECRET)
     # channel, event, content
     time_ = time_.strftime('%Y-%m-%d %H:%M:%S')
-    p.trigger(channel, event, {'message': msg, 'type': type_, 'id': id_, 'time': time_})
-    # print channel, event, msg, type_, id_, time_
+    p.trigger(channel, event, {'message': msg, 'type': type_,
+                               'id': id_, 'time': time_})

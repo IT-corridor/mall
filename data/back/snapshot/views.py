@@ -38,7 +38,9 @@ from account.serializers import VendorStoreSerializer, StoreShortSerializer
 from catalog.models import Commodity, Event
 from vutils.wzhifuSDK import JsApi_pub
 from vutils.utils import get_last_day_of_month
+from vutils.utils import get_nickname
 
+# TODO: remove logger. it consumes resources
 log = logging.getLogger(__name__)
 
 
@@ -1339,10 +1341,3 @@ def get_signature(request):
 
     js_info = jsapi.get_signature(url=url, ticket=ticket)
     return Response(data=js_info)
-
-
-def get_nickname(user):
-    if hasattr(user, 'vendor'):
-        return user.vendor.store.brand_name or user.username
-    elif hasattr(user, 'visitor'):
-        return user.visitor.username or user.username

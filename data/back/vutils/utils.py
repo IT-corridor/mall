@@ -34,3 +34,10 @@ def get_last_day_of_month(year, month):
         return today.day
     else:
         return calendar.monthrange(year, month)[1]
+
+
+def get_nickname(user):
+    if hasattr(user, 'vendor'):
+        return user.vendor.store.name
+    elif hasattr(user, 'visitor'):
+        return user.visitor.username or user.username

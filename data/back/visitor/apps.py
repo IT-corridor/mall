@@ -16,5 +16,5 @@ class VisitorConfig(AppConfig):
 
         Visitor = self.get_model('Visitor')
         pre_delete.connect(receivers.cleanup_files_avatar, sender=Visitor)
-
         post_save.connect(receivers.create_thumb_avatar_320, sender=Visitor)
+        post_save.connect(receivers.register_quickblox, sender=Visitor)

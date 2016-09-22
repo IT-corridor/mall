@@ -8,7 +8,6 @@ from django.utils import timezone
 from visitor.models import Visitor
 from utils.utils import UploadPath
 from utils.validators import SizeValidator
-from vutils.notification import trigger_notification
 
 
 class MirrorQuerySet(models.query.QuerySet):
@@ -436,13 +435,6 @@ class Notification(models.Model):
 
     def __unicode__(self):
         return '{}: {}'.format(self.owner, self.message)
-
-    def save(self, *args, **kwargs):
-        super(Notification, self).save(*args, **kwargs)
-        if self.status == 'new':
-            trigger_notification('nf_channel_{}'.format(self.owner.id),
-                                 'new_notification', self.message, self.type,
-                                 self.id, self.create_date)
 
     class Meta:
         ordering = ('pk',)

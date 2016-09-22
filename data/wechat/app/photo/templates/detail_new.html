@@ -133,9 +133,9 @@
 			</div>
 		</div>
 
-		<div data-ng-if="photo.is_store === false && !photo.address" class="row">
+		<div data-ng-if="photo.is_store === false && !photo.address && is_owner" class="row">
 			<div class="col-xs-6">
-				<button class="btn btn-default btn-add-location" ng-click="open_modal('address')" style="">
+				<button class="btn btn-default btn-add-location" data-ng-click="open_modal('address')" style="">
 					<img src="/res/theme/images/map_pin.jpg" class="img-circle thumb-xs">
 					<span style="margin-left: 10px;">Add Map Location </span>
 				</button>

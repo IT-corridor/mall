@@ -113,7 +113,7 @@ class Store(models.Model):
                            blank=True, null=True)
     apt = models.CharField(_('Apartments'), max_length=5,
                            blank=True, null=True)
-    brand_name = models.CharField(_('Brand name'), max_length=50, unique=True)
+    brand_name = models.CharField(_('Brand name'), max_length=50)
     vendor = models.OneToOneField(Vendor, on_delete=models.CASCADE,
                                   verbose_name=_('Owner'), primary_key=True)
     crop = models.ImageField(_('Crop'), upload_to='stores/crops',
@@ -122,7 +122,7 @@ class Store(models.Model):
                               blank=True, null=True)
     post = models.ImageField(_('Post'), upload_to='stores/post',
                              blank=True, null=True)
-    name = models.CharField(_('Store name'), max_length=150)
+    name = models.CharField(_('Store name'), max_length=50, unique=True)
 
     def get_location(self):
         """ It is not a field --- it is a method. It returns an address string,
