@@ -17,6 +17,13 @@ class WeixinBackend(ModelBackend):
             user = None
         return user
 
+    def get_user(self, user_id):
+        User = get_user_model()
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+
 
 class PhoneBackend(ModelBackend):
     """ Authenticate user (visitor) with phone number """
@@ -32,3 +39,10 @@ class PhoneBackend(ModelBackend):
             # Run the default password hasher once to reduce the timing
             # difference between an existing and a non-existing user (#20760).
             UserModel().set_password(password)
+
+    def get_user(self, user_id):
+        User = get_user_model()
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None

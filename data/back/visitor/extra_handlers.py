@@ -19,7 +19,6 @@ class PendingUserVault(object):
         code = random.randint(1000, 9999)
         mail_admins('Verification code', 'Code: {}'.format(code))
         self.cache.set(sessionid, (code, user), 180)
-        print(code)
         return code
 
     def get_by_sessionid(self, sessionid, code):
@@ -47,7 +46,6 @@ class PhonesVault(object):
         code = random.randint(1000, 9999)
         mail_admins('Verification code', 'Code: {}'.format(code))
         self.pending_cache.set(sessionid, (code, phone), 180)
-        print(code)
         return code
 
     def get_pending_by_sessionid(self, sessionid, code):
@@ -56,7 +54,7 @@ class PhonesVault(object):
         check_code, phone = self.pending_cache.get(sessionid)
         if int(code) == check_code:
             self.pending_cache.delete(sessionid)
-            self.verify_cache.set(sessionid, phone)
+            self.verify_cache.set(sessionid, phone, 180)
             return phone
         return None
 

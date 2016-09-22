@@ -44,7 +44,7 @@ def login_view(request):
                                          backend=backend)
         serializer = VisitorSerializer(instance=extra.weixin.visitor)
         user_data = serializer.data
-        user = authenticate(weixin=extra.openid)
+        user = authenticate(weixin=extra.openid, backend=backend)
         login(request, user)
     except KeyError as e:
         user_data = {'weixin': _('Missed param')}
@@ -73,26 +73,6 @@ def is_authenticated(request):
 def logout_view(request):
     logout(request)
     return Response(status=200)
-
-
-@api_view(['GET', 'POST'])
-@permission_classes((AllowAny,))
-def verify_captcha(request, captcha_key, captcha_value):
-    """ PIN VERIFICATION. NO USE FOR NOW """
-    # THAT LOGIC LOOKS STUPID. But I leave it for now.
-    data = {}
-    status = 400
-    if not captcha_value:
-        data = {'captcha': _('Verification code required')}
-    else:
-        server_captcha = request.session.get(captcha_key)
-        if server_captcha != captcha_value:
-            data = {'captcha_error': _('Code is incorrect or has expired')}
-        else:
-            del request.session[captcha_key]
-            status = 200
-
-    return Response(data, status=status)
 
 
 @api_view(['GET', 'POST'])
@@ -369,6 +349,23 @@ class ProfileViewSet(viewsets.GenericViewSet):
         """ Create user. Redirect to get_me.
         SIGN UP: Step 3
         Important: this handler will take phone value only from cache.
+        To get a success you need a run send_code and verify_code previously!
+        In other case you will get an error response.
+        ---
+        omit_serializer: true
+        parameters:
+            - name: username
+              type: string
+              required: true
+            - name: password
+              type: hidden
+              required: true
+            - name: confirm_password
+              type: hidden
+              required: true
+            - name: avatar
+              type: file
+
         """
         data = request.data.copy()
         sessionid = request.session.session_key
@@ -492,12 +489,16 @@ class ProfileViewSet(viewsets.GenericViewSet):
     def send_code(self, request):
         """ Sending code to the phone. Required for the SIGN UP.
         SIGN UP: Step 1
-         Optional request.data parameter -- is_exists.
          If this parameter sent with request,
          with value that can be interpreted as true.
          We assume that it phone should be existed, in any other case,
          we assume that this is a new phone and we should not have
          related record with it.
+        ---
+        parameters:
+            - name: is_exists
+              type: string
+              paramType: form
         """
         is_exists = request.data.get('is_exists', False)
         serializer = PhoneSerializer(data=request.data)
@@ -546,8 +547,8 @@ class ProfileViewSet(viewsets.GenericViewSet):
          VisitorProfileSerializer.
 
          Requires sms verification ( send_code and
-        verify_code must be performed before).
-         """
+         verify_code must be performed before).
+        """
 
         user = request.user
         visitor = user.visitor

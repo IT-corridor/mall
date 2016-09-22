@@ -84,6 +84,7 @@ STOCKS = [
 
 ]
 
+
 class CatalogTests(APITestCase):
 
     @classmethod
@@ -297,7 +298,6 @@ class CatalogTests(APITestCase):
             'size': 3,
             'season': 0,
             'stock_set': '[{\"size\": 3, \"color\": 1, \"amount\": 1}]'
-
         }
 
         fpath1 = os.path.join(settings.MEDIA_ROOT, 'image.jpeg')
@@ -316,7 +316,7 @@ class CatalogTests(APITestCase):
         url = reverse('catalog:commodity-my')
         response = self.client.get(url, data={'q': 'Awes', 'photo': 2})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), expected_items)
+        self.assertEqual(len(response.data['results']), expected_items)
         self.client.logout()
 
     def test_my_search_has_commodity(self):

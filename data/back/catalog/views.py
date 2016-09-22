@@ -20,6 +20,7 @@ from catalog.models import Event
 from vutils.calc_direct_distance import haversine
 from account.models import Store
 
+
 class ReferenceMixin(OwnerCreateMixin, OwnerUpdateMixin):
     """ Only vendor can see his commodities and references """
     permission_classes = (permissions.IsOwnerOrReadOnly,)

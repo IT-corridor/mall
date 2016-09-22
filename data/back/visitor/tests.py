@@ -47,11 +47,11 @@ class VisitorProfileTests(APITestCase):
     """ tEST FOR Visitor profiles """
     @classmethod
     def setUpTestData(cls):
-        cls.data_create = {'username': 'Jack', 'phone': '+380953396512',
+        cls.data_create = {'username': 'Jack', 'phone': '11111111111',
                            'password': 'Greeeat12ss',
                            'confirm_password': 'Greeeat12ss'}
         cls.user_data = {'username': 'Nik', 'password': 'GrreaAe3456aa'}
-        cls.visitor_data = {'phone': '+380971155608'}
+        cls.visitor_data = {'phone': '12222222222'}
         cls.user = get_user_model()(username=cls.user_data['username'])
         cls.user.set_password(cls.user_data['password'])
         cls.user.save()
@@ -61,10 +61,10 @@ class VisitorProfileTests(APITestCase):
                                **cls.visitor_data)
 
     def test_registration(self):
-        # Expected redirect = 302
+        # Expected redirect = 400 bec ause we did not pass sms verification
         url = reverse('visitor:profile-list')
         response = self.client.post(url, self.data_create)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 400)
         self.client.logout()
 
     def test_login(self):

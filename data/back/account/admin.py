@@ -34,7 +34,6 @@ class ChineseUserCreationForm(UserCreationForm):
         if User.objects.filter(username=username).exists():
             raise forms.ValidationError(_('A user with that username already exists.'))
         self.instance.username = username
-        print (self.instance)
         return username
 
     class Meta:

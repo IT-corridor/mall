@@ -212,7 +212,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         for k, v in validated_data.items():
             setattr(instance, k, v)
         instance.save()
-        print (vendor_args)
         if vendor_args:
             vendor_args.pop('user')
             models.Vendor.objects.update_or_create(user=instance, defaults=vendor_args)

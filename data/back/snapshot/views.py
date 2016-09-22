@@ -435,13 +435,8 @@ class PhotoViewSet(PaginationMixin, viewsets.ModelViewSet):
             return Response(data={'error': _('Photo does not exist')})
 
         context = {'request': request}
-        serializer = serializers.PhotoSerializer(instance=photo,
-                                                 data=request.data,
-                                                 partial=True,
-                                                 context=context)
+        serializer = serializers.PhotoSerializer(instance=photo)
 
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
         return Response(data=serializer.data)
 
     def destroy(self, request, *args, **kwargs):

@@ -12,7 +12,7 @@ from django.conf import settings
 from django.db import connection
 from rest_framework.test import APITestCase, APIClient
 from .models import Mirror, Group, Member, Tag, Photo, Like, Link
-from visitor.models import Visitor
+from visitor.models import Visitor, VisitorExtra, Weixin
 from account.models import Vendor, Store, District, City, State
 from catalog import models as c_models
 from catalog import tests as c_tests
@@ -20,19 +20,19 @@ from catalog import tests as c_tests
 # TODO: CREATE TEST CASES!
 DB_VENDOR = connection.vendor
 
-visitor_data_1 = {"weixin": "oRFOiwzjygVD6hwtyMFUZCZ299bo",
+visitor_data_1 = {"openid": "oRFOiwzjygVD6hwtyMFUZCZ299bo",
                   "access_token": "ACCESS_TOKEN",
                   "refresh_token": "REFRESH_TOKEN",
                   "expires_in": 7200,
                   "token_date": "2016-06-15T07:08:04.960Z"}
 
-visitor_data_2 = {"weixin": "oRFOiwzjygVD6hwtyMFUZCZ299b1",
+visitor_data_2 = {"openid": "oRFOiwzjygVD6hwtyMFUZCZ299b1",
                   "access_token": "ACCESS_TOKEN",
                   "refresh_token": "REFRESH_TOKEN",
                   "expires_in": 7200,
                   "token_date": "2016-06-15T07:08:04.960Z"}
 
-visitor_data_3 = {"weixin": "oRFOiwzjygVD6hwtyMFUZCZ299b2",
+visitor_data_3 = {"openid": "oRFOiwzjygVD6hwtyMFUZCZ299b2",
                   "access_token": "ACCESS_TOKEN",
                   "refresh_token": "REFRESH_TOKEN",
                   "expires_in": 7200,
@@ -48,8 +48,14 @@ class MirrorTests(APITestCase):
         user_1 = User.objects.create(username='Nikolay')
         user_2 = User.objects.create(username='Jack')
 
-        Visitor.objects.create(user=user_1)
-        Visitor.objects.create(user=user_2)
+        visitor_1 = Visitor.objects.create(user=user_1)
+        visitor_2 = Visitor.objects.create(user=user_2)
+
+        w1 = Weixin.objects.create(visitor=visitor_1)
+        w2 = Weixin.objects.create(visitor=visitor_2)
+
+        VisitorExtra.objects.create(weixin=w1, **visitor_data_1)
+        VisitorExtra.objects.create(weixin=w2, **visitor_data_2)
 
         cls.vendor_data_1 = {'weixin': 'oRFOiwzjygVD6hwtyMFUZCZ299bo'}
         cls.vendor_data_2 = {'weixin': 'oRFOiwzjygVD6hwtyMFUZCZ299b1'}

@@ -185,6 +185,20 @@ def logout_view(request):
 @api_view(['POST'])
 @permission_classes(())
 def login_view(request):
+    """
+    ---
+    # YAML (must be separated by `---`)
+
+    parameters:
+        - name: username
+          type: string
+          paramType: form
+          required: true
+        - name: password
+          type: hidden
+          paramType: form
+          required: true
+    """
     data = {}
     status = 401
     try:

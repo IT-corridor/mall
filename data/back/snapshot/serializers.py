@@ -96,8 +96,12 @@ class PhotoSerializer(serializers.ModelSerializer):
     cover = serializers.SerializerMethodField(read_only=True)
 
     def get_cover(self, obj):
-        cover = obj.cover or obj.original.cover
-        return cover.url
+        request = self.context.get('request', None)
+        cover = obj.original.cover if obj.original else obj.cover
+        url = cover.url if cover.name else None
+        if request is not None and url:
+            return request.build_absolute_uri(url)
+        return url
 
     class Meta:
         model = models.Photo

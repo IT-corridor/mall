@@ -36,7 +36,9 @@ class VendorTests(APITestCase):
         data_compare = {'username': user.username, 'id': user.id,
                         'store': None, 'brand_name': None, 'avatar': None,
                         'thumb': None, 'pk': 2,
-                        'photo_count': 0, 'group_count': 0}
+                        'photo_count': 0, 'group_count': 0,
+                        'chat_login': user.username
+                        }
         url = reverse('account:login')
         response = self.client.post(url, data=self.vendor_data)
         self.assertEqual(response.status_code, 200)
@@ -98,6 +100,7 @@ class StoreTests(APITestCase):
             'district_title': 'First one',
             'city_title': 'Shanghai',
             'state_title': 'Shanghai',
+            'name': 'Smile store #1'
         }
 
     def test_rest_login_success(self):
@@ -106,7 +109,9 @@ class StoreTests(APITestCase):
         data_compare = {'username': user.username, 'id': user.id,
                         'store': self.store.pk, 'brand_name': 'EYE',
                         'avatar': None, 'thumb': None, 'pk': 2,
-                        'photo_count': 0, 'group_count': 0}
+                        'photo_count': 0, 'group_count': 0,
+                        'chat_login': user.username
+                        }
         url = reverse('account:login')
         response = self.client.post(url, data=self.vendor_data_2)
         self.assertEqual(response.status_code, 200)
@@ -134,12 +139,13 @@ class StoreTests(APITestCase):
             'city_title': 'Beijing',
             'state_title': 'Beijing',
             'street_no': '67',
+            'name': 'RUBY store',
         }
         self.client.login(username=self.vendor_data_2['username'],
                           password=self.vendor_data_2['password'])
         url = reverse('account:store-detail', kwargs={'pk': self.store.pk})
         response = self.client.put(url, json.dumps(data),
-                                    content_type='application/json')
+                                   content_type='application/json')
         self.client.logout()
         self.assertEqual(response.status_code, 200)
 

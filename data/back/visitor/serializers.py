@@ -189,8 +189,8 @@ class VisitorCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Visitor
-        exclude = ('user',)
-        extra_kwargs = {'phone': {'required': True},
+        exclude = ('user', 'thumb')
+        extra_kwargs = {'phone': {'required': True, 'allow_null': False},
                         'username': {'required': True}}
 
 
