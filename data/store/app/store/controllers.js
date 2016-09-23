@@ -1,10 +1,11 @@
-angular.module('store.controllers', ['store.services', 'common.services', 'auth.services', 'commodity.services'])
+angular.module('store.controllers', ['store.services', 'common.services', 'auth.services', 'commodity.services',
+'store.directives'])
     .controller('CtrlStoreCreate', ['$scope', '$rootScope', '$http',
-        '$location', '$translate', 'MultipartForm',
-        function ($scope, $rootScope, $http, $location, $translate, MultipartForm) {
+        '$location', '$translate', 'MultipartForm', 'Auth', 'MyVendor',
+        function ($scope, $rootScope, $http, $location, $translate, MultipartForm, Auth, MyVendor) {
 
             $scope.wait = false;
-
+            $scope.r = {};
             $scope.create = function () {
                 $scope.wait = true;
                 var url = '/account/stores/';
@@ -12,7 +13,17 @@ angular.module('store.controllers', ['store.services', 'common.services', 'auth.
                         $translate('STORE.CREATE.SUCCESS').then(function (msg) {
                             $rootScope.alerts.push({type: 'info', msg: msg});
                         });
-                        $rootScope.visitor.store = response.data.id;
+                        MyVendor.get(
+                            function(success){
+                                Auth.set(success);
+                                $rootScope.visitor = success;
+                            },
+                            function(error){
+                                $translate('AUTHENTICATION.ERROR').then(function (msg) {
+                                    $rootScope.alerts.push({ type: 'error', msg:  msg});
+                                });
+                            }
+                        );
                         $location.path('/stores/my/');
 
 
@@ -112,12 +123,11 @@ angular.module('store.controllers', ['store.services', 'common.services', 'auth.
                 delete data['thumb'];
                 delete data['crop'];
                 delete data['post'];
-                console.log($scope.r);
                 Store.update({pk: $scope.r.vendor}, data,
                     function (success) {
+                        $scope.wait = false;
                         $translate('STORE.UPDATE.SUCCESS').then(function (msg) {
-                            // $rootScope.alerts.push({type: 'info', msg: msg});
-                            // $rootScope.alerts.push({type: 'info', msg: 'Successfully updated!'});
+                            $rootScope.alerts.push({type: 'info', msg: msg});
                         });
                         $location.path('/stores/my/');
                     },
@@ -135,6 +145,7 @@ angular.module('store.controllers', ['store.services', 'common.services', 'auth.
                         callback: 'JSON_CALLBACK',
                     }
                 }).then(function (response) {
+                    console.log(response);
                     return response.data.data.map(function (item) {
                         return item;
                     });

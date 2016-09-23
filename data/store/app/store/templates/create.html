@@ -6,12 +6,13 @@
             </div>
             <div class="panel-body">
                 <form data-ng-submit="create()" name="form" id="store_form">
+                    <input type="hidden" name="lat" value="{{ r.lat }}">
+                    <input type="hidden" name="lon" value="{{ r.lon }}">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.BRAND_NAME' | translate }}</label>
                         <div class="col-sm-10">
                             <input type="text" name="brand_name" class="form-control rounded" required>
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.brand_name">{{ e }}</p>
+                            <p class="text-danger" data-ng-repeat="e in error.brand_name">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -19,89 +20,79 @@
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.NAME' | translate }}</label>
                         <div class="col-sm-10">
                             <input type="text" name="name" class="form-control rounded" required>
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.name">{{ e }}</p>
+                            <p class="text-danger" data-ng-repeat="e in error.name">{{ e }}</p>
+                        </div>
+                    </div>
+                    <div class="line line-dashed b-b line-lg pull-in"></div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">{{ 'STORE.FORM.ADDRESS' | translate }}</label>
+                        <div class="col-sm-10">
+                            <address-choice data-store="r"></address-choice>
+                            <p class="text-danger" data-ng-repeat="e in error.address">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.STATE' | translate }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="state_title"
-                                   class="form-control rounded">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.state_title">{{ e }}</p>
+                            <input type="text" name="state_title" data-ng-model="r.state_title" class="form-control rounded">
+                            <p class="text-danger" data-ng-repeat="e in error.state_title">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.CITY' | translate }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="city_title"
-                                   class="form-control rounded">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.city_title">{{ e }}</p>
+                            <input type="text" name="city_title" data-ng-model="r.city_title" class="form-control rounded">
+                            <p class="text-danger" data-ng-repeat="e in error.city_title">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.DISTRICT' | translate }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="district_title"
-                                   class="form-control rounded">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.district_title">{{ e }}</p>
+                            <input type="text" name="district_title" data-ng-model="r.district_title" class="form-control rounded">
+                            <p class="text-danger" data-ng-repeat="e in error.district_title">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.STREET' | translate }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="street"
-                                   class="form-control rounded">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.street">{{ e }}</p>
+                            <input type="text" name="street" class="form-control rounded">
+                            <p class="text-danger" data-ng-repeat="e in error.street">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.BUILD_NAME' | translate }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="build_name"
-                                   class="form-control rounded">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.build_name">{{ e }}</p>
+                            <input type="text" name="build_name" class="form-control rounded">
+                            <p class="text-danger" data-ng-repeat="e in error.build_name">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.BUILD_NO' | translate }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="build_no"
-                                   class="form-control rounded">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.build_no">{{ e }}</p>
+                            <input type="text" name="build_no" class="form-control rounded">
+                            <p class="text-danger" data-ng-repeat="e in error.build_no">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.APT' | translate }}</label>
                         <div class="col-sm-10">
-                            <input type="text" name="apt"
-                                   class="form-control rounded">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.apt">{{ e }}</p>
+                            <input type="text" name="apt" class="form-control rounded">
+                            <p class="text-danger" data-ng-repeat="e in error.apt">{{ e }}</p>
                         </div>
                     </div>
-                    <div class="line line-dashed b-b line-lg pull-in"></div>
-
                     <div class="line line-dashed b-b line-lg pull-in"></div>
                     <div class="form-group">
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.PHOTO' | translate }}</label>
                         <div class="col-sm-10">
                             <input type="file" name="photo" required aria-required="true">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.photo">{{ e }}</p>
+                            <p class="text-danger" data-ng-repeat="e in error.photo">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -109,8 +100,7 @@
                         <label class="col-sm-2 control-label">{{ 'STORE.FORM.POST' | translate }}</label>
                         <div class="col-sm-10">
                             <input type="file" name="post" required aria-required="true">
-                            <p class="text-danger"
-                               data-ng-repeat="e in error.photo">{{ e }}</p>
+                            <p class="text-danger" data-ng-repeat="e in error.photo">{{ e }}</p>
                         </div>
                     </div>
                     <div class="line line-dashed b-b line-lg pull-in"></div>
@@ -118,8 +108,7 @@
                         <div class="col-sm-4 col-sm-offset-2">
                             <button data-ng-disabled="wait" type="submit" class="btn btn-primary">{{ 'STORE.FORM.SUBMIT' | translate }}
                             </button>
-                            <a data-ng-href="#!/"
-                               class="btn btn-default">{{ 'STORE.FORM.CANCEL' | translate }}</a>
+                            <a data-ng-href="#!/" class="btn btn-default">{{ 'STORE.FORM.CANCEL' | translate }}</a>
                         </div>
                     </div>
                 </form>
