@@ -39,7 +39,11 @@ def is_ascii(s):
     return all(ord(c) < 128 for c in s)
 
 
-def user_signup_qb(user):
+def user_signup_qb(instance):
+    if hasattr(instance, 'user'):
+        user = instance.user
+    else:
+        user = instance.vendor.user
     full_name = get_nickname(user)
     login = user.username.replace(' ', '')
 

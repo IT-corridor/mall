@@ -88,4 +88,4 @@ def cleanup_if_avatar_is_none(sender, **kwargs):
 def register_quickblox(sender, instance, created, **kwargs):
     # TODO: maybe it make sence to handle it with django_rq
     if instance and created:
-        user_signup_qb(instance.user)
+        user_signup_qb(instance)
