@@ -105,13 +105,13 @@ class Store(models.Model):
     introduction = models.TextField(_('Introduction of the store'), blank=True,
                                     null=True)
     street = models.CharField(_('Street'), max_length=100,
-                           blank=True, null=True)
+                              blank=True, null=True)
     street_no = models.CharField(_('Street number'), max_length=100,
-                           blank=True, null=True)
+                                 blank=True, null=True)
     build_name = models.CharField(_('Building name'), max_length=50,
                                   blank=True)
     build_no = models.CharField(_('Building number'), max_length=5,
-                           blank=True, null=True)
+                                blank=True, null=True)
     apt = models.CharField(_('Apartments'), max_length=5,
                            blank=True, null=True)
     brand_name = models.CharField(_('Brand name'), max_length=50)

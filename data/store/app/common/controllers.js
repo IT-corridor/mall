@@ -6,11 +6,13 @@ angular.module('common.controllers', ['auth.services', 'ngCookies'])
         $rootScope.title = 'The First Page';
 
     }
-]).controller('CtrlChat', ['$scope',
+])
+.controller('CtrlChat', ['$scope',
     function($scope) {
         if (chat_initialized) {
             // load chat dialogs
             retrieveChatDialogs();
+            $scope.$apply();
         }
     }
 ]);

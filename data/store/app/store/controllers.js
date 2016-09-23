@@ -135,31 +135,6 @@ angular.module('store.controllers', ['store.services', 'common.services', 'auth.
                 );
             };
 
-            $scope.getLocation = function (val) {
-                return $http.jsonp('http://apis.map.qq.com/ws/place/v1/suggestion', {
-                    params: {
-                        region: $scope.r.state_title,
-                        keyword: val,
-                        key: 'NY6BZ-2IB35-AMFIV-QMWBJ-RKC2Z-6BFDG',
-                        output: 'jsonp',
-                        callback: 'JSON_CALLBACK',
-                    }
-                }).then(function (response) {
-                    console.log(response);
-                    return response.data.data.map(function (item) {
-                        return item;
-                    });
-                });
-            };
-
-            $scope.get_item_ = function ($item, $model, $label, $event) {
-                $scope.r.state_title = $item.province
-                $scope.r.city_title = $item.city
-                $scope.r.district_title = $item.district
-                $scope.r.lat = $item.location.lat
-                $scope.r.lng= $item.location.lng
-            }
-
             $scope.update_photo = function () {
                 $scope.wait = true;
                 var url = '/account/stores/' + $scope.r.vendor + '/update_photo/';
