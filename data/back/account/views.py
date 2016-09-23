@@ -45,24 +45,21 @@ class StoreViewSet(OwnerCreateMixin,
     def update_photo(self, request, *args, **kwargs):
         """ Used to update only the logo of the store.
         Nothing more guarantied."""
-        if 'photo' not in request.data:
-            raise ValidationError({'photo': _('This parameter is required.')})
-        obj = self.get_object()
-        context = {'request': request}
-        serializer = self.serializer_class(instance=obj, data=request.data,
-                                           partial=True, context=context)
-
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(data=serializer.data)
+        return self.update_media(request, 'photo')
 
     @detail_route(methods=['patch'])
     def update_post(self, request, *args, **kwargs):
         """
         Update the post of the store.
         """
-        if 'post' not in request.data:
-            raise ValidationError({'post': _('This parameter is required.')})
+        return self.update_media(request, 'post')
+
+    def update_media(self, request, field,  *args, **kwargs):
+        """
+            Updates a custom media field
+        """
+        if field not in request.data:
+            raise ValidationError({field: _('This parameter is required.')})
         obj = self.get_object()
         serializer = self.serializer_class(instance=obj, data=request.data,
                                            partial=True)

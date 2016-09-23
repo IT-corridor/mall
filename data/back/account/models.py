@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
-from utils.validators import SizeValidator, phone_regex
+from utils.validators import SizeValidator, phone_regex, china_phone
 from utils.fields import EmailNullField, CharNullField
 
 
@@ -23,6 +23,7 @@ class Vendor(models.Model):
     it will break migrations.
     """
     # TODO: Fix auto creation with empty params
+    # TODO: Avatar and thumb useless, remove them.
     user = models.OneToOneField(User, on_delete=models.CASCADE,
                                 primary_key=True)
 
@@ -33,7 +34,7 @@ class Vendor(models.Model):
                               upload_to='vendors/thumbs',
                               null=True, blank=True)
     phone = CharNullField(_('Phone'), max_length=16, blank=True, null=True,
-                          validators=[phone_regex], unique=True, default=None)
+                          validators=[china_phone], unique=True, default=None)
     email = EmailNullField(_('Email'), unique=True, blank=True, null=True,
                            default=None)
 
@@ -132,4 +133,4 @@ class Store(models.Model):
                                       self.build_no, self.apt)
 
     def __unicode__(self):
-        return self.brand_name
+        return self.name if self.name else self.brand_name

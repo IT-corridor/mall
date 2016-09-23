@@ -174,7 +174,9 @@ app.config(['$translateProvider', function ($translateProvider) {
                 'NO_PHOTO': 'No photo',
                 'POSTER': 'Poster',
                 'DESCRIPTION': 'Description',
-                'START_DATE': 'Start date'
+                'START_DATE': 'Start date',
+                'NAME': 'Name',
+                'POST': 'Post',
             },
             'MY': {
                 'HEADER': 'Your store overview',
@@ -432,7 +434,9 @@ app.config(['$translateProvider', function ($translateProvider) {
                 'NO_PHOTO': 'No photo',
                 'POSTER': 'Poster',
                 'DESCRIPTION': 'Description',
-                'START_DATE': 'Start date'
+                'START_DATE': 'Start date',
+                'NAME': 'Name',
+                'POST': 'Post',
             },
             'MY': {
                 'HEADER': 'Your store overview',
