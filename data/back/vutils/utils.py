@@ -38,6 +38,6 @@ def get_last_day_of_month(year, month):
 
 def get_nickname(user):
     if hasattr(user, 'vendor'):
-        return user.vendor.store.name
+        return user.vendor.store.name or user.vendor.store.brand_name
     elif hasattr(user, 'visitor'):
         return user.visitor.username or user.username

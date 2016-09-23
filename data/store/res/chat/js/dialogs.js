@@ -110,7 +110,7 @@ function showOrUpdateDialogInUI(itemRes, updateHtml) {
         dialogName = 'Dialog with ' + opponentLogin;
     }
 
-    if (updateHtml === true && $('#'+dialogId).length < 1) {
+    if (updateHtml === true && $('#' + dialogId).length < 1) {
         var updatedDialogHtml = buildDialogHtml(dialogId, dialogUnreadMessagesCount, dialogIcon, dialogName, dialogLastMessage);
         $('#dialogs-list').prepend(updatedDialogHtml);
         console.log('116@@@');
@@ -124,8 +124,8 @@ function showOrUpdateDialogInUI(itemRes, updateHtml) {
 
 // add photo to dialogs
 function getDialogIcon(dialogType) {
-    var groupPhoto = '<img src="/res/chat/images/ava-group.svg" width="30" height="30" class="round">';
-    var privatPhoto = '<img src="/res/chat/images/ava-single.svg" width="30" height="30" class="round">';
+    var groupPhoto = '<img src="/static/chat/images/ava-group.svg" width="30" height="30" class="round">';
+    var privatPhoto = '<img src="/static/chat/images/ava-single.svg" width="30" height="30" class="round">';
     var defaultPhoto = '<span class="glyphicon glyphicon-eye-close"></span>';
 
     var dialogIcon;
@@ -195,8 +195,8 @@ function setupUsersScrollHandler() {
 }
 
 //
-function showUsers(userLogin, userId) {
-    var userHtml = buildUserHtml(userLogin, userId, false);
+function showUsers(userFullname, userLogin, userId) {
+    var userHtml = buildUserHtml(userFullname, userLogin, userId, false);
     $('#users_list').append(userHtml);
 }
 
@@ -215,7 +215,7 @@ function showNewDialogPopup() {
             return;
         }
         $.each(users, function (index, item) {
-            showUsers(this.user.full_name, this.user.id);
+            showUsers(this.user.full_name, this.user.login, this.user.id);
         });
     });
 
@@ -235,10 +235,11 @@ function clickToAdd(forFocus) {
 function createNewDialog() {
     var usersIds = [];
     var usersNames = [];
-
+    var uid;
     $('#users_list .users_form.active').each(function (index) {
         usersIds[index] = $(this).attr('id');
         usersNames[index] = $(this).text();
+        uid = $(this).attr('uid');
     });
 
     $("#add_new_dialog").modal("hide");
@@ -261,8 +262,31 @@ function createNewDialog() {
         dialogType = 3;
     }
 
+    var endpoint = '/api/v1/notification/';
+    console.log(document.cookie);
+    $.ajax({
+        'url': endpoint,
+        'data': {'type': 'chat_request', 'message': usersNames[0] + ' wants to chat with you!@'+currentUser.login, 'user_id': uid},
+        'type': 'POST',
+        'beforeSend': function (xhr) {
+            xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+        },
+        success: function () {
+            alert('Request is sent successfully!');
+        }
+    });
+}
+
+function createNewDialog_real(user_id, dialogName) {
+    var user_id_qb;
+    $('#users_list .users_form').each(function (index) {
+        if (user_id == $(this).attr('uid'))
+            user_id_qb = $(this).attr('id');
+    });
+
+    var dialogOccupants = [user_id_qb];
     var params = {
-        type: dialogType,
+        type: 3,    // private
         occupants_ids: dialogOccupants,
         name: dialogName
     };
@@ -294,6 +318,20 @@ function createNewDialog() {
     });
 }
 
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length,c.length);
+        }
+    }
+    return "";
+}
 //
 function joinToNewDialogAndShow(itemDialog) {
     var dialogId = itemDialog._id;
@@ -315,7 +353,7 @@ function joinToNewDialogAndShow(itemDialog) {
     }
 
     // show it
-    if ($('#'+dialogId).length < 1) {
+    if ($('#' + dialogId).length < 1) {
         var dialogHtml = buildDialogHtml(dialogId, dialogUnreadMessagesCount, dialogIcon, dialogName, dialogLastMessage);
         $('#dialogs-list').prepend(dialogHtml);
         console.log('320@@@');
@@ -455,7 +493,7 @@ function setupDialogInfoPopup(occupantsIds, name) {
             }
 
             $.each(users, function (index, item) {
-                var userHtml = buildUserHtml(this.user.full_name, this.user.id, true);
+                var userHtml = buildUserHtml(this.user.full_name, this.user.login, this.user.id, true);
                 $('#add_new_occupant').append(userHtml);
             });
         });
@@ -474,7 +512,7 @@ function setupScrollHandlerForNewOccupants() {
                     return;
                 }
                 $.each(users, function (index, item) {
-                    var userHtml = buildUserHtml(this.user.full_name, this.user.id, false);
+                    var userHtml = buildUserHtml(this.user.full_name, this.user.login, this.user.id, false);
                     $('#add_new_occupant').append(userHtml);
                 });
             });
@@ -532,16 +570,16 @@ function onDialogDelete() {
             // if (err) {
             //     console.log(err);
             // } else {
-                console.log("Dialog removed"+currentDialog._id);
-                $('#' + currentDialog._id).remove();
+            console.log("Dialog removed" + currentDialog._id);
+            $('#' + currentDialog._id).remove();
 
-                // remove from storage
-                delete dialogs[currentDialog._id];
+            // remove from storage
+            delete dialogs[currentDialog._id];
 
-                //  and trigger the next dialog
-                if (Object.keys(dialogs).length > 0) {
-                    triggerDialog(dialogs[Object.keys(dialogs)[0]]._id);
-                }
+            //  and trigger the next dialog
+            if (Object.keys(dialogs).length > 0) {
+                triggerDialog(dialogs[Object.keys(dialogs)[0]]._id);
+            }
 
             // }
         });

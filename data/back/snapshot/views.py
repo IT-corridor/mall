@@ -1169,6 +1169,13 @@ class VisitorViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
 class NotificationViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
     """ Notification logic"""
     queryset = Notification.objects.all()
+    permission_classes = (AllowAny,)
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        Notification.objects.create(type=data['type'], message=data['message'],
+                                    owner_id=int(data['user_id']))
+        return Response('success', status=201)
 
     @detail_route(methods=['get'])
     def reply_notification(self, request, *args, **kwargs):

@@ -35,17 +35,9 @@ def get_qb_token():
     return res_json['session']['token']
 
 
-def is_ascii(s):
-    return all(ord(c) < 128 for c in s)
-
-
-def user_signup_qb(instance):
-    if hasattr(instance, 'user'):
-        user = instance.user
-    else:
-        user = instance.vendor.user
+def user_signup_qb(user):
     full_name = get_nickname(user)
-    login = user.username.replace(' ', '')
+    login = '0'+str(user.id)
 
     if not full_name:
         print login, '$$$ Not vendor or visitor'
@@ -56,17 +48,15 @@ def user_signup_qb(instance):
     header = {"QB-Token": token,
               "Content-Type": "application/json"}
 
-    if not is_ascii(full_name) and len(full_name) < 3:
+    if len(full_name) < 3:
         full_name += '_' * (3-len(full_name))
 
-    if not is_ascii(user.username):
-        login = user.username.encode("hex")
+    params = {'user': {
+        'login': login,
+        'password': 'atyichu@3212',
+        'full_name': full_name}}
 
-    if full_name:
-        params = {'user': {
-            'login': login,
-            'password': 'atyichu@3212',
-            'full_name': full_name}}
+    res = requests.post(url=url, headers=header, data=json.dumps(params))
+    print login, '@@', full_name, '===', res.json()
 
-        res = requests.post(url=url, headers=header, data=json.dumps(params))
-        print login, '@@', full_name, '===', res.json()
+

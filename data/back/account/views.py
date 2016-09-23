@@ -14,6 +14,8 @@ from catalog import serializers as cat_srlzrs
 from catalog import models as cat_models
 from utils import permissions
 from utils.views import OwnerCreateMixin, OwnerUpdateMixin, PaginationMixin
+from snapshot.models import Notification
+from snapshot.serializers import NotificationSerializer
 
 
 class StoreViewSet(OwnerCreateMixin,
@@ -208,7 +210,12 @@ def login_view(request):
             context = {'request': request}
             serializer = serializers.VendorBriefSerializer(instance=vendor,
                                                            context=context)
+            # return the store's notifications
+            nfs = Notification.objects.filter(owner=user).order_by('-create_date')
+            s_nfs = NotificationSerializer(nfs, many=True)
+
             data.update(serializer.data)
+            data['notifications'] = s_nfs.data
             status = 200
             login(request, user)
     except KeyError as e:

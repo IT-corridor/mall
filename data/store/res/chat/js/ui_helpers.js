@@ -7,8 +7,8 @@ function buildMessageHTML(messageText, messageSenderId, messageDateSent, attachm
 
 	var isMessageSticker = stickerpipe.isSticker(messageText);
 
-  var delivered = '<img class="icon-small" src="/res/chat/images/delivered.jpg" alt="" id="delivered_'+messageId+'">';
-  var read = '<img class="icon-small" src="/res/chat/images/read.jpg" alt="" id="read_'+messageId+'">';
+  var delivered = '<img class="icon-small" src="/static/chat/images/delivered.jpg" alt="" id="delivered_'+messageId+'">';
+  var read = '<img class="icon-small" src="/static/chat/images/read.jpg" alt="" id="read_'+messageId+'">';
 
 	var messageTextHtml = messageText;
 	if (messageAttach) {
@@ -73,14 +73,14 @@ function buildTypingUserHtml(userId, userLogin) {
 }
 
 // build html for users list
-function buildUserHtml(userLogin, userId, isNew) {
+function buildUserHtml(userFullname, userLogin, userId, isNew) {
   var userHtml = "<a href='javascript:;' id='" + userId;
   if(isNew){
     userHtml += "_new'";
   }else{
     userHtml += "'";
   }
-  userHtml += " class='col-md-12 col-sm-12 col-xs-12 users_form' onclick='";
+  userHtml += " class='col-md-12 col-sm-12 col-xs-12 users_form' uid='"+userLogin+"' onclick='";
   userHtml += "clickToAdd";
   userHtml += "(\"";
   userHtml += userId;
@@ -88,7 +88,7 @@ function buildUserHtml(userLogin, userId, isNew) {
     userHtml += "_new";
   }
   userHtml += "\")'>";
-  userHtml += userLogin;
+  userHtml += userFullname;
   userHtml +="</a>";
 
   return userHtml;
