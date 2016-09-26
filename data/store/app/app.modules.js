@@ -68,7 +68,8 @@ app.run(['$rootScope', function($rootScope) {
             var currentUser = {
                 login: '0' + newValue.pk,
                 pass: 'atyichu@3212',
-                full_name: newValue.username
+                full_name: newValue.username,
+                uid: newValue.pk,
             };
             connectToChat(currentUser);
             unwatch();

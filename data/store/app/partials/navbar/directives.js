@@ -110,7 +110,7 @@ navbar.controller('ModalInstanceCtrl', ['$scope', '$rootScope', '$uibModalInstan
                                 $http.post(API + '/api/v1/notification/', {
                                     type: 'chat_reply',
                                     message: $rootScope.visitor.brand_name + ' accepts your request!@0' + $rootScope.visitor.pk,
-                                    user_id: user_id,
+                                    user_id: $rootScope.visitor.pk,
                                 });
                             }
                             // set the notification read

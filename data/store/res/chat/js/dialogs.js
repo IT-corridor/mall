@@ -266,7 +266,7 @@ function createNewDialog() {
     console.log(document.cookie);
     $.ajax({
         'url': endpoint,
-        'data': {'type': 'chat_request', 'message': usersNames[0] + ' wants to chat with you!@'+currentUser.login, 'user_id': uid},
+        'data': {'type': 'chat_request', 'message': usersNames[0] + ' wants to chat with you!@'+currentUser.login, 'user_id': currentUser.uid},
         'type': 'POST',
         'beforeSend': function (xhr) {
             xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
