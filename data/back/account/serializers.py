@@ -273,7 +273,7 @@ class VendorBriefSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Vendor
         fields = ('pk', 'thumb', 'avatar', 'username', 'brand_name',
-                  'group_count', 'photo_count', 'store')
+                  'group_count', 'photo_count', 'store', 'name')
 
 
 class PhotoCropSerializer(serializers.ModelSerializer):

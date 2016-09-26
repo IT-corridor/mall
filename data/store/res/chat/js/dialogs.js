@@ -262,7 +262,7 @@ function createNewDialog() {
         dialogType = 3;
     }
 
-    var endpoint = '/api/v1/notification/';
+    var endpoint = 'http://api.atyichu.com' + '/api/v1/notification/';
     console.log(document.cookie);
     $.ajax({
         'url': endpoint,

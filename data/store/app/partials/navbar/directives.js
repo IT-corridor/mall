@@ -89,14 +89,6 @@ navbar.controller('ModalInstanceCtrl', ['$scope', '$rootScope', '$uibModalInstan
                     Auth.set(success);
                     $uibModalInstance.close(Auth);
 
-                    // configuration for chat and notification
-                    $window.currentUser = {
-                        login: '0' + success.pk,
-                        pass: 'atyichu@3212',
-                        full_name: success.name
-                    };
-                    connectToChat(currentUser);
-
                     var pusher = new Pusher('4c8e6d909a1f7ccc44ed');
                     var notificationsChannel = pusher.subscribe('nf_channel_' + success.pk);
 

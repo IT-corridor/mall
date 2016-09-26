@@ -44,6 +44,42 @@ app.run(function($rootScope) {
         container: false
     };
 });
+app.run(['$rootScope','$q','Visitor', 'Notification', function($rootScope, $q, Visitor, Notification) {
+    /*Initialization*/
+    $rootScope.site = 'Atyichu';
+    $rootScope.THEME = 'res/theme/';
+    $rootScope.PATH = 'app/';
+    $rootScope.alerts = [];
+    $rootScope.app = {
+        navbarHeaderColor: 'bg-black',
+        navbarCollapseColor: 'bg-white-only',
+        asideColor: 'bg-black',
+        headerFixed: true,
+        asideFixed: false,
+        asideFolded: false,
+        asideDock: false,
+        hideAside: false,
+        container: false
+    };
+
+    var follow_d = $q.defer();
+    $rootScope.follow_promise = follow_d.promise;
+
+    // $rootScope.following -- a list of users which authenticating user is following
+
+    var unwatch = $rootScope.$watch('visitor', function(newValue, oldValue) {
+        if (newValue) {
+            // configuration for chat and notification
+            var currentUser = {
+                login: '0' + success.pk,
+                pass: 'atyichu@3212',
+                full_name: success.name
+            };
+            connectToChat(currentUser);
+            unwatch();
+        }
+    });
+}]);
 app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('httpRequestInterceptor');
     $httpProvider.useApplyAsync(true);
