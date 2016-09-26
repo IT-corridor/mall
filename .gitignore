@@ -120,3 +120,5 @@ crashlytics-build.properties
 /data/back/tmp/*
 /.vagrant/
 /data/back/config.json
+*xlsx#
+

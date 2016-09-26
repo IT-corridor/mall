@@ -384,7 +384,7 @@ class PhotoViewSet(PaginationMixin, viewsets.ModelViewSet):
                                             'visitor__vendor__store',
                                             'group')
         qs = qs.filter(Q(group__is_private=False)) \
-            .order_by('-stamps__photostamp__confidence').distinct()
+            .order_by('-photostamp__confidence').distinct()
         qs = self.filter_queryset(qs)
 
         return self.get_list_response(qs, serializers.PhotoListSerializer)
@@ -608,6 +608,7 @@ class PhotoViewSet(PaginationMixin, viewsets.ModelViewSet):
 
         # photo pk
         pk = self.get_object().pk
+        context = {'request': request}
 
         link_limit = 3
         count = Link.objects.filter(photo_id=pk).count()
@@ -628,7 +629,8 @@ class PhotoViewSet(PaginationMixin, viewsets.ModelViewSet):
             response_data = []
             for n, i in enumerate(sliced):
                 data = {'commodity': i, 'photo': pk}
-                serializer = serializers.LinkSerializer(data=data)
+                serializer = serializers.LinkSerializer(data=data,
+                                                        context=context)
                 serializer.is_valid(True)
                 serializer.save()
                 response_data.append(serializer.data)
