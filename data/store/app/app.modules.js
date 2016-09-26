@@ -44,7 +44,7 @@ app.run(function($rootScope) {
         container: false
     };
 });
-app.run(['$rootScope','$q','Visitor', 'Notification', function($rootScope, $q, Visitor, Notification) {
+app.run(['$rootScope', function($rootScope) {
     /*Initialization*/
     $rootScope.site = 'Atyichu';
     $rootScope.THEME = 'res/theme/';
@@ -61,11 +61,6 @@ app.run(['$rootScope','$q','Visitor', 'Notification', function($rootScope, $q, V
         hideAside: false,
         container: false
     };
-
-    var follow_d = $q.defer();
-    $rootScope.follow_promise = follow_d.promise;
-
-    // $rootScope.following -- a list of users which authenticating user is following
 
     var unwatch = $rootScope.$watch('visitor', function(newValue, oldValue) {
         if (newValue) {
