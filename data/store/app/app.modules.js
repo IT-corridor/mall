@@ -44,7 +44,7 @@ app.run(function($rootScope) {
         container: false
     };
 });
-app.run(['$rootScope', function($rootScope) {
+app.run(['$rootScope', '$window', function($rootScope, $window) {
     /*Initialization*/
     $rootScope.site = 'Atyichu';
     $rootScope.THEME = 'res/theme/';
@@ -65,13 +65,13 @@ app.run(['$rootScope', function($rootScope) {
     var unwatch = $rootScope.$watch('visitor', function(newValue, oldValue) {
         if (newValue) {
             // configuration for chat and notification
-            var currentUser = {
+            $window.currentUser = {
                 login: '0' + newValue.pk,
                 pass: 'atyichu@3212',
                 full_name: newValue.username,
                 uid: newValue.pk,
             };
-            connectToChat(currentUser);
+            connectToChat($window.currentUser);
             unwatch();
         }
     });
