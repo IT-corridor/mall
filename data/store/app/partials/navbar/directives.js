@@ -75,8 +75,8 @@ var navbar = angular.module('navbar', ['auth.services'])
         }
     ]);
 
-navbar.controller('ModalInstanceCtrl', ['$scope', '$rootScope', '$uibModalInstance', 'Login', 'Auth', '$window', '$http',
-    function($scope, $rootScope, $uibModalInstance, Login, Auth, $window, $http) {
+navbar.controller('ModalInstanceCtrl', ['$scope', '$rootScope', '$uibModalInstance', 'Login', 'Auth', '$window', '$http', 'API',
+    function($scope, $rootScope, $uibModalInstance, Login, Auth, $window, $http, API) {
 
         $scope.authenticate = function(u, p) {
             var promise = Auth.login(u, p);
@@ -115,7 +115,7 @@ navbar.controller('ModalInstanceCtrl', ['$scope', '$rootScope', '$uibModalInstan
                             var r = confirm(message[0]);
                             if (r == true) {
                                 var user_id = message[1];
-                                $http.post('/api/v1/notification/', {
+                                $http.post(API + '/api/v1/notification/', {
                                     type: 'chat_reply',
                                     message: $rootScope.visitor.brand_name + ' accepts your request!@0' + $rootScope.visitor.pk,
                                     user_id: user_id,

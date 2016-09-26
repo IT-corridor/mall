@@ -12,7 +12,6 @@ angular.module('common.controllers', ['auth.services', 'ngCookies'])
         if (chat_initialized) {
             // load chat dialogs
             retrieveChatDialogs();
-            $scope.$apply();
         }
     }
 ]);
