@@ -37,9 +37,6 @@ angular.module('photo.services', ['ngResource', 'common.services'])
             for (i; i < l; i++) {
                 compare_arr[i]['owner_followed'] = IsMember(base_arr, compare_arr[i].visitor, 'pk');
                 compare_arr[i]['creator_followed'] = IsMember(base_arr, compare_arr[i].creator, 'pk');
-                if (compare_arr[i]['article']) {
-                    compare_arr[i]['article']['descr'] = $sce.trustAsHtml(compare_arr[i]['article']['descr']);
-                }
             };
 
         };
