@@ -66,9 +66,9 @@ app.run(['$rootScope', function($rootScope) {
         if (newValue) {
             // configuration for chat and notification
             var currentUser = {
-                login: '0' + success.pk,
+                login: '0' + newValue.pk,
                 pass: 'atyichu@3212',
-                full_name: success.name
+                full_name: newValue.username
             };
             connectToChat(currentUser);
             unwatch();
