@@ -5,7 +5,15 @@
 </div>
 <div class="modal-body">
     <div class="row">
-        <div class="col-md-6 col-xs-6">
+        <div class="col-md-6 col-xs-12">
+            <input type="text" class="form-control"  placeholder="Choose a collaborator"
+                data-typeahead-focus-on-select="false"
+                data-typeahead-select-on-exact="true"
+                data-ng-model="member" data-ng-model-options="modelOptions"
+                data-uib-typeahead="item for item in get_members($viewValue)"
+                data-typeahead-on-select="select_item($item, $model, $label, $event)">
+        </div>
+        <div class="col-md-6 col-xs-12">
             <div data-ng-repeat="person in r.members">
                 <div class="hbox wrapper-sm">
                     <div class="col v-middle thumb-md m-l">
@@ -21,12 +29,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6 col-xs-6">
-            <input type="text" class="form-control"  placeholder="Choose a collaborator"
-                data-ng-model="member" data-ng-model-options="modelOptions"
-                data-uib-typeahead="item for item in get_members($viewValue)"
-                data-typeahead-on-select="select_item($item, $model, $label, $event)">
         </div>
     </div>
 </div>
