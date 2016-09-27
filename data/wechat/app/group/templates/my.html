@@ -42,6 +42,7 @@
 						<ul class="dropdown-menu" data-uib-dropdown-menu aria-labelledby="group-dropdown{{ group.id }}">
 							<li><span><i class="fa fa-user-plus"></i> {{ 'GROUP.MY.INVITE' | translate }}</span></li>
 							<li data-ng-click="remove($index)"><span><i class="fa fa-trash"></i> {{ 'GROUP.MY.DELETE' | translate }}</span></li>
+							<li data-ng-click="open_members(group.id)"><span><i class="fa fa-users"></i> {{ 'GROUP.MY.COLLABORATORS' | translate }}</span></li>
 							<li data-ng-if="group.is_private" data-ng-click="toggle_privacy($index)" class="fa fa-unlock"><span><i></i>{{ 'GROUP.MY.SET_PUBLIC' | translate }}</span></li>
 							<li data-ng-if="!group.is_private" data-ng-click="toggle_privacy($index)" class="fa fa-lock"><span><i></i>{{ 'GROUP.MY.SET_PRIVATE' | translate }}</span></li>
 						</ul>

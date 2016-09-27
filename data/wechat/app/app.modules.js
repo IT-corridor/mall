@@ -200,6 +200,7 @@ app.config(['$translateProvider', function($translateProvider) {
                 'DELETE': 'Delete',
                 'SET_PUBLIC': 'Set public',
                 'SET_PRIVATE': 'Set private',
+                'COLLABORATORS': 'Collaborators',
             }
         },
         'PHOTO': {
@@ -394,6 +395,7 @@ app.config(['$translateProvider', function($translateProvider) {
                 'DELETE': 'Delete',
                 'SET_PUBLIC': 'Set public',
                 'SET_PRIVATE': 'Set private',
+                'COLLABORATORS': 'Collaborators',
             }
         },
         'PHOTO': {

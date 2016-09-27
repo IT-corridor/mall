@@ -8,7 +8,7 @@ angular.module('group.services', ['ngResource'])
             save: {method: 'POST'},
             remove: {method: 'DELETE'},
             photo_list: {method:'GET', params:{action: 'photo_list'}, responseType:'json'},
-            member_add: {method:'POST', params:{action: 'member_add'}, responseType:'json'},
+            member_add: {method:'POST', params:{action: 'member_vendor_add'}, responseType:'json'},
             member_remove: {method:'POST', params:{action: 'member_remove'}, responseType:'json'},
             tag_create: {method:'POST', params:{action: 'tag_create'}, responseType:'json'},
             vendor_list: {method:'GET', params:{pk: null, action: 'vendor_list'},

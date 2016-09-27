@@ -766,16 +766,16 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         """ Pretty complex queryset for retreiving groups """
         visitor = self.request.user
+        prefetch = Prefetch('photo_set',
+                            queryset=Photo.objects.
+                            select_related('original__group',
+                                           'original__visitor', ))
         qs = Group.objects.select_related('owner__visitor'). \
             prefetch_related('tag_set', 'member_set',
                              'followgroup_set')
+        qs = qs.prefetch_related(prefetch)
         if self.request.method == 'GET' and not self.kwargs.get('pk', None):
-            prefetch = Prefetch('photo_set',
-                                queryset=Photo.objects.
-                                select_related('original__group',
-                                               'original__visitor', ))
 
-            qs = qs.prefetch_related(prefetch)
             qs = qs.filter(Q(is_private=False) | Q(owner=visitor) |
                            Q(member__visitor=visitor)).distinct()
         else:
@@ -845,16 +845,18 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
          """
         pk = self.get_object().id
         status = 400
+        context = {'request': request}
         try:
             username = request.data['username']
-            visitor = Visitor.objects.get(user__username=username)
+            visitor = Visitor.objects.get(username=username)
         except KeyError as e:
             data = {'error': _('{} parameter is required').format(e.message)}
         except Visitor.DoesNotExist:
             data = {'error': _('Matching user does not exists')}
         else:
             member_data = {'visitor': visitor.pk, 'group': pk}
-            serializer = serializers.MemberSerializer(data=member_data)
+            serializer = serializers.MemberSerializer(data=member_data,
+                                                      context=context)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             data = serializer.data
@@ -866,7 +868,7 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         """
         Add visitor (VENDOR!) to the group by store`s brand name.
         It is necessary to perform self.get_object to check permission.
-        Warning: it is not programatically restricted that members of the
+        Warning: it is not programmable restricted that members of the
         vendor(store) group can instances of the vendor.
         username -- username of the collaborator to add.
         """
@@ -874,18 +876,20 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
 
         pk = self.get_object().id
         status = 400
+        context = {'request': request}
         try:
             # Argument left with name "username" to be compatible with frontend
             # I do not want to write a completely new frontend for store part.
             username = request.data['username']
-            vendor = Vendor.objects.get(store__brand_name=username)
+            vendor = Vendor.objects.get(store__name=username)
         except KeyError as e:
             data = {'error': _('{} parameter is required').format(e.message)}
         except Vendor.DoesNotExist:
             data = {'error': _('Matching user does not exists')}
         else:
             member_data = {'visitor': vendor.pk, 'group': pk}
-            serializer = serializers.MemberSerializer(data=member_data)
+            serializer = serializers.MemberSerializer(data=member_data,
+                                                      context=context)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             data = serializer.data
@@ -957,7 +961,7 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         try:
             q = request.query_params['q']
             qs = Vendor.objects.filter(~Q(pk=request.user.id) &
-                                       Q(store__brand_name__startswith=q))[:5]
+                                       Q(store__name__startswith=q))[:5]
 
             serializer = VendorStoreSerializer(qs, many=True, context=context)
             data = serializer.data

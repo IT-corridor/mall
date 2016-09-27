@@ -32,10 +32,10 @@ angular.module('group.controllers', ['group.services', 'group.directives',
 
         }
     ])
-    .controller('CtrlGroupList', ['$scope', '$rootScope', '$http', '$window',
-        '$location', '$routeParams', '$translate', 'GetPageLink', 'Group', 'title', 'my', 'WindowScroll',
+    .controller('CtrlGroupList', ['$scope', '$rootScope', '$http', '$window', '$location', '$routeParams',
+     '$translate', 'GetPageLink', 'Group', 'title', 'my', 'WindowScroll', '$uibModal', 'PATH',
         function ($scope, $rootScope, $http, $window, $location, $routeParams, $translate,
-                  GetPageLink, Group, title, my, WindowScroll) {
+                  GetPageLink, Group, title, my, WindowScroll, $uibModal, PATH) {
 
             /* Add check for the ownership */
             $rootScope.title = title;
@@ -136,6 +136,23 @@ angular.module('group.controllers', ['group.services', 'group.directives',
                     }
                 }
             }
+
+            $scope.open_members = function(group_id) {
+
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: PATH + 'group/templates/modal_members.html',
+                    controller: 'MemberListCtrl',
+                    size: 'lg',
+                    resolve: {
+                        group_id: function () {
+                          return group_id;
+                        }
+                    }
+                });
+
+            }
+
         }
     ])
     .controller('CtrlGroupPhotoList', ['$scope', '$rootScope', '$http', '$window',
@@ -558,5 +575,66 @@ angular.module('group.controllers', ['group.services', 'group.directives',
                 }
             );
         }
-    ]);
+    ])
+    .controller('MemberListCtrl', ['$scope', '$rootScope', '$window', '$translate', '$uibModalInstance', 'Group', 'group_id',
+    function($scope, $rootScope, $window, $translate, $uibModalInstance, Group, group_id) {
+
+        $scope.modelOptions = {
+            debounce: {
+                default: 500,
+                blur: 250
+            },
+            getterSetter: true
+        };
+        $scope.member = '';
+        $scope.r = Group.get({pk: group_id});
+
+        $scope.member_remove = function (member_id, index) {
+
+            $translate('CONFIRM').then(function (msg) {
+                $scope.confirm = $window.confirm(msg);
+                if ($scope.confirm) {
+                    Group.member_remove({pk: group_id}, {member: member_id},
+                        function (success) {
+                            $translate('GROUP.MANAGE.MEMBER_EXCLUDED').then(function (msg) {
+                                $rootScope.alerts.push({type: 'success', msg: msg});
+                            });
+                           $scope.r.members.splice(index, 1);
+                        }
+                    );
+                }
+            });
+
+        }
+
+        function add_member(username) {
+            Group.member_add({pk: group_id}, {username: username},
+                function (success) {
+                    $scope.r.members.push(success);
+                    $scope.member = '';
+                }
+            );
+        }
+
+        $scope.get_members = function(val) {
+            var promise = Group.visitor_list({
+                q: val
+            }).$promise;
+            return promise.then(function(success) {
+                return success.map(function(item) {
+                    return item.username;
+                });
+            });
+
+        };
+
+        $scope.select_item = function($item, $model, $label, $event) {
+            add_member($item);
+        }
+
+        $scope.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        }
+    }
+]);
 

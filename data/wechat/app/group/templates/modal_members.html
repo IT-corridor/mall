@@ -1,0 +1,35 @@
+<div class="modal-header">
+    <button type="button" class="close" data-ng-click="cancel()"><span aria-hidden="true">&times;</span>
+        <span class="sr-only">{{ 'NAVBAR.MODAL.CLOSE' | translate }}</span></button>
+    <h3 class="modal-title">{{ r.title }} | {{ 'GROUP.MY.COLLABORATORS' | translate }}</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6 col-xs-6">
+            <div data-ng-repeat="person in r.members">
+                <div class="hbox wrapper-sm">
+                    <div class="col v-middle thumb-md m-l">
+                        <div class="">
+                            <img data-ng-src="{{ person.thumb }}" class="pull-left img-circle" alt="{{ person.username }}">
+                        </div>
+                    </div>
+                    <div class="col v-middle">
+                        <h4 class="h4 font-bold wrapper-sm">{{ person.username }}</h4>
+                    </div>
+                    <div class="col v-middle thumb-xs">
+                        <span class="text-muted text-center" data-ng-click="member_remove(person.id, $index)"><i class="fa fa-times fa-2x"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-xs-6">
+            <input type="text" class="form-control"  placeholder="Choose a collaborator"
+                data-ng-model="member" data-ng-model-options="modelOptions"
+                data-uib-typeahead="item for item in get_members($viewValue)"
+                data-typeahead-on-select="select_item($item, $model, $label, $event)">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+
+</div>

@@ -82,7 +82,7 @@ CACHES = {
     }
 }
 
-#SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 #SESSION_COOKIE_DOMAIN = ['127.0.0.1']
 SESSION_COOKIE_HTTPONLY = False
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'

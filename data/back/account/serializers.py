@@ -45,7 +45,7 @@ class StoreShortSerializer(serializers.ModelSerializer):
 
 
 class VendorStoreSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='store.brand_name', read_only=True)
+    username = serializers.CharField(source='store.name', read_only=True)
     thumb = serializers.ImageField(source='store.thumb', read_only=True)
 
     class Meta:

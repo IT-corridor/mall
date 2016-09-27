@@ -258,17 +258,29 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class MemberSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='visitor', read_only=True)
+    username = serializers.SerializerMethodField(read_only=True)
     thumb = serializers.SerializerMethodField(read_only=True)
 
-    def get_thumb(self, obj):
+    def get_username(self, obj):
+
         if hasattr(obj.visitor, 'visitor'):
-            return serializers.ImageField(source='visitor.visitor.thumb',
-                                          read_only=True).initial
+            return obj.visitor.username
         elif hasattr(obj.visitor, 'vendor'):
-            return serializers.ImageField(source='visitor.vendor.store.thumb',
-                                          read_only=True).initial
-        return
+            return obj.visitor.vendor.store.name
+        return obj.visitor.username
+
+    def get_thumb(self, obj):
+        request = self.context.get('request', None)
+        url = None
+        if hasattr(obj.visitor, 'visitor'):
+            url = obj.visitor.visitor.thumb.url
+        elif hasattr(obj.visitor, 'vendor'):
+            url = obj.visitor.vendor.store.crop.url
+
+        if url and request:
+            url = request.build_absolute_uri(url)
+
+        return url
 
     class Meta:
         model = models.Member
@@ -285,6 +297,8 @@ class GroupSerializer(serializers.ModelSerializer):
     is_owner_followed = serializers.SerializerMethodField(read_only=True)
 
     def get_is_owner_followed(self, obj):
+        # TODO: BAD REQUEST, it repeats for many times
+        # this action run for the eact item of the queryset
         if self.context.get('request'):
             return models.FollowUser \
                 .objects.filter(user=obj.owner,
