@@ -41,32 +41,6 @@
         </div>
     </div>
 
-    <!-- Modal (new dialog)-->
-    <div id="add_new_dialog" class="modal fade" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3 class="modal-title">Choose users to create a dialog with</h3>
-                </div>
-                <div class="modal-body">
-                    <div class="list-group pre-scrollable for-scroll">
-                        <div id="users_list" class="clearfix"></div>
-                    </div>
-                    <div class="img-place"><img src="res/chat/images/ajax-loader.gif" id="load-users"></div>
-                    <input type="text" class="form-control" id="dlg_name" placeholder="Enter dialog name">
-                    <button id="add-dialog" type="button" value="Confirm" id="" class="btn btn-success btn-lg btn-block"
-                            onclick="createNewDialog()">Create dialog
-                    </button>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="100"
-                             aria-valuemin="0" aria-valuemax="100" style="width:100%">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <noscript><h4 class="text-danger">{% trans 'This site requires JavaScript to be enabled' %}</h4></noscript>
 
     <script src="res/lib/jquery/jquery.js"></script>

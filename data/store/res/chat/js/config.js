@@ -28,6 +28,9 @@ var config = {
     }
 };
 
+var resource_url = '/res/chat/';
+var server_url = 'http://localhost:8000/';
+
 var currentUser = {};
 
 QB.init(QBApp.appId, QBApp.authKey, QBApp.authSecret, config);

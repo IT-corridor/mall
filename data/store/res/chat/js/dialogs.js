@@ -1,4 +1,5 @@
 var dialogs = {};
+var pending_friends = [];
 
 function onSystemMessageListener(message) {
     if (!message.delay) {
@@ -124,8 +125,8 @@ function showOrUpdateDialogInUI(itemRes, updateHtml) {
 
 // add photo to dialogs
 function getDialogIcon(dialogType) {
-    var groupPhoto = '<img src="/static/chat/images/ava-group.svg" width="30" height="30" class="round">';
-    var privatPhoto = '<img src="/static/chat/images/ava-single.svg" width="30" height="30" class="round">';
+    var groupPhoto = '<img src="'+resource_url+'images/ava-group.svg" width="30" height="30" class="round">';
+    var privatPhoto = '<img src="'+resource_url+'images/ava-single.svg" width="30" height="30" class="round">';
     var defaultPhoto = '<span class="glyphicon glyphicon-eye-close"></span>';
 
     var dialogIcon;
@@ -179,47 +180,44 @@ function triggerDialog(dialogId) {
     $('#messages-list').scrollTop($('#messages-list').prop('scrollHeight'));
 }
 
-function setupUsersScrollHandler() {
-    // uploading users scroll event
-    $('.list-group.pre-scrollable.for-scroll').scroll(function () {
-        if ($('.list-group.pre-scrollable.for-scroll').scrollTop() == $('#users_list').height() - $('.list-group.pre-scrollable.for-scroll').height()) {
 
-            // get and show users
-            retrieveUsersForDialogCreation(function (users) {
-                $.each(users, function (index, item) {
-                    showUsers(this.user.full_name, this.user.id);
-                });
-            });
-        }
-    });
-}
-
-//
-function showUsers(userFullname, userLogin, userId) {
-    var userHtml = buildUserHtml(userFullname, userLogin, userId, false);
-    $('#users_list').append(userHtml);
-}
-
-function chatLogin() {
-    $("#loginForm").modal("show");
-    $('#loginForm .progress').hide();
-}
-// show modal window with users
 function showNewDialogPopup() {
-    $("#add_new_dialog").modal("show");
-    $('#add_new_dialog .progress').hide();
+  var full_name = prompt("Opponent's name : ");
+  if (full_name != null) {
+    if (full_name.length < 3)
+      full_name += '_';
+    if (full_name.length < 3)
+      full_name += '_';
 
-    // get and show users
-    retrieveUsersForDialogCreation(function (users) {
-        if (users === null || users.length === 0) {
-            return;
-        }
-        $.each(users, function (index, item) {
-            showUsers(this.user.full_name, this.user.login, this.user.id);
+    QB.users.get({full_name: full_name}, function(err, result) {
+      if (err) {
+        console.log(err);
+        alert("Oops! Name is wrong!\nPlease check it again.");
+      } else {
+        // console.log(result);
+        console.log(result.items[0].user);
+        console.log('retrieveUsers@@@@');
+        var opponent = result.items[0].user;
+        var endpoint = server_url+'/api/v1/notification/';
+        // console.log(document.cookie);
+
+        pending_friends.push(opponent);
+        console.log(pending_friends);
+
+        $.ajax({
+            'url': endpoint,
+            'data': {'type': 'chat_request', 'message': currentUser.full_name + ' wants to chat with you!@'+currentUser.login, 'user_id': opponent.login},
+            'type': 'POST',
+            'beforeSend': function (xhr) {
+                xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
+            },
+            success: function () {
+                alert('Request is sent successfully!');
+            }
         });
-    });
-
-    setupUsersScrollHandler();
+      }      
+    });  
+    }
 }
 
 // select users from users list
@@ -231,58 +229,17 @@ function clickToAdd(forFocus) {
     }
 }
 
-// create new dialog
-function createNewDialog() {
-    var usersIds = [];
-    var usersNames = [];
-    var uid;
-    $('#users_list .users_form.active').each(function (index) {
-        usersIds[index] = $(this).attr('id');
-        usersNames[index] = $(this).text();
-        uid = $(this).attr('uid');
-    });
-
-    $("#add_new_dialog").modal("hide");
-    $('#add_new_dialog .progress').show();
-
-    var dialogName;
-    var dialogOccupants;
-    var dialogType;
-
-    if (usersIds.length > 1) {
-        if (usersNames.indexOf(currentUser.full_name) > -1) {
-            dialogName = usersNames.join(', ');
-        } else {
-            dialogName = currentUser.full_name + ', ' + usersNames.join(', ');
-        }
-        dialogOccupants = usersIds;
-        dialogType = 2;
-    } else {
-        dialogOccupants = usersIds;
-        dialogType = 3;
-    }
-
-    var endpoint = '/api/v1/notification/';
-    console.log(document.cookie);
-    $.ajax({
-        'url': endpoint,
-        'data': {'type': 'chat_request', 'message': usersNames[0] + ' wants to chat with you!@'+currentUser.login, 'user_id': uid},
-        'type': 'POST',
-        'beforeSend': function (xhr) {
-            xhr.setRequestHeader('X-CSRFToken', getCookie('csrftoken'));
-        },
-        success: function () {
-            alert('Request is sent successfully!');
-        }
-    });
-}
-
 function createNewDialog_real(user_id, dialogName) {
     var user_id_qb;
-    $('#users_list .users_form').each(function (index) {
-        if (user_id == $(this).attr('uid'))
-            user_id_qb = $(this).attr('id');
-    });
+    console.log('Before create a dialog');
+    console.log(pending_friends);
+
+    for(var i = 0; i < pending_friends.length; i++) {
+        if (pending_friends[i].login == user_id) {
+            user_id_qb = pending_friends[i].id;
+            break;
+        }
+    }
 
     var dialogOccupants = [user_id_qb];
     var params = {

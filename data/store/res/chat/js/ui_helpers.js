@@ -7,8 +7,8 @@ function buildMessageHTML(messageText, messageSenderId, messageDateSent, attachm
 
 	var isMessageSticker = stickerpipe.isSticker(messageText);
 
-  var delivered = '<img class="icon-small" src="/static/chat/images/delivered.jpg" alt="" id="delivered_'+messageId+'">';
-  var read = '<img class="icon-small" src="/static/chat/images/read.jpg" alt="" id="read_'+messageId+'">';
+  var delivered = '<img class="icon-small" src="'+resource_url+'images/delivered.jpg" alt="" id="delivered_'+messageId+'">';
+  var read = '<img class="icon-small" src="'+resource_url+'images/read.jpg" alt="" id="read_'+messageId+'">';
 
 	var messageTextHtml = messageText;
 	if (messageAttach) {
