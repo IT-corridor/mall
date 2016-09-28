@@ -84,12 +84,3 @@ class ImaggaAPI(object):
     def get_tags_by_filepath(self, image_path, **kwargs):
         content = self.content(image_path)
         return self.tagging(content=content, **kwargs)
-
-if __name__ == '__main__':
-    api = ImaggaAPI(key='acc_60524b660772546',
-                    secret='b8a7133f5990d04038ce468c7321d82c')
-
-    tag_response = api.get_tags_by_filepath('/home/niklak/repositories/atyichu/back/'
-                                            'media/无需过多装饰简洁的纯白色连衣裙就能瞬间体现女人味气质_thumb.jpeg',
-                               language='zh_chs')
-    print (tag_response)
