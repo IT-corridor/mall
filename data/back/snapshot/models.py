@@ -353,6 +353,7 @@ class Member(models.Model):
     class Meta:
         verbose_name = _('Collaborator')
         verbose_name_plural = _('Collaborators')
+        unique_together = ('group', 'visitor')
         ordering = ('pk',)
 
 

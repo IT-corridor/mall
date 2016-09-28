@@ -848,7 +848,7 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         context = {'request': request}
         try:
             username = request.data['username']
-            visitor = Visitor.objects.get(username=username)
+            visitor = Visitor.objects.get(user__username=username)
         except KeyError as e:
             data = {'error': _('{} parameter is required').format(e.message)}
         except Visitor.DoesNotExist:
