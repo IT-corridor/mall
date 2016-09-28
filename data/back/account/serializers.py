@@ -135,7 +135,12 @@ class StoreSerializer(serializers.ModelSerializer):
     def get_newest_promotion(self, obj):
         promotion = obj.promotion_set.first()
         if promotion:
-            return promotion.post.url
+            request = self.context.get('request', None)
+            url = promotion.post.url
+            if request is not None:
+                return request.build_absolute_uri(url)
+            return url
+        return          
 
     def check_key_title(self, key, **kwargs):
         if 'title' not in kwargs:
