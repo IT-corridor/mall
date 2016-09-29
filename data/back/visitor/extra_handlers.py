@@ -23,11 +23,14 @@ class PendingUserVault(object):
 
     def get_by_sessionid(self, sessionid, code):
         """ Get user by sessionid and code"""
-        check_code, user = self.cache.get(sessionid)
+        try:
+            check_code, user = self.cache.get(sessionid)
+        except TypeError:
+            return
         if int(code) == check_code:
             self.cache.delete(sessionid)
             return user
-        return None
+        return
 
 
 class PhonesVault(object):
@@ -51,15 +54,18 @@ class PhonesVault(object):
     def get_pending_by_sessionid(self, sessionid, code):
         """ Get user by sessionid and code, then replace it
         to the verify_cache"""
-        check_code, phone = self.pending_cache.get(sessionid)
+        try:
+            check_code, phone = self.pending_cache.get(sessionid)
+        except TypeError:
+            return
         if int(code) == check_code:
             self.pending_cache.delete(sessionid)
             self.verify_cache.set(sessionid, phone, 180)
             return phone
-        return None
+        return
 
     def get_verify_by_sessionid(self, sessionid):
         """ Returns phone that have passed verification """
         phone = self.verify_cache.get(sessionid)
-        #self.verify_cache.delete(sessionid)
+        # self.verify_cache.delete(sessionid)
         return phone
