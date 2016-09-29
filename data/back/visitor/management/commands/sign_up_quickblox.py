@@ -18,7 +18,8 @@ class Command(BaseCommand):
         for n, visitor in enumerate(visitors):
             user = visitor.user
             if not hasattr(user, 'quickblox'):
-                self.stdout.write('processing user {}, {}'.format(user, n))
+                self.stdout.write('processing user {}, {}, {}'.format(user,
+                                                                      user.id, n))
                 token = api.get_token()
                 password = User.objects.make_random_password()
                 r = api.sign_up(user.id, user.username, password, token)
