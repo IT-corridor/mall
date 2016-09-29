@@ -18,22 +18,26 @@ class Command(BaseCommand):
         for n, visitor in enumerate(visitors):
             user = visitor.user
             if not hasattr(user, 'quickblox'):
-                self.stdout.write('processing user {}, {}, {}'.format(user,
-                                                                      user.id, n))
-                token = api.get_token()
-                password = User.objects.make_random_password()
-                r = api.sign_up(user.id, user.username, password, token)
+                try:
+                    self.stdout.write(
+                        'processing user {}, {}, {}'.format(user, user.id, n))
+                    token = api.get_token()
+                    password = User.objects.make_random_password()
+                    r = api.sign_up(user.id, user.username, password, token)
 
-                user_data = {
-                    'qid': r['user']['id'],
-                    'login': r['user']['login'],
-                    'full_name': r['user']['full_name'],
-                    'password': password,
-                    'user': user,
-                }
+                    user_data = {
+                        'qid': r['user']['id'],
+                        'login': r['user']['login'],
+                        'full_name': r['user']['full_name'],
+                        'password': password,
+                        'user': user,
+                    }
 
-                Quickblox.objects.create(**user_data)
-                api.destroy_session(token)
+                    Quickblox.objects.create(**user_data)
+                    api.destroy_session(token)
+                except Exception:
+                    self.stdout.write(
+                        self.style.WARNING('Error: {}-{},{}'.format(user, user.id, n)))
 
         self.stdout.write(
             self.style.SUCCESS('All users registered!'))
