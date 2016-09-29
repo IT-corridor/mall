@@ -58,7 +58,7 @@ class QuickbloxAPI(object):
 
         payload = {
             'user': {
-                'login': 'at' + str(login),
+                'login': 'aty' + str(login),
                 'password': password,
                 'full_name': full_name
             }
