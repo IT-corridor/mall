@@ -65,7 +65,8 @@ class QuickbloxAPI(object):
         }
 
         r = requests.post(url=url, headers=headers, json=payload)
-        assert r.status_code == 201
+
+        assert r.status_code == 201, r.text
         return r.json()
 
     def sign_in(self, login, password, token):
