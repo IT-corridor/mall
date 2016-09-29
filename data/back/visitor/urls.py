@@ -7,6 +7,7 @@ from . import views
 profile_router = DefaultRouter()
 
 profile_router.register(r'profile', views.ProfileViewSet, 'profile')
+profile_router.register(r'chat', views.QuickbloxViewSet, 'chat')
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),

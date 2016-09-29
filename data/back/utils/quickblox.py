@@ -37,7 +37,7 @@ class QuickbloxAPI(object):
         payload['signature'] = signature
 
         r = requests.post(url, json=payload)
-        assert r.status_code == 201
+        assert r.status_code == 201, r.text
 
         return r.json()['session']['token']
 
@@ -94,11 +94,12 @@ if __name__ == '__main__':
     auth_key = 'cPbb6XAAEgYwmF5'
     auth_secret = 'qcwkUf5dD73gLDS'
     api = QuickbloxAPI(app_id, auth_key, auth_secret)
-    token = api.get_token()
+    token = api.get_token({'login': 'aty1', 'password': 'zECL6QhrDF'})
     # 来去
     print token
-    password = 'asd112345!!'
-    login = api.sign_up('woop1', 'Starky2', password, token)['user']['login']
-    api.sign_in(login, password, token)
+    #password = 'asd112345!!'
+    #login = api.sign_up('woop1', 'Starky2', password, token)['user']['login']
+
+    #api.sign_in('aty1', 'zECL6QhrDF', token)
     api.sign_out(token)
     api.destroy_session(token)

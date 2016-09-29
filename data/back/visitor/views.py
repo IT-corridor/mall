@@ -612,9 +612,9 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
 
         if hasattr(user, 'quickblox'):
             serializer = self.serializer_class(user.quickblox)
-            jdata = {'login': serializer.data['login'],
-                     'password': serializer.data['password']}
-            token = api.get_token(json.dumps(jdata))
+            user_data = {'login': serializer.data['login'],
+                         'password': serializer.data['password']}
+            token = api.get_token()
         else:
             password = User.objects.make_random_password()
             token = api.get_token()
@@ -629,9 +629,9 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
             serializer = self.serializer_class(data=user_data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
-            api.sign_in(user_data['login'], password, token)
+        api.sign_in(user_data['login'], user_data['password'], token)
         data = serializer.data
-        data.update({'token': token})
+        data.update({'token': token, 'app_id': settings.QUICKBLOX_APP_ID})
         return Response(data)
 
     @list_route(methods=['post'])

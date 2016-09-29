@@ -8,6 +8,7 @@ angular.module('app.route', [
     'article.controllers',
     'notification.controllers',
     'store.controllers',
+    'chat.controllers',
 ])
 .config(['$routeProvider','PATH',
     function($routeProvider, PATH) {
@@ -143,6 +144,9 @@ angular.module('app.route', [
         when('/store/:pk/', {
             templateUrl: PATH + 'store/templates/detail.html',
             controller: 'CtrlStoreDetail'}).
+        when('/chat/', {
+            templateUrl: PATH + 'chat/templates/chat.html',
+            controller: 'CtrlChat'}).
         when('/error/404/', {
             templateUrl: PATH + 'partials/error/templates/404.html'}).
         otherwise({
