@@ -5,7 +5,6 @@ import time
 import operator
 import random
 import hmac
-import json
 import requests
 
 from hashlib import sha1
@@ -18,12 +17,9 @@ class QuickbloxAPI(object):
         self.auth_key = auth_key
         self.auth_secret = auth_secret
 
-        self.password = 'atyichu@3212'
-
-    def get_token(self):
+    def get_token(self, user=None):
         """
-
-        :param user:  A JSON STRING WITH LOGIN
+        :param user:  A JSON STRING WITH LOGIN AND PASSWORD
         """
         url = 'https://api.quickblox.com/session.json'
         nonce = str(random.randint(1, 10000))
@@ -35,7 +31,8 @@ class QuickbloxAPI(object):
             'timestamp': timestamp,
             'nonce': nonce,
         }
-
+        if user is not None and isinstance(user, str):
+            payload['user'] = user
         signature = self._get_signature(payload)
         payload['signature'] = signature
 
@@ -50,7 +47,7 @@ class QuickbloxAPI(object):
         s = '&'.join('{}={}'.format(k, v) for k, v in sorted_data)
         return hmac.new(str(self.auth_secret), str(s), sha1).hexdigest()
 
-    def sign_up(self, login, full_name, token):
+    def sign_up(self, login, full_name, password, token):
         """
         Login must be unique, And it will be a user PK
         """
@@ -62,20 +59,19 @@ class QuickbloxAPI(object):
         payload = {
             'user': {
                 'login': 'at' + str(login),
-                'password': self.password,
+                'password': password,
                 'full_name': full_name
             }
         }
 
         r = requests.post(url=url, headers=headers, json=payload)
-        print r.text
         assert r.status_code == 201
-        return r.json()['user']['login']
+        return r.json()
 
-    def sign_in(self, login, token):
+    def sign_in(self, login, password, token):
         url = 'http://api.quickblox.com/login.json'
         headers = {"QB-Token": token}
-        payload = {'login': login, 'password': self.password}
+        payload = {'login': login, 'password': password}
 
         r = requests.post(url=url, headers=headers, json=payload)
         assert r.status_code == 202
@@ -93,15 +89,15 @@ class QuickbloxAPI(object):
         assert r.status_code == 200
 
 if __name__ == '__main__':
-    app_id = '47235'
-    auth_key = 'bMaMr7rX86sbGqN'
-    auth_secret = 'YbetO6dx7fDb7Yn'
+    app_id = '47642'
+    auth_key = 'cPbb6XAAEgYwmF5'
+    auth_secret = 'qcwkUf5dD73gLDS'
     api = QuickbloxAPI(app_id, auth_key, auth_secret)
     token = api.get_token()
     # 来去
     print token
-
-    login = api.sign_up(8, 'JonSnowц', token)
-    api.sign_in(login, token)
+    password = 'asd112345!!'
+    login = api.sign_up('woop1', 'Starky2', password, token)['user']['login']
+    api.sign_in(login, password, token)
     api.sign_out(token)
     api.destroy_session(token)

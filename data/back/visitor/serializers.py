@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password as vp
 from rest_framework import serializers
-from .models import Visitor, VisitorExtra, Weixin
+from .models import Visitor, VisitorExtra, Weixin, Quickblox
 from utils.utils import get_content_file
 from utils.validators import china_phone
 from django.core.mail import mail_admins
@@ -219,3 +219,9 @@ class PhoneSerializer(serializers.Serializer):
 
 class CodeSerializer(serializers.Serializer):
     code = serializers.CharField(label=_('Code'))
+
+
+class QuicbloxSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Quickblox

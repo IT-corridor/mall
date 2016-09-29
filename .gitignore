@@ -122,3 +122,5 @@ crashlytics-build.properties
 /data/back/config.json
 *xlsx#
 
+/data/deploy/deploy.py
+/data/deploy/config.json

@@ -2,33 +2,32 @@
 
 from __future__ import unicode_literals
 
-import random
-from urllib import quote_plus
+import json
 from django.utils.translation import ugettext as _
-from django.utils import timezone
 from django.contrib.auth import login, logout, authenticate, \
     update_session_auth_hash
+from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.core.mail import mail_admins
-from django.core.cache import cache
 from django.conf import settings
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, list_route
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 from .serializers import VisitorSerializer, VisitorExtraSerializer, \
     VisitorCreateSerializer, VisitorProfileSerializer, VisitorLoginSerializer, \
-    PhoneSerializer, CodeSerializer
+    PhoneSerializer, CodeSerializer, QuicbloxSerializer
 from .oauth2 import WeixinBackend, WeixinQRBackend
 from .models import Visitor, VisitorExtra
 from .permissions import IsVisitorSimple, IsVisitorOrReadOnly
 from .extra_handlers import PendingUserVault, PhonesVault
 from .sms import TaoSMSAPI
 from utils.serializers import UserPasswordSerializer, UserSetPasswordSerializer
+from utils.quickblox import QuickbloxAPI
 from snapshot.models import Notification
 from vutils.notification import trigger_notification
 
@@ -597,6 +596,55 @@ class ProfileViewSet(viewsets.GenericViewSet):
 
         serializer.save()
         return Response(status=204)
+
+
+class QuickbloxViewSet(viewsets.GenericViewSet):
+    """Only authenticated """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = QuicbloxSerializer
+
+    @list_route(methods=['post'])
+    def create_session(self, request):
+        api = QuickbloxAPI(settings.QUICKBLOX_APP_ID,
+                           settings.QUICKBLOX_AUTH_KEY,
+                           settings.QUICKBLOX_AUTH_SECRET)
+        user = request.user
+
+        if hasattr(user, 'quickblox'):
+            serializer = self.serializer_class(user.quickblox)
+            jdata = {'login': serializer.data['login'],
+                     'password': serializer.data['password']}
+            token = api.get_token(json.dumps(jdata))
+        else:
+            password = User.objects.make_random_password()
+            token = api.get_token()
+            r = api.sign_up(user.id, user.username, password, token)
+            user_data = {
+                'qid': r['user']['id'],
+                'login': r['user']['login'],
+                'full_name': r['user']['full_name'],
+                'password': password,
+                'user': user.id,
+            }
+            serializer = self.serializer_class(data=user_data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            api.sign_in(user_data['login'], password, token)
+        data = serializer.data
+        data.update({'token': token})
+        return Response(data)
+
+    @list_route(methods=['post'])
+    def destroy_session(self, request):
+        try:
+            token = request.data['token']
+        except KeyError:
+            raise ValidationError({'detail': _('Session token is required!')})
+        api = QuickbloxAPI(settings.QUICKBLOX_APP_ID,
+                           settings.QUICKBLOX_AUTH_KEY,
+                           settings.QUICKBLOX_AUTH_SECRET)
+        api.destroy_session(token)
+        return Response(204)
 
 
 def check_unread_notification(user):

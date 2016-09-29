@@ -123,6 +123,10 @@ IMAGGA_LANG = 'zh_chs'
 TAO_SMS_KEY = data['TAO_SMS_KEY']
 TAO_SMS_SECRET = data['TAO_SMS_SECRET']
 
+QUICKBLOX_APP_ID = data['QUICKBLOX_APP_ID']
+QUICKBLOX_AUTH_KEY = data['QUICKBLOX_AUTH_KEY']
+QUICKBLOX_AUTH_SECRET = data['QUICKBLOX_AUTH_SECRET']
+
 # CORS
 CORS_ORIGIN_WHITELIST = ('atyichu.com',
                          'www.atyichu.com',

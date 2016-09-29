@@ -75,3 +75,17 @@ class VisitorExtra(models.Model):
     class Meta:
         verbose_name = _('Extra Data')
         unique_together = (('weixin', 'backend'),)
+
+
+class Quickblox(models.Model):
+    """ Qucikblox credentials vault """
+    qid = models.PositiveIntegerField(_('Quickblox external ID'))
+    login = models.CharField(_('Login'), max_length=50)
+    full_name = models.CharField(_('Full name'), max_length=50)
+    password = models.CharField(_('Password'), max_length=50)
+    user = models.OneToOneField('auth.User', on_delete=models.CASCADE,
+                                primary_key=True)
+
+    class Meta:
+        verbose_name = _('Quickblox')
+        ordering = ('pk',)

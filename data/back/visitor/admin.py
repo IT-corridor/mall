@@ -18,6 +18,11 @@ class VisitorExtraAdmin(admin.ModelAdmin):
 class WeixinAdmin(admin.ModelAdmin):
     readonly_fields = ('unionid', )
 
+
+class QuickbloxAdmin(admin.ModelAdmin):
+    list_display = ('qid', 'login', 'full_name',)
+
 admin.site.register(models.Visitor, VisitorAdmin)
 admin.site.register(models.Weixin, WeixinAdmin)
 admin.site.register(models.VisitorExtra, VisitorExtraAdmin)
+admin.site.register(models.Quickblox, QuickbloxAdmin)
