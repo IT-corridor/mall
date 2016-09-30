@@ -47,7 +47,7 @@ class PhonesVault(object):
             request.session.cycle_key()
         sessionid = request.session.session_key
         code = random.randint(1000, 9999)
-        #mail_admins('Verification code', 'Code: {}'.format(code))
+        mail_admins('Verification code', 'Code: {}'.format(code))
         self.pending_cache.set(sessionid, (code, phone), 180)
         return code
 
