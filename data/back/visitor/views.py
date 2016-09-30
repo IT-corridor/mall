@@ -618,9 +618,11 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
             token = api.get_token()
 
             data = serializer.data
+            api.sign_in(user_data['login'], user_data['password'], token)
             data.update({'token': token,
                          'app_id': int(settings.QUICKBLOX_APP_ID)})
             return Response(data)
+        raise PermissionDenied({'detail': 'You have no permission'})
 
     @list_route(methods=['post'])
     def destroy_session(self, request):
@@ -632,7 +634,7 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
                            settings.QUICKBLOX_AUTH_KEY,
                            settings.QUICKBLOX_AUTH_SECRET)
         api.destroy_session(token)
-        return Response(204)
+        return Response(status=204)
 
 
 def check_unread_notification(user):

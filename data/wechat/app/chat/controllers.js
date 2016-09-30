@@ -6,10 +6,22 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
                 debug: {mode: 1}
             };
             $rootScope.title = 'CHAT Yo-hoo';
-            Quickblox.create_session();
+            Quickblox.connect();
+            var dialogs_p = Quickblox.get_dialogs();
+            dialogs_p.then(function(result){
+                $scope.dialogs = result;
+            });
 
             $scope.destroy_session = function(){
-                Chat.destroy_session({'token': $scope.credentials.token});
+                Quickblox.disconnect();
             }
+
+            $scope.users = [];
+            $scope.get_users = function(){
+                var promise = Quickblox.get_users();
+                promise.then(function(success){
+                    $scope.users = success;
+                });
+            };
         }
     ]);
