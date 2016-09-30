@@ -1,14 +1,12 @@
 angular.module('chat.controllers', ['chat.services', 'ngCookies'])
     .controller('CtrlChat', ['$scope', '$rootScope', '$http', '$cookies',
-        '$location', '$route', '$window', 'Chat',
-        function ($scope, $rootScope, $http, $cookies, $location, $route, $window, Chat) {
+        '$location', '$route', '$window', 'Quickblox',
+        function ($scope, $rootScope, $http, $cookies, $location, $route, $window, Quickblox) {
             var CONFIG = {
                 debug: {mode: 1}
             };
             $rootScope.title = 'CHAT Yo-hoo';
-            $scope.credentials = Chat.create_session(function(success){
-                QB.init(success.token, success.app_id, CONFIG);
-            });
+            Quickblox.create_session();
 
             $scope.destroy_session = function(){
                 Chat.destroy_session({'token': $scope.credentials.token});

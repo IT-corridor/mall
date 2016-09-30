@@ -101,5 +101,5 @@ if __name__ == '__main__':
     #login = api.sign_up('woop1', 'Starky2', password, token)['user']['login']
 
     #api.sign_in('aty1', 'zECL6QhrDF', token)
-    api.sign_out(token)
+    #api.sign_out(token)
     api.destroy_session(token)

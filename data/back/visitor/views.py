@@ -615,24 +615,11 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
             user_data = {'login': serializer.data['login'],
                          'password': serializer.data['password']}
             token = api.get_token()
-        else:
-            password = User.objects.make_random_password()
-            token = api.get_token()
-            r = api.sign_up(user.id, user.username, password, token)
-            user_data = {
-                'qid': r['user']['id'],
-                'login': r['user']['login'],
-                'full_name': r['user']['full_name'],
-                'password': password,
-                'user': user.id,
-            }
-            serializer = self.serializer_class(data=user_data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-        api.sign_in(user_data['login'], user_data['password'], token)
-        data = serializer.data
-        data.update({'token': token, 'app_id': settings.QUICKBLOX_APP_ID})
-        return Response(data)
+
+            data = serializer.data
+            data.update({'token': token,
+                         'app_id': int(settings.QUICKBLOX_APP_ID)})
+            return Response(data)
 
     @list_route(methods=['post'])
     def destroy_session(self, request):
