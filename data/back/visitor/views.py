@@ -364,6 +364,7 @@ class ProfileViewSet(viewsets.GenericViewSet):
               required: true
             - name: avatar
               type: file
+              required: false
 
         """
         data = request.data.copy()
