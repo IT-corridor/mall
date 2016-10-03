@@ -33,7 +33,10 @@ angular.module('chat.services', ['ngResource'])
                 }
             };
             $rootScope.messages = [];
-            var user_storage = {current_page: 1, items: []};
+            var user_storage = {
+                current_page: 1,
+                items: []
+            };
             $rootScope.credentials = Chat.create_session(function(success) {
 
                 QB.init(success.token, success.app_id);
@@ -114,15 +117,15 @@ angular.module('chat.services', ['ngResource'])
                 return inner.promise;
             };
 
-            Quickblox.send_message = function(opponent_id, body){
+            Quickblox.send_message = function(opponent_id, body) {
                 var inner = $q.defer();
                 promise.then(function(success) {
                     var msg = {
-                      type: 'chat',
-                      body: body,
-                      extension: {
-                        save_to_history: 1,
-                      }
+                        type: 'chat',
+                        body: body,
+                        extension: {
+                            save_to_history: 1,
+                        }
                     };
                     QB.chat.send(opponentId, msg);
                     inner.resolve();
@@ -132,7 +135,9 @@ angular.module('chat.services', ['ngResource'])
 
             Quickblox.unread_count = function(dialog_ids) {
                 /* dialog_ids Array expected */
-                var params = {chat_dialog_ids: dialog_ids};
+                var params = {
+                    chat_dialog_ids: dialog_ids
+                };
                 var inner = $q.defer();
                 promise.then(function(success) {
                     QB.chat.message.unreadCount(params, function(err, res) {
@@ -148,7 +153,12 @@ angular.module('chat.services', ['ngResource'])
             };
 
             Quickblox.message_list = function(dialog_id) {
-                var params = {chat_dialog_id: dialog_id, sort_desc: 'date_sent', limit: 100, skip: 0};
+                var params = {
+                    chat_dialog_id: dialog_id,
+                    sort_desc: 'date_sent',
+                    limit: 100,
+                    skip: 0
+                };
                 var inner = $q.defer();
 
                 promise.then(function(success) {
@@ -168,24 +178,31 @@ angular.module('chat.services', ['ngResource'])
             /*USERS*/
 
             Quickblox.get_users = function(dialog_id) {
-                var params = {page: user_storage.current_page, per_page: '10'};
-
                 var inner = $q.defer();
 
-                promise.then(function(success) {
-                    QB.users.listUsers(params, function(err, res) {
-                        if (err) {
-                            inner.reject(err);
-                        } else {
-                            user_storage.current_page += 1;
-                            items = user_storage.items.concat(res.items);
-                            inner.resolve(res);
-                            console.log(res);
-                        }
+                if (!user_storage.total_entries || user_storage.items.length < user_storage.total_entries) {
+                    var params = {
+                        page: user_storage.current_page,
+                        per_page: '10'
+                    };
+
+                    promise.then(function(success) {
+                        QB.users.listUsers(params, function(err, res) {
+                            if (err) {
+                                inner.reject(err);
+                            } else {
+                                user_storage.current_page += 1;
+                                user_storage.total_entries = res.total_entries;
+                                user_storage.items = user_storage.items.concat(res.items);
+                                inner.resolve(user_storage.items);
+                                console.log(res);
+                            }
+                        });
+
                     });
-
-                });
-
+                } else {
+                    inner.reject();
+                }
                 return inner.promise;
             };
 
@@ -210,7 +227,7 @@ angular.module('chat.services', ['ngResource'])
 
                 promise.then(function(success) {
                     QB.chat.roster.add(jidOrUserId, function() {
-                      // TODO
+                        // TODO
                     });
 
                 });
@@ -223,7 +240,7 @@ angular.module('chat.services', ['ngResource'])
 
                 promise.then(function(success) {
                     QB.chat.roster.remove(jidOrUserId, function() {
-                      // TODO
+                        // TODO
                     });
 
                 });
@@ -236,7 +253,7 @@ angular.module('chat.services', ['ngResource'])
 
                 promise.then(function(success) {
                     QB.chat.roster.confirm(jidOrUserId, function() {
-                      // TODO
+                        // TODO
                     });
 
                 });
@@ -249,7 +266,7 @@ angular.module('chat.services', ['ngResource'])
 
                 promise.then(function(success) {
                     QB.chat.roster.reject(jidOrUserId, function() {
-                      // TODO
+                        // TODO
                     });
 
                 });
@@ -281,18 +298,19 @@ angular.module('chat.services', ['ngResource'])
             };
 
             function onSubscribe(userId) {
-              // ToDO
+                // ToDO
             };
 
             function onConfirmSubscribe(userId) {
-              // ToDO
+                // ToDO
             };
 
             function onRejectSubscribe(userId) {
-              // ToDO
+                // ToDO
             };
+
             function onContactList(userId, type) {
-              // ToDO
+                // ToDO
             };
             Quickblox.roster = roster;
             return Quickblox;
