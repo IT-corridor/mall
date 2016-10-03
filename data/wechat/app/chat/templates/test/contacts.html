@@ -1,0 +1,13 @@
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Contacts</div>
+  <!-- List group -->
+  <ul class="list-group">
+    <li class="list-group-item" data-ng-repeat="item in contacts">
+        {{ item.user.full_name }}
+        <span class="pull-right" data-ng-click="unsubscribe(item.user)">
+            <i class="fa fa-times-circle text-danger fa-lg" aria-hidden="true"></i>
+        </span>
+    </li>
+  </ul>
+</div>

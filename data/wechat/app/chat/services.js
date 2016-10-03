@@ -25,8 +25,14 @@ angular.module('chat.services', ['ngResource'])
         function($rootScope, $window, $q, Chat) {
             var defer = $q.defer();
             var promise = defer.promise;
+
+            var defer_chat = $q.defer();
+            var promise_chat = defer_chat.promise;
+
             var roster = {};
             var Quickblox = {};
+            var users = {};
+            var contacts = [];
             var CONFIG = {
                 debug: {
                     mode: 1
@@ -37,6 +43,7 @@ angular.module('chat.services', ['ngResource'])
                 current_page: 1,
                 items: []
             };
+            var subscribers = [];
             $rootScope.credentials = Chat.create_session(function(success) {
 
                 QB.init(success.token, success.app_id);
@@ -45,14 +52,30 @@ angular.module('chat.services', ['ngResource'])
 
             Quickblox.connect = function() {
                 promise.then(function(success) {
+
                     QB.chat.connect({
                         userId: $rootScope.credentials.qid,
                         password: $rootScope.credentials.password
                     }, function(err, roster) {
+
                         if (err) {
-                            console.log(err);
+                            defer_chat.reject(err);
                         } else {
-                            console.log(roster);
+                            defer_chat.resolve(roster);
+                            var ids = Object.keys(roster);
+                            var filter = {field: 'id', param: 'in', value: ids};
+                            var promise_u = users.get_list(null, null, filter);
+                            promise_u.then(function(success){
+                                var i = 0, l = success.length;
+                                for (i; i < l; i++){
+                                    contacts.push(success[i]);
+                                }
+                            },
+                            function(err){
+                                console.log(err);
+                            }
+                            );
+
                         }
                     });
                     QB.chat.onDisconnectedListener = onDisconnectedListener;
@@ -177,13 +200,15 @@ angular.module('chat.services', ['ngResource'])
 
             /*USERS*/
 
-            Quickblox.get_users = function(dialog_id) {
+            Quickblox.get_users = function(filter) {
+                console.log('here');
+                // TODO: make it easy
                 var inner = $q.defer();
-
                 if (!user_storage.total_entries || user_storage.items.length < user_storage.total_entries) {
                     var params = {
                         page: user_storage.current_page,
-                        per_page: '10'
+                        per_page: '10',
+                        filter: filter,
                     };
 
                     promise.then(function(success) {
@@ -195,14 +220,52 @@ angular.module('chat.services', ['ngResource'])
                                 user_storage.total_entries = res.total_entries;
                                 user_storage.items = user_storage.items.concat(res.items);
                                 inner.resolve(user_storage.items);
-                                console.log(res);
                             }
                         });
 
                     });
                 } else {
-                    inner.reject();
+                    inner.reject('error');
                 }
+                return inner.promise;
+            };
+
+            users.get_list = function(page, per_page, filter) {
+                var inner = $q.defer();
+
+                var params = {
+                    page: page,
+                    per_page: per_page,
+                    filter: filter,
+                };
+
+                promise.then(function(success) {
+                    QB.users.listUsers(params, function(err, res) {
+                        if (err) {
+                            inner.reject(err);
+                        } else {
+                            inner.resolve(res.items);
+                        }
+                    });
+
+                });
+
+                return inner.promise;
+            };
+
+             users.get = function(user_id) {
+                var inner = $q.defer();
+
+                promise.then(function(success) {
+                    QB.users.get(user_id, function(err, res) {
+                        if (err) {
+                            inner.repromiject(err);
+                        } else {
+                            inner.resolve(res);
+                        }
+                    });
+
+                });
                 return inner.promise;
             };
 
@@ -212,11 +275,11 @@ angular.module('chat.services', ['ngResource'])
             roster.get = function() {
                 var inner = $q.defer();
 
-                promise.then(function(success) {
+                promise_chat.then(function(success) {
                     QB.chat.roster.get(function(res) {
+                        console.log(res);
                         inner.resolve(res);
                     });
-
                 });
 
                 return inner.promise;
@@ -225,9 +288,15 @@ angular.module('chat.services', ['ngResource'])
             roster.add_user = function(jidOrUserId) {
                 var inner = $q.defer();
 
-                promise.then(function(success) {
+                promise_chat.then(function(success) {
                     QB.chat.roster.add(jidOrUserId, function() {
-                        // TODO
+                        var p = users.get(jidOrUserId);
+                        p.then(function (success){
+                            contacts.push({'user': success});
+                        });
+                       inner.resolve();
+
+                       console.log(contacts);
                     });
 
                 });
@@ -235,12 +304,12 @@ angular.module('chat.services', ['ngResource'])
                 return inner.promise;
             };
 
-            roster.remove_user = function(jidOrUserId) {
+            roster.remove = function(jidOrUserId) {
                 var inner = $q.defer();
 
-                promise.then(function(success) {
+                promise_chat.then(function(success) {
                     QB.chat.roster.remove(jidOrUserId, function() {
-                        // TODO
+
                     });
 
                 });
@@ -251,7 +320,7 @@ angular.module('chat.services', ['ngResource'])
             roster.confirm = function(jidOrUserId) {
                 var inner = $q.defer();
 
-                promise.then(function(success) {
+                promise_chat.then(function(success) {
                     QB.chat.roster.confirm(jidOrUserId, function() {
                         // TODO
                     });
@@ -264,7 +333,7 @@ angular.module('chat.services', ['ngResource'])
             roster.reject = function(jidOrUserId) {
                 var inner = $q.defer();
 
-                promise.then(function(success) {
+                promise_chat.then(function(success) {
                     QB.chat.roster.reject(jidOrUserId, function() {
                         // TODO
                     });
@@ -275,7 +344,43 @@ angular.module('chat.services', ['ngResource'])
             };
 
 
+            roster.confirm_user = function(user){
+                var promise = roster.confirm(user.id);
+                promise.then(function(success){
+                    var index = subscribers.indexOf(user);
+                    console.log(index);
+                    subscribers.splice(index, 1);
+                });
 
+            };
+
+            roster.remove_user = function(user){
+                console.log('here');
+                var inner = roster.remove(user.id);
+                inner.then(function(success){
+                    var index = contacts.indexOf(user);
+                    console.log(index);
+                    contacts.splice(index, 1);
+                });
+            }
+
+            roster.get_users = function(){
+                var roster_promise = roster.get();
+                roster_promise.then(function(success){
+                    var ids = Object.keys(success);
+                    var filter = {field: 'id', param: 'in', value: ids};
+                    var promise_u = users.get_list(null, null, filter);
+                    promise_u.then(function(success){
+                        console.log(success);
+                    },
+                    function(err){
+                        console.log(err);
+                    }
+                    );
+                    contacts.push(success);
+                    console.log(success);
+                });
+            };
 
 
             Quickblox.disconnect = function() {
@@ -298,7 +403,11 @@ angular.module('chat.services', ['ngResource'])
             };
 
             function onSubscribe(userId) {
-                // ToDO
+                var promise = users.get(userId);
+                promise.then(function(success){
+                    console.log(success);
+                    subscribers.push({'id': success.id, 'full_name': success.full_name});
+                });
             };
 
             function onConfirmSubscribe(userId) {
@@ -312,6 +421,10 @@ angular.module('chat.services', ['ngResource'])
             function onContactList(userId, type) {
                 // ToDO
             };
+
+            Quickblox.subscribers = subscribers;
+            Quickblox.contacts = contacts;
+            Quickblox.users = users;
             Quickblox.roster = roster;
             return Quickblox;
         }

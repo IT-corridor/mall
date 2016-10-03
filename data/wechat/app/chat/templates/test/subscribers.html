@@ -1,0 +1,13 @@
+<div class="panel panel-default">
+  <!-- Default panel contents -->
+  <div class="panel-heading">Pending subscribers</div>
+  <!-- List group -->
+  <ul class="list-group">
+    <li class="list-group-item" data-ng-repeat="user in subscribers">
+        {{ user.full_name }}
+        <span class="pull-right" data-ng-click="confirm_subscription(user)">
+            <i class="fa fa-check-circle text-success fa-lg" aria-hidden="true"></i>
+        </span>
+    </li>
+  </ul>
+</div>

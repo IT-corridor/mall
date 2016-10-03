@@ -1,7 +1,7 @@
 <ul class="list-unstyled">
     <li data-ng-repeat="item in users">
         <span>{{ item.user.full_name }}</span>
-        <span class="pull-right">
+        <span class="pull-right" data-ng-click="subscribe(item.user.id)">
             <i class="fa fa-plus-circle text-success fa-lg" aria-hidden="true"></i>
         </span>
     </li>
