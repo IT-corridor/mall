@@ -1,7 +1,7 @@
 <ul class="list-unstyled">
-    <li data-ng-repeat="item in users">
+    <li data-ng-repeat="item in qb.user_storage.items">
         <span>{{ item.user.full_name }}</span>
-        <span class="pull-right" data-ng-click="subscribe(item.user.id)">
+        <span class="pull-right" data-ng-click="qb.subscribe_user(item.user)">
             <i class="fa fa-plus-circle text-success fa-lg" aria-hidden="true"></i>
         </span>
     </li>

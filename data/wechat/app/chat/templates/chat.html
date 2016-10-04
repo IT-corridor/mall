@@ -1,18 +1,15 @@
 <div class="container">
     <div class="row">
         <div class="col-md-2">
-            <div data-ng-if="subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/subscribers.html'"></div>
-            <div data-ng-if="contacts.length > 0" data-ng-include="PATH +'chat/templates/test/contacts.html'"></div>
+            <div data-ng-if="qb.subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/subscribers.html'"></div>
+            <div data-ng-if="qb.contacts.length > 0" data-ng-include="PATH +'chat/templates/test/contacts.html'"></div>
+            <p class="text-center"><a class="btn btn-info" data-ng-click="open_user_list()">Add users</a></p>
+            <p class="text-center"><a class="btn btn-danger" data-ng-click="destroy_session()">Destroy chat session</a></p>
         </div>
         <div class="col-md-10">
-            <p class="text-center"><a class="btn btn-danger" data-ng-click="destroy_session()">Destroy chat session</a></p>
 
-            <pre>{{ credentials |json }}</pre>
+            <pre>{{ qb.credentials |json }}</pre>
             <pre>{{ dialogs |json }}</pre>
-            <pre>{{ subscribers |json }}</pre>
-            <pre>{{ contacts |json }}</pre>
-            <div data-ng-include="PATH +'chat/templates/test/user_list.html'"></div>
-            <p class="text-center"><a class="btn btn-info" data-ng-click="get_users()">Get user list</a></p>
         </div>
     </div>
 

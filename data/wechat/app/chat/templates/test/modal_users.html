@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <button type="button" class="close" data-ng-click="cancel()"><span aria-hidden="true">&times;</span>
+        <span class="sr-only">{{ 'NAVBAR.MODAL.CLOSE' | translate }}</span></button>
+    <h3 class="modal-title">USERS</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12 col-xs-12">
+            <ul class="list-group">
+                <li class="list-group-item" data-ng-repeat="item in qb.user_storage.items">
+                    {{ item.user.full_name }}
+                    <span class="pull-right" data-ng-click="qb.subscribe_user(item.user)">
+                        <i class="fa fa-plus-circle text-success fa-lg" aria-hidden="true"></i>
+                    </span>
+                </li>
+              </ul>
+            <p class="text-center"><a class="btn btn-info" data-ng-click="qb.get_users()">Get user list</a></p>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+
+</div>

@@ -1,43 +1,35 @@
 angular.module('chat.controllers', ['chat.services', 'ngCookies'])
-    .controller('CtrlChat', ['$scope', '$rootScope', '$http', '$cookies',
-        '$location', '$route', '$window', 'Quickblox',
-        function ($scope, $rootScope, $http, $cookies, $location, $route, $window, Quickblox) {
-            var CONFIG = {
-                debug: {mode: 1}
-            };
+    .controller('CtrlChat', ['$scope', '$rootScope', '$uibModal', 'PATH', 'Quickblox',
+        function ($scope, $rootScope, $uibModal, PATH, Quickblox) {
+
             $rootScope.title = 'CHAT Yo-hoo';
-            Quickblox.connect();
+            $scope.qb = Quickblox;
+            $scope.qb.connect();
 
-            var dialogs_p = Quickblox.get_dialogs();
+            $scope.open_user_list = function() {
+                // TODO search
+                var modalInstance = $uibModal.open({
+                    animation: true,
+                    templateUrl: PATH + 'chat/templates/test/modal_users.html',
+                    controller: 'ChatUserListCtrl',
+                    size: 'sm',
+                    resolve: {
+                        qb: function () {
+                          return $scope.qb;
+                        }
+                    }
+                });
 
-            dialogs_p.then(function(result){
-                $scope.dialogs = result;
-            });
-
-            $scope.destroy_session = function(){
-                Quickblox.disconnect();
             }
 
-
-            $scope.users = [];
-            $scope.contacts = Quickblox.contacts;
-            $scope.subscribers = Quickblox.subscribers;
-
-            $scope.get_users = function(){
-                var promise = Quickblox.get_users();
-                promise.then(function(success){
-                    $scope.users = success;
-                });
-            };
-            $scope.subscribe = function(user_id){
-                Quickblox.roster.add_user(user_id);
-            };
-            $scope.unsubscribe = function(user){
-                Quickblox.roster.remove_user(user);
-            };
-
-            $scope.confirm_subscription = function(user){
-                Quickblox.roster.confirm_user(user);
-            };
         }
-    ]);
+    ])
+    .controller('ChatUserListCtrl', ['$scope','$translate', '$uibModalInstance', 'qb',
+    function($scope, $translate, $uibModalInstance, qb) {
+        $scope.qb = qb;
+        $scope.cancel = function() {
+            $uibModalInstance.dismiss('cancel');
+        }
+    }
+
+]);
