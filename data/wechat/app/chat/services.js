@@ -1,7 +1,7 @@
 angular.module('chat.services', ['ngResource'])
     .constant('chat_path', 'visitor/chat/')
     .factory('Chat', ['$resource', 'chat_path', 'API',
-        function($resource, chat_path, API) {
+        function ($resource, chat_path, API) {
             return $resource(API + chat_path + ':pk/:action/', {}, {
                 create_session: {
                     method: 'POST',
@@ -21,32 +21,32 @@ angular.module('chat.services', ['ngResource'])
             });
         }
     ])
-    .factory('Quickblox', ['$q', 'Chat',
-        function($q, Chat) {
-          // TODO: make it cleaner
+    .factory('Quickblox', ['$rootScope', '$q', 'Chat',
+        function ($rootScope, $q, Chat) {
+            // TODO: make it cleaner
             /*This is a Angularjs factory for Quickblox API */
             var d = $q.defer(), // global defer for object
                 dc = $q.defer(), // global chat defer
                 pc = dc.promise,
                 p = d.promise
-                self = null;
+            self = null;
 
             var Quickblox = {
-                init: function(){
-                  // trick for storing self reference.
-                  self = this;
+                init: function () {
+                    // trick for storing self reference.
+                    self = this;
                 },
-                credentials: Chat.create_session(function(success) {
+                credentials: Chat.create_session(function (success) {
                     QB.init(success.token, success.app_id);
                     d.resolve();
                 }),
-                connect: function() {
+                connect: function () {
                     var self = this;
-                    p.then(function(success) {
+                    p.then(function (success) {
                         QB.chat.connect({
                             userId: self.credentials.qid,
                             password: self.credentials.password
-                        }, function(err, res) {
+                        }, function (err, res) {
                             /*roster expected as res*/
                             if (err) {
                                 dc.reject(err);
@@ -60,20 +60,25 @@ angular.module('chat.services', ['ngResource'])
                                         value: ids
                                     };
                                     // Works
-                                    var promise_contacts = self.users.get_list(null, null, filter);
-                                    promise_contacts.then(function(success) {
-                                            self.contacts = self.contacts.concat(success.items);
+                                    var p_contacts = self.users.get_list(null, null, filter);
+                                    p_contacts.then(function (success) {
+                                            self.contacts = success.items;
                                         },
-                                        function(err) {
+                                        function (err) {
                                             console.log(err);
                                         }
                                     );
+                                    var p_dialogs = self.dialogs.get_list(null);
+                                    p_dialogs.then(function (success) {
+                                        self.storage.dialogs = success.items;
+                                    });
                                 }
                             }
                         });
 
                         QB.chat.onDisconnectedListener = self.on_disconnected;
                         QB.chat.onMessageListener = self.on_message;
+                        QB.chat.onDeliveredStatusListener = self.on_delivered_status;
                         QB.chat.onSubscribeListener = self.on_subscribe;
                         QB.chat.onConfirmSubscribeListener = self.on_confirm_subscribe;
                         QB.chat.onRejectSubscribeListener = self.on_reject_subscribe;
@@ -81,14 +86,14 @@ angular.module('chat.services', ['ngResource'])
 
                     });
                 },
-                disconnect: function() {
+                disconnect: function () {
                     QB.chat.disconnect();
                 },
                 dialogs: {
-                    get_list: function(params) {
+                    get_list: function (params) {
                         var inner = $q.defer();
-                        p.then(function(success) {
-                            QB.chat.dialog.list(params, function(err, res) {
+                        p.then(function (success) {
+                            QB.chat.dialog.list(params, function (err, res) {
                                 if (err) {
                                     inner.reject(err);
                                 } else {
@@ -98,15 +103,15 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
-                    create_private: function(occupant_id) {
+                    create_private: function (occupant_id) {
                         var inner = $q.defer();
-                        p.then(function(success) {
+                        p.then(function (success) {
                             var params = {
                                 type: 3,
                                 occupants_ids: [occupant_id],
                             };
 
-                            QB.chat.dialog.create(params, function(err, res) {
+                            QB.chat.dialog.create(params, function (err, res) {
                                 if (err) {
                                     inner.reject(err);
                                 } else {
@@ -117,11 +122,11 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
-                    remove: function(dialog_ids) {
+                    remove: function (dialog_ids) {
                         /* dialog_ids Array expected */
                         var inner = $q.defer();
-                        p.then(function(success) {
-                            QB.chat.dialog.delete(dialog_ids, function(err) {
+                        p.then(function (success) {
+                            QB.chat.dialog.delete(dialog_ids, function (err) {
                                 if (err) {
                                     inner.reject(err);
                                 } else {
@@ -135,29 +140,30 @@ angular.module('chat.services', ['ngResource'])
 
                 },
                 messages: {
-                    send_message: function(opponent_id, body) {
+                    send: function (opponent_id, body) {
                         var inner = $q.defer();
-                        p.then(function(success) {
+                        p.then(function (success) {
                             var msg = {
                                 type: 'chat',
                                 body: body,
                                 extension: {
                                     save_to_history: 1,
-                                }
+                                },
+                                //markable: 1
                             };
-                            QB.chat.send(opponentId, msg);
-                            inner.resolve();
+                            QB.chat.send(opponent_id, msg);
+                            inner.resolve(msg);
                         });
                         return inner.promise;
                     },
-                    unread_count: function(dialog_ids) {
+                    unread_count: function (dialog_ids) {
                         /* dialog_ids Array expected */
                         var params = {
                             chat_dialog_ids: dialog_ids
                         };
                         var inner = $q.defer();
-                        p.then(function(success) {
-                            QB.chat.message.unreadCount(params, function(err, res) {
+                        p.then(function (success) {
+                            QB.chat.message.unreadCount(params, function (err, res) {
                                 if (err) {
                                     inner.reject(err);
                                 } else {
@@ -168,7 +174,7 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
-                    get_list: function(dialog_id) {
+                    get_list: function (dialog_id) {
                         var params = {
                             chat_dialog_id: dialog_id,
                             sort_desc: 'date_sent',
@@ -177,8 +183,8 @@ angular.module('chat.services', ['ngResource'])
                         };
                         var inner = $q.defer();
 
-                        p.then(function(success) {
-                            QB.chat.message.list(params, function(err, res) {
+                        p.then(function (success) {
+                            QB.chat.message.list(params, function (err, res) {
                                 if (err) {
                                     inner.reject(err);
                                 } else {
@@ -192,7 +198,7 @@ angular.module('chat.services', ['ngResource'])
                     }
                 },
                 users: {
-                    get_list: function(page, per_page, filter) {
+                    get_list: function (page, per_page, filter) {
                         var inner = $q.defer();
 
                         var params = {
@@ -201,8 +207,8 @@ angular.module('chat.services', ['ngResource'])
                             filter: filter,
                         };
 
-                        p.then(function(success) {
-                            QB.users.listUsers(params, function(err, res) {
+                        p.then(function (success) {
+                            QB.users.listUsers(params, function (err, res) {
                                 if (err) {
                                     inner.reject(err);
                                 } else {
@@ -214,10 +220,10 @@ angular.module('chat.services', ['ngResource'])
 
                         return inner.promise;
                     },
-                    get: function(user_id) {
+                    get: function (user_id) {
                         var inner = $q.defer();
-                        p.then(function(success) {
-                            QB.users.get(user_id, function(err, res) {
+                        p.then(function (success) {
+                            QB.users.get(user_id, function (err, res) {
                                 if (err) {
                                     inner.reject(err);
                                 } else {
@@ -230,22 +236,22 @@ angular.module('chat.services', ['ngResource'])
                     },
                 },
                 roster: {
-                    get: function() {
+                    get: function () {
                         /* Get user`s roster*/
                         var inner = $q.defer();
-                        pc.then(function(success) {
-                            QB.chat.roster.get(function(res) {
+                        pc.then(function (success) {
+                            QB.chat.roster.get(function (res) {
                                 console.log(res);
                                 inner.resolve(res);
                             });
                         });
                         return inner.promise;
                     },
-                    add: function(jidOrUserId) {
+                    add: function (jidOrUserId) {
                         /* Subscribe on user*/
                         var inner = $q.defer();
-                        pc.then(function(success) {
-                            QB.chat.roster.add(jidOrUserId, function() {
+                        pc.then(function (success) {
+                            QB.chat.roster.add(jidOrUserId, function () {
                                 inner.resolve();
                             });
 
@@ -253,22 +259,22 @@ angular.module('chat.services', ['ngResource'])
 
                         return inner.promise;
                     },
-                    remove: function(jidOrUserId) {
+                    remove: function (jidOrUserId) {
                         var inner = $q.defer();
 
-                        pc.then(function(success) {
-                            QB.chat.roster.remove(jidOrUserId, function() {
+                        pc.then(function (success) {
+                            QB.chat.roster.remove(jidOrUserId, function () {
                                 inner.resolve();
                             });
 
                         });
                         return inner.promise;
                     },
-                    confirm: function(jidOrUserId) {
+                    confirm: function (jidOrUserId) {
                         var inner = $q.defer();
 
-                        pc.then(function(success) {
-                            QB.chat.roster.confirm(jidOrUserId, function() {
+                        pc.then(function (success) {
+                            QB.chat.roster.confirm(jidOrUserId, function () {
                                 // TODO
                                 inner.resolve();
                             });
@@ -277,10 +283,10 @@ angular.module('chat.services', ['ngResource'])
 
                         return inner.promise;
                     },
-                    reject: function(jidOrUserId) {
+                    reject: function (jidOrUserId) {
                         var inner = $q.defer();
-                        pc.then(function(success) {
-                            QB.chat.roster.reject(jidOrUserId, function() {
+                        pc.then(function (success) {
+                            QB.chat.roster.reject(jidOrUserId, function () {
                                 // TODO
                                 inner.resolve();
                             });
@@ -291,35 +297,40 @@ angular.module('chat.services', ['ngResource'])
 
 
                 },
-                on_dictonnected: function() {
+                on_dictonnected: function () {
                     Chat.destroy_session({
                         'token': self.credentials.token
                     });
                 },
-                on_message: function(user_id, msg) {
-                    if (typeof self.message_storage[user_id] === 'undefined') {
-                        self.message_storage[dialog_id] = Array();
+                on_message: function (user_id, msg) {
+                    if (!self.message_storage.hasOwnProperty(user_id)) {
+                        self.message_storage[user_id] = [];
                     }
                     // set dialog_id instead of
                     self.message_storage[user_id].push(msg);
+                    console.log(msg);
+                    self.broadcast('ChatMessage');
                 },
-                on_subscribe: function(user_id) {
+                on_delivered_status:  function(message_id, dialog_id, user_id){
+                    console.log(message_id, dialog_id, user_id);
+                },
+                on_subscribe: function (user_id) {
                     // Works
                     var promise_user = self.users.get(user_id);
-                    promise_user.then(function(success) {
+                    promise_user.then(function (success) {
                         self.subscribers.push({
                             'id': success.id,
                             'full_name': success.full_name
                         });
                     });
                 },
-                on_confirm_subscribe: function(user_id) {
+                on_confirm_subscribe: function (user_id) {
                     // TODO
                 },
-                on_reject_subscribe: function(user_id) {
+                on_reject_subscribe: function (user_id) {
                     // TODO
                 },
-                on_contact_list: function(user_id, type) {
+                on_contact_list: function (user_id, type) {
                     // TODO
                     /*
                     Returns:
@@ -328,7 +339,7 @@ angular.module('chat.services', ['ngResource'])
                     */
                 },
 
-                get_users: function(filter) {
+                get_users: function (filter) {
                     // TODO: make it easy
                     // Works
                     var self = this;
@@ -338,7 +349,7 @@ angular.module('chat.services', ['ngResource'])
                             per_page = 10,
                             filter = filter,
                             list_promise = self.users.get_list(page, per_page, filter);
-                        list_promise.then(function(success) {
+                        list_promise.then(function (success) {
                             self.user_storage.current_page += 1;
                             self.user_storage.total_entries = success.total_entries;
                             self.user_storage.items = self.user_storage.items.concat(success.items);
@@ -349,10 +360,10 @@ angular.module('chat.services', ['ngResource'])
                     }
                     return inner.promise;
                 },
-                confirm_user: function(user) {
+                confirm_user: function (user) {
                     var self = this;
                     var promise_confirm = self.roster.confirm(user.id);
-                    promise_confirm.then(function(success) {
+                    promise_confirm.then(function (success) {
                         var index = self.subscribers.indexOf(user);
                         console.log(index);
                         self.subscribers.splice(index, 1);
@@ -360,32 +371,32 @@ angular.module('chat.services', ['ngResource'])
                         //self.contacts.push(user);
                     });
                 },
-                unsubscribe_user: function(user) {
+                unsubscribe_user: function (user) {
                     console.log('removing user');
                     var self = this;
                     var promise_remove = self.roster.remove(user.id);
-                    promise_remove.then(function(success) {
+                    promise_remove.then(function (success) {
                         var index = self.contacts.indexOf(user);
                         self.contacts.splice(index, 1);
                     });
                 },
-                subscribe_user: function(user) {
+                subscribe_user: function (user) {
                     var self = this;
                     var promise_add = self.roster.add(user.id);
-                    promise_add.then(function(success) {
+                    promise_add.then(function (success) {
                         var promise_user = self.users.get(user.id);
-                        promise_user.then(function(success) {
+                        promise_user.then(function (success) {
                             self.contacts.push({
                                 'user': success
                             });
                         });
                     });
                 },
-                get_contacts: function() {
+                get_contacts: function () {
                     /* First we query roster, then users*/
                     var self = this;
                     var roster_promise = self.roster.get();
-                    roster_promise.then(function(success) {
+                    roster_promise.then(function (success) {
                         var ids = Object.keys(success);
                         var filter = {
                             field: 'id',
@@ -393,16 +404,35 @@ angular.module('chat.services', ['ngResource'])
                             value: ids
                         };
                         var promise_u = self.users.get_list(null, null, filter);
-                        promise_u.then(function(success) {
+                        promise_u.then(function (success) {
                                 console.log(success);
                                 self.contacts = self.contacts.concat(success);
                             },
-                            function(err) {
+                            function (err) {
                                 console.log(err);
                             }
                         );
                         console.log(success);
                     });
+                },
+                set_opponent: function (user) {
+                    self.opponent = user;
+                    if (!self.message_storage.hasOwnProperty(user.id)) {
+                        self.message_storage[user.id] = [];
+                    }
+                },
+                send_message: function (opponent, body) {
+                    var p_send = self.messages.send(opponent.id, body);
+                    p_send.then(function(success){
+                      var msg = success;
+                      msg['extension']['date_sent'] = Math.round(new Date().getTime()/1000);
+                      msg['is_sender'] = true;
+                      console.log(msg);
+                      self.message_storage[opponent.id].push(msg);
+                    });
+                },
+                broadcast: function(signal){
+                  $rootScope.$broadcast(signal);
                 },
                 user_storage: {
                     current_page: 1,
@@ -410,9 +440,17 @@ angular.module('chat.services', ['ngResource'])
                 },
                 contacts: [],
                 subscribers: [],
-                message_storage: [],
+                message_storage: {},
+                opponent: null,
+                opponent_storage: [],
+                storage: {
+                    dialogs: [],
+                },
+
             };
+            // DIRTY!!!
             Quickblox.init();
+
             return Quickblox;
         }
     ]);

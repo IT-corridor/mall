@@ -1,15 +1,48 @@
 <div class="container">
     <div class="row">
         <div class="col-md-2">
-            <div data-ng-if="qb.subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/subscribers.html'"></div>
-            <div data-ng-if="qb.contacts.length > 0" data-ng-include="PATH +'chat/templates/test/contacts.html'"></div>
             <p class="text-center"><a class="btn btn-info" data-ng-click="open_user_list()">Add users</a></p>
             <p class="text-center"><a class="btn btn-danger" data-ng-click="destroy_session()">Destroy chat session</a></p>
+            <div data-ng-if="qb.subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/subscribers.html'"></div>
+            <div data-ng-if="qb.contacts.length > 0" data-ng-include="PATH +'chat/templates/test/contacts.html'"></div>
         </div>
         <div class="col-md-10">
+            <div class="row">
+                <h2 data-ng-if="qb.opponent">{{ qb.opponent.full_name }}</h2>
+                <div class="col-md-12 bg-light dk m" id="inbox" style="overflow-y:scroll; height: 410px; margin-bottom: 10px;">
 
-            <pre>{{ qb.credentials |json }}</pre>
-            <pre>{{ dialogs |json }}</pre>
+                    <div class="panel panel-default col-md-10" data-ng-class="{'col-md-offset-2 bg-light dker': message.is_sender }"
+                         data-ng-repeat="message in qb.message_storage[qb.opponent.id]">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <p class="small">{{ message.extension.date_sent | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+                            </div>
+                            <div class="col-md-9" style="word-wrap: break-word;">
+                                {{ message.body }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12" id="input">
+                    <form data-ng-submit="send_message()">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group">
+                                    <input data-ng-model="message" type="text" class="form-control" placeholder="start typing">
+                                    <span class="input-group-btn">
+                                        <button type="submit" class="btn btn-primary">SEND</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--<pre>{{ qb.credentials |json }}</pre>-->
+            <!--<pre>{{ qb.storage.dialogs |json }}</pre>-->
+
         </div>
     </div>
 

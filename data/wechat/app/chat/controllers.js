@@ -6,6 +6,13 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
             $scope.qb = Quickblox;
             $scope.qb.connect();
 
+            $scope.send_message = function(){
+                $scope.qb.send_message($scope.qb.opponent, $scope.message);
+                $scope.message = null;
+            };
+            $scope.$on('ChatMessage', function() {
+               $scope.$apply();
+           });
             $scope.open_user_list = function() {
                 // TODO search
                 var modalInstance = $uibModal.open({
