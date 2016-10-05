@@ -68,14 +68,10 @@ class TaoSMSAPI(object):
 
         r = requests.post(self.url, data=payload, headers=headers)
 
-        assert r.status_code == 200
+        assert r.status_code == 200, r.text
 
         data = r.json()
-
-        if 'alibaba_aliqin_fc_sms_num_send_response' in data:
-            return data
-
-        return
+        return data
 
     def send_code(self, phone_number, code):
         """ Send a verification code """

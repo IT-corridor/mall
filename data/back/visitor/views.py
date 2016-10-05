@@ -516,11 +516,11 @@ class ProfileViewSet(viewsets.GenericViewSet):
         code = phones_vault.add_by_sessionid(request, phone)
         sms_api = TaoSMSAPI(settings.TAO_SMS_KEY, settings.TAO_SMS_SECRET)
         r = sms_api.send_code(phone, code)
-        if r:
+        if 'error_response' not in r:
             data = {'status': 'sent'}
             return Response(data, 200)
         else:
-            raise ValidationError({'detail': [_('Code has not been sent.')]})
+            raise ValidationError({'detail': r['error_response']['sub_code']})
 
     @list_route(methods=['post'])
     def verify_code(self, request):
