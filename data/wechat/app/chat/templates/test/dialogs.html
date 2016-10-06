@@ -1,11 +1,11 @@
 <div class="panel panel-default">
   <!-- Default panel contents -->
-  <div class="panel-heading">Contacts</div>
+  <div class="panel-heading">Dialogs</div>
   <!-- List group -->
   <ul class="list-group">
-    <li class="list-group-item" data-ng-repeat="item in qb.dialogs">
-        {{ item.user.name }}
-        <span class="pull-right" data-ng-click="qb.set_dialog(item)">
+    <li class="list-group-item" data-ng-repeat="item in qb.storage.dialogs">
+        {{ item.name }}
+        <span class="pull-right" data-ng-click="qb.dialogs.set_dialog(item)">
             <i class="fa fa-comments text-info fa-lg" aria-hidden="true"></i>
         </span>
     </li>

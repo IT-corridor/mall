@@ -64,13 +64,16 @@ angular.module('chat.services', ['ngResource'])
                                     p_contacts.then(function (success) {
                                             self.contacts = success.items;
                                         },
-                                        function (err) {
-                                            console.log(err);
+                                        function (error) {
+                                            console.log(error);
                                         }
                                     );
                                     var p_dialogs = self.dialogs.get_list(null);
                                     p_dialogs.then(function (success) {
                                         self.storage.dialogs = success.items;
+                                        console.log(self.storage.dialogs);
+                                    }, function (error) {
+                                        console.log(error);
                                     });
                                 }
                             }
@@ -103,16 +106,13 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
-                    create_private: function (occupant_id) {
+                    create_dialog: function (params) {
                         var inner = $q.defer();
                         p.then(function (success) {
-                            var params = {
-                                type: 3,
-                                occupants_ids: [occupant_id],
-                            };
 
                             QB.chat.dialog.create(params, function (err, res) {
                                 if (err) {
+                                    console.log(err);
                                     inner.reject(err);
                                 } else {
                                     inner.resolve(res);
@@ -137,10 +137,50 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
+                    set_dialog: function (dialog) {
+                        self.current_dialog = dialog;
+                        self.messages.check_message_storage(dialog);
+                    },
+                    create_private: function (user_id) {
+                        // Also fetches one if it is already created
+                        var inner = $q.defer();
+                        var params = {
+                            type: 3,
+                            occupants_ids: [user_id],
+                        };
+                        var promise_create = this.create_dialog(params);
+                        promise_create.then(function (success) {
+                            inner.resolve(success);
+                            self.storage.dialogs.push(success);
+                            console.log(success);
+                        }, function (error) {
+                            inner.reject(error);
+                        });
+                        return inner.promise;
+                    }
 
                 },
                 messages: {
-                    send: function (opponent_id, body) {
+                    send: function (user_id, body) {
+                        var inner = $q.defer();
+                        p.then(function (success) {
+                            var msg = {
+                                type: 'chat',
+                                body: body,
+                                sender_id: self.credentials.qid,
+                                date_sent: Math.round(new Date().getTime() / 1000),
+                                extension: {
+                                    save_to_history: 1,
+                                },
+                                //markable: 1
+                            };
+                            QB.chat.send(user_id, msg);
+                            inner.resolve(msg);
+                        });
+                        return inner.promise;
+                    },
+                    send_occupants: function (dialog, body) {
+                        /* Sending to all dialog occupants */
                         var inner = $q.defer();
                         p.then(function (success) {
                             var msg = {
@@ -148,10 +188,18 @@ angular.module('chat.services', ['ngResource'])
                                 body: body,
                                 extension: {
                                     save_to_history: 1,
+                                    sender_id: self.credentials.qid,
+                                    date_sent: Math.round(new Date().getTime() / 1000),
+                                    dialog_id: dialog._id
                                 },
                                 //markable: 1
                             };
-                            QB.chat.send(opponent_id, msg);
+                            var i = 0,
+                                l = dialog.occupants_ids.length;
+                            for (i; i < l; i++) {
+                                QB.chat.send(dialog.occupants_ids[i], msg);
+                            }
+
                             inner.resolve(msg);
                         });
                         return inner.promise;
@@ -174,13 +222,8 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
-                    get_list: function (dialog_id) {
-                        var params = {
-                            chat_dialog_id: dialog_id,
-                            sort_desc: 'date_sent',
-                            limit: 100,
-                            skip: 0
-                        };
+                    get_list: function (params) {
+
                         var inner = $q.defer();
 
                         p.then(function (success) {
@@ -195,7 +238,49 @@ angular.module('chat.services', ['ngResource'])
                         });
 
                         return inner.promise;
-                    }
+                    },
+                    get_list_by_user: function (user) {
+                        var inner = $q.defer();
+                        var params = {
+                            sender_id: user.id,
+                            sort_desc: 'date_sent',
+                            limit: 100,
+                            skip: 0
+                        };
+                        var promise_list = this.get_list(params);
+                        promise_list.then(function (success) {
+                            inner.resolve(success);
+                        }, function (error) {
+                            inner.reject(error);
+                        });
+                        return inner.promise;
+                    },
+                    get_list_by_dialog: function (dialog) {
+                        var inner = $q.defer();
+                        var params = {
+                            chat_dialog_id: dialog._id,
+                            sort_asc: 'date_sent',
+                            limit: 100,
+                            skip: 0
+                        };
+                        var promise_list = this.get_list(params);
+                        promise_list.then(function (success) {
+                            inner.resolve(success);
+                        }, function (error) {
+                            inner.reject(error);
+                        });
+                        return inner.promise;
+                    },
+                    check_message_storage: function (dialog) {
+                        if (!self.storage.messages.hasOwnProperty(dialog._id)) {
+                            self.storage.messages[dialog._id] = [];
+                            var promise_list = self.messages.get_list_by_dialog(dialog);
+                            promise_list.then(function (success) {
+                                self.storage.messages[dialog._id] = self.storage.messages[dialog._id].concat(success.items);
+                                //self.broadcast('ChatMessage');
+                            });
+                        }
+                    },
                 },
                 users: {
                     get_list: function (page, per_page, filter) {
@@ -282,6 +367,7 @@ angular.module('chat.services', ['ngResource'])
                         });
 
                         return inner.promise;
+                        user
                     },
                     reject: function (jidOrUserId) {
                         var inner = $q.defer();
@@ -303,15 +389,28 @@ angular.module('chat.services', ['ngResource'])
                     });
                 },
                 on_message: function (user_id, msg) {
-                    if (!self.message_storage.hasOwnProperty(user_id)) {
-                        self.message_storage[user_id] = [];
+                    console.log(user_id, msg);
+                    msg['message'] = msg.body;
+                    msg['sender_id'] = msg.extension.sender_id;
+                    msg['date_sent'] = msg.extension.date_sent;
+
+                    var check_arr = self.storage.dialogs.filter(function (element, index, arr) {
+                        return element._id == msg.dialog_id;
+                    });
+                    if (check_arr.length == 0) {
+                        var promise_create = self.dialogs.create_private(user_id);
+                        promise_create.then(function (success) {
+                            self.storage.messages[msg.dialog_id] = [];
+                            self.storage.messages[msg.dialog_id].push(msg);
+                        });
+                    } else {
+
+                        self.storage.messages[msg.dialog_id].push(msg);
+                        console.log(msg);
+                        self.broadcast('ChatMessage');
                     }
-                    // set dialog_id instead of
-                    self.message_storage[user_id].push(msg);
-                    console.log(msg);
-                    self.broadcast('ChatMessage');
                 },
-                on_delivered_status:  function(message_id, dialog_id, user_id){
+                on_delivered_status: function (message_id, dialog_id, user_id) {
                     console.log(message_id, dialog_id, user_id);
                 },
                 on_subscribe: function (user_id) {
@@ -417,22 +516,16 @@ angular.module('chat.services', ['ngResource'])
                 },
                 set_opponent: function (user) {
                     self.opponent = user;
-                    if (!self.message_storage.hasOwnProperty(user.id)) {
-                        self.message_storage[user.id] = [];
-                    }
+                    self.check_user_message_storage(user);
                 },
-                send_message: function (opponent, body) {
-                    var p_send = self.messages.send(opponent.id, body);
-                    p_send.then(function(success){
-                      var msg = success;
-                      msg['extension']['date_sent'] = Math.round(new Date().getTime()/1000);
-                      msg['is_sender'] = true;
-                      console.log(msg);
-                      self.message_storage[opponent.id].push(msg);
+                send_message: function (dialog, body) {
+                    var p_send = self.messages.send_occupants(dialog, body);
+                    p_send.then(function (success) {
+                        // TODO
                     });
                 },
-                broadcast: function(signal){
-                  $rootScope.$broadcast(signal);
+                broadcast: function (signal) {
+                    $rootScope.$broadcast(signal);
                 },
                 user_storage: {
                     current_page: 1,
@@ -442,9 +535,11 @@ angular.module('chat.services', ['ngResource'])
                 subscribers: [],
                 message_storage: {},
                 opponent: null,
+                current_dialog: null,
                 opponent_storage: [],
                 storage: {
                     dialogs: [],
+                    messages: [],
                 },
 
             };

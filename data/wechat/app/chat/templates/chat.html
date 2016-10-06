@@ -5,20 +5,21 @@
             <p class="text-center"><a class="btn btn-danger" data-ng-click="destroy_session()">Destroy chat session</a></p>
             <div data-ng-if="qb.subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/subscribers.html'"></div>
             <div data-ng-if="qb.contacts.length > 0" data-ng-include="PATH +'chat/templates/test/contacts.html'"></div>
+            <div data-ng-if="qb.storage.dialogs.length > 0" data-ng-include="PATH +'chat/templates/test/dialogs.html'"></div>
         </div>
         <div class="col-md-10">
             <div class="row">
-                <h2 data-ng-if="qb.opponent">{{ qb.opponent.full_name }}</h2>
+                <h2 data-ng-if="qb.current_dialog">{{ qb.current_dialog.name }}</h2>
                 <div class="col-md-12 bg-light dk m" id="inbox" style="overflow-y:scroll; height: 410px; margin-bottom: 10px;">
 
-                    <div class="panel panel-default col-md-10" data-ng-class="{'col-md-offset-2 bg-light dker': message.is_sender }"
-                         data-ng-repeat="message in qb.message_storage[qb.opponent.id]">
+                    <div class="panel panel-default col-md-10" data-ng-class="{'col-md-offset-2 bg-light dker': message.sender_id == qb.credentials.qid }"
+                         data-ng-repeat="message in qb.storage.messages[qb.current_dialog._id]">
                         <div class="row">
                             <div class="col-md-3">
-                                <p class="small">{{ message.extension.date_sent | date:'yyyy-MM-dd HH:mm:ss' }}</p>
+                                <p class="small">{{ message.date_sent | date:'yyyy-MM-dd HH:mm:ss' }}</p>
                             </div>
                             <div class="col-md-9" style="word-wrap: break-word;">
-                                {{ message.body }}
+                                {{ message.message }}
                             </div>
                         </div>
                     </div>

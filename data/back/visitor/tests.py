@@ -22,8 +22,7 @@ class VisitorTests(APITestCase):
                     "token_date": "2016-06-15T07:08:04.960Z"}
         user = get_user_model().objects.create(username="Nikolay")
         visitor = Visitor.objects.create(user=user)
-        weixin = Weixin.objects.create(visitor=visitor,
-                                        unionid="123")
+        weixin = Weixin.objects.create(visitor=visitor, unionid="123")
         VisitorExtra.objects.create(weixin=weixin, **cls.data)
 
     def test_rest_login_success(self):

@@ -7,7 +7,7 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
             $scope.qb.connect();
 
             $scope.send_message = function(){
-                $scope.qb.send_message($scope.qb.opponent, $scope.message);
+                $scope.qb.send_message($scope.qb.current_dialog, $scope.message);
                 $scope.message = null;
             };
             $scope.$on('ChatMessage', function() {
