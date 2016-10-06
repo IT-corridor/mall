@@ -365,7 +365,7 @@ class ProfileViewSet(viewsets.GenericViewSet):
             - name: avatar
               type: file
               required: false
-         response_serializer: VisitorSerializer
+        response_serializer: VisitorSerializer
 
         """
         data = request.data.copy()
