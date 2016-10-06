@@ -275,7 +275,7 @@ def update_visitor(request):
     return Response(data=serializer.data)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 @permission_classes((IsVisitorSimple,))
 def get_me(request):
     """ Provides personal user data, username and thumb """
@@ -365,6 +365,7 @@ class ProfileViewSet(viewsets.GenericViewSet):
             - name: avatar
               type: file
               required: false
+         response_serializer: VisitorSerializer
 
         """
         data = request.data.copy()
@@ -377,8 +378,10 @@ class ProfileViewSet(viewsets.GenericViewSet):
         user = authenticate(phone=visitor.phone,
                             password=data['password'])
         login(request, user)
-        url = reverse('visitor:me')
-        return HttpResponseRedirect(url)
+        # for android support
+        context = {'request': request}
+        brief_serializer = VisitorSerializer(instance=visitor, context=context)
+        return Response(brief_serializer.data, 201)
 
     @list_route(methods=['patch'])
     def edit(self, request):
