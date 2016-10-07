@@ -28,8 +28,8 @@ angular.module('chat.services', ['ngResource'])
             var d = $q.defer(), // global defer for object
                 dc = $q.defer(), // global chat defer
                 pc = dc.promise,
-                p = d.promise
-            self = null;
+                p = d.promise,
+                self = null;
 
             var Quickblox = {
                 init: function () {
@@ -54,24 +54,10 @@ angular.module('chat.services', ['ngResource'])
                                 dc.resolve(res);
                                 var ids = Object.keys(res);
                                 if (ids.length > 0) {
-                                    var filter = {
-                                        field: 'id',
-                                        param: 'in',
-                                        value: ids
-                                    };
-                                    // Works
-                                    var p_contacts = self.users.get_list(null, null, filter);
-                                    p_contacts.then(function (success) {
-                                            self.contacts = success.items;
-                                        },
-                                        function (error) {
-                                            console.log(error);
-                                        }
-                                    );
+                                    self.users.perform_contacts(ids);
                                     var p_dialogs = self.dialogs.get_list(null);
                                     p_dialogs.then(function (success) {
                                         self.storage.dialogs = success.items;
-                                        console.log(self.storage.dialogs);
                                     }, function (error) {
                                         console.log(error);
                                     });
@@ -79,13 +65,13 @@ angular.module('chat.services', ['ngResource'])
                             }
                         });
 
-                        QB.chat.onDisconnectedListener = self.on_disconnected;
-                        QB.chat.onMessageListener = self.on_message;
-                        QB.chat.onDeliveredStatusListener = self.on_delivered_status;
-                        QB.chat.onSubscribeListener = self.on_subscribe;
-                        QB.chat.onConfirmSubscribeListener = self.on_confirm_subscribe;
-                        QB.chat.onRejectSubscribeListener = self.on_reject_subscribe;
-                        QB.chat.onContactListListener = self.on_contact_list;
+                        QB.chat.onDisconnectedListener = self.handlers.on_disconnected;
+                        QB.chat.onMessageListener = self.handlers.on_message;
+                        QB.chat.onDeliveredStatusListener = self.handlers.on_delivered_status;
+                        QB.chat.onSubscribeListener = self.handlers.on_subscribe;
+                        QB.chat.onConfirmSubscribeListener = self.handlers.on_confirm_subscribe;
+                        QB.chat.onRejectSubscribeListener = self.handlers.on_reject_subscribe;
+                        QB.chat.onContactListListener = self.handlers.on_contact_list;
 
                     });
                 },
@@ -94,6 +80,7 @@ angular.module('chat.services', ['ngResource'])
                 },
                 dialogs: {
                     get_list: function (params) {
+                        /* Getting the dialogs list */
                         var inner = $q.defer();
                         p.then(function (success) {
                             QB.chat.dialog.list(params, function (err, res) {
@@ -142,7 +129,7 @@ angular.module('chat.services', ['ngResource'])
                         self.messages.check_message_storage(dialog);
                     },
                     create_private: function (user_id) {
-                        // Also fetches one if it is already created
+                        /* Creates a dialog. And (!) also fetches one if it is already created */
                         var inner = $q.defer();
                         var params = {
                             type: 3,
@@ -167,8 +154,6 @@ angular.module('chat.services', ['ngResource'])
                             var msg = {
                                 type: 'chat',
                                 body: body,
-                                sender_id: self.credentials.qid,
-                                date_sent: Math.round(new Date().getTime() / 1000),
                                 extension: {
                                     save_to_history: 1,
                                 },
@@ -199,7 +184,6 @@ angular.module('chat.services', ['ngResource'])
                             for (i; i < l; i++) {
                                 QB.chat.send(dialog.occupants_ids[i], msg);
                             }
-
                             inner.resolve(msg);
                         });
                         return inner.promise;
@@ -218,12 +202,11 @@ angular.module('chat.services', ['ngResource'])
                                     inner.resolve(res);
                                 }
                             });
-
                         });
                         return inner.promise;
                     },
                     get_list: function (params) {
-
+                        /* chat_dialog_id is required! */
                         var inner = $q.defer();
 
                         p.then(function (success) {
@@ -237,22 +220,6 @@ angular.module('chat.services', ['ngResource'])
 
                         });
 
-                        return inner.promise;
-                    },
-                    get_list_by_user: function (user) {
-                        var inner = $q.defer();
-                        var params = {
-                            sender_id: user.id,
-                            sort_desc: 'date_sent',
-                            limit: 100,
-                            skip: 0
-                        };
-                        var promise_list = this.get_list(params);
-                        promise_list.then(function (success) {
-                            inner.resolve(success);
-                        }, function (error) {
-                            inner.reject(error);
-                        });
                         return inner.promise;
                     },
                     get_list_by_dialog: function (dialog) {
@@ -319,10 +286,50 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
+                    perform_list: function (filter) {
+                        // TODO: make it easy
+                        // Works
+                        var inner = $q.defer();
+                        if (!self.storage.users.total_entries || self.storage.users.items.length < self.storage.users.total_entries) {
+                            var page = self.storage.users.current_page,
+                                per_page = 10,
+                                filter = filter,
+                                list_promise = self.users.get_list(page, per_page, filter);
+                            list_promise.then(function (success) {
+                                self.storage.users.current_page += 1;
+                                self.storage.users.total_entries = success.total_entries;
+                                self.storage.users.items = self.storage.users.items.concat(success.items);
+                                inner.resolve(self.storage.users.items);
+                            });
+                        } else {
+                            inner.reject('error');
+                        }
+                        return inner.promise;
+                    },
+                    perform_contacts: function (roster_ids) {
+                        /* First we query roster, then users*/
+                        var inner = $q.defer();
+                        var filter = {
+                            field: 'id',
+                            param: 'in',
+                            value: roster_ids,
+                        };
+                        var promise_u = self.users.get_list(null, null, filter);
+                        promise_u.then(function (success) {
+                                self.storage.contacts = self.storage.contacts.concat(success.items);
+                                inner.resolve();
+                            },
+                            function (error) {
+                                console.log(error);
+                                inner.reject(error);
+                            }
+                        );
+                        return inner.promise;
+                    },
                 },
                 roster: {
                     get: function () {
-                        /* Get user`s roster*/
+                        /* Get user`s roster */
                         var inner = $q.defer();
                         pc.then(function (success) {
                             QB.chat.roster.get(function (res) {
@@ -333,7 +340,7 @@ angular.module('chat.services', ['ngResource'])
                         return inner.promise;
                     },
                     add: function (jidOrUserId) {
-                        /* Subscribe on user*/
+                        /* Subscribe on user */
                         var inner = $q.defer();
                         pc.then(function (success) {
                             QB.chat.roster.add(jidOrUserId, function () {
@@ -346,7 +353,6 @@ angular.module('chat.services', ['ngResource'])
                     },
                     remove: function (jidOrUserId) {
                         var inner = $q.defer();
-
                         pc.then(function (success) {
                             QB.chat.roster.remove(jidOrUserId, function () {
                                 inner.resolve();
@@ -367,7 +373,6 @@ angular.module('chat.services', ['ngResource'])
                         });
 
                         return inner.promise;
-                        user
                     },
                     reject: function (jidOrUserId) {
                         var inner = $q.defer();
@@ -380,143 +385,43 @@ angular.module('chat.services', ['ngResource'])
                         });
                         return inner.promise;
                     },
-
-
-                },
-                on_dictonnected: function () {
-                    Chat.destroy_session({
-                        'token': self.credentials.token
-                    });
-                },
-                on_message: function (user_id, msg) {
-                    console.log(user_id, msg);
-                    msg['message'] = msg.body;
-                    msg['sender_id'] = msg.extension.sender_id;
-                    msg['date_sent'] = msg.extension.date_sent;
-
-                    var check_arr = self.storage.dialogs.filter(function (element, index, arr) {
-                        return element._id == msg.dialog_id;
-                    });
-                    if (check_arr.length == 0) {
-                        var promise_create = self.dialogs.create_private(user_id);
-                        promise_create.then(function (success) {
-                            self.storage.messages[msg.dialog_id] = [];
-                            self.storage.messages[msg.dialog_id].push(msg);
-                        });
-                    } else {
-
-                        self.storage.messages[msg.dialog_id].push(msg);
-                        console.log(msg);
-                        self.broadcast('ChatMessage');
-                    }
-                },
-                on_delivered_status: function (message_id, dialog_id, user_id) {
-                    console.log(message_id, dialog_id, user_id);
-                },
-                on_subscribe: function (user_id) {
-                    // Works
-                    var promise_user = self.users.get(user_id);
-                    promise_user.then(function (success) {
-                        self.subscribers.push({
-                            'id': success.id,
-                            'full_name': success.full_name
-                        });
-                    });
-                },
-                on_confirm_subscribe: function (user_id) {
-                    // TODO
-                },
-                on_reject_subscribe: function (user_id) {
-                    // TODO
-                },
-                on_contact_list: function (user_id, type) {
-                    // TODO
-                    /*
-                    Returns:
-                      *  (Integer) userId - The sender ID
-                      *  (String) type - If user leave the chat, type will be 'unavailable'
-                    */
-                },
-
-                get_users: function (filter) {
-                    // TODO: make it easy
-                    // Works
-                    var self = this;
-                    var inner = $q.defer();
-                    if (!self.user_storage.total_entries || self.user_storage.items.length < self.user_storage.total_entries) {
-                        var page = self.user_storage.current_page,
-                            per_page = 10,
-                            filter = filter,
-                            list_promise = self.users.get_list(page, per_page, filter);
-                        list_promise.then(function (success) {
-                            self.user_storage.current_page += 1;
-                            self.user_storage.total_entries = success.total_entries;
-                            self.user_storage.items = self.user_storage.items.concat(success.items);
-                            inner.resolve(self.user_storage.items);
-                        });
-                    } else {
-                        inner.reject('error');
-                    }
-                    return inner.promise;
-                },
-                confirm_user: function (user) {
-                    var self = this;
-                    var promise_confirm = self.roster.confirm(user.id);
-                    promise_confirm.then(function (success) {
-                        var index = self.subscribers.indexOf(user);
-                        console.log(index);
-                        self.subscribers.splice(index, 1);
-                        // TODO: FIX;
-                        //self.contacts.push(user);
-                    });
-                },
-                unsubscribe_user: function (user) {
-                    console.log('removing user');
-                    var self = this;
-                    var promise_remove = self.roster.remove(user.id);
-                    promise_remove.then(function (success) {
-                        var index = self.contacts.indexOf(user);
-                        self.contacts.splice(index, 1);
-                    });
-                },
-                subscribe_user: function (user) {
-                    var self = this;
-                    var promise_add = self.roster.add(user.id);
-                    promise_add.then(function (success) {
-                        var promise_user = self.users.get(user.id);
-                        promise_user.then(function (success) {
-                            self.contacts.push({
-                                'user': success
+                    confirm_user: function (user) {
+                        var promise_confirm = self.roster.confirm(user.id);
+                        promise_confirm.then(function (success) {
+                            var index = self.storage.subscribers.indexOf(user);
+                            console.log(index);
+                            self.storage.subscribers.splice(index, 1);
+                            self.storage.contacts.push({
+                                'user': user
                             });
                         });
-                    });
-                },
-                get_contacts: function () {
-                    /* First we query roster, then users*/
-                    var self = this;
-                    var roster_promise = self.roster.get();
-                    roster_promise.then(function (success) {
-                        var ids = Object.keys(success);
-                        var filter = {
-                            field: 'id',
-                            param: 'in',
-                            value: ids
-                        };
-                        var promise_u = self.users.get_list(null, null, filter);
-                        promise_u.then(function (success) {
-                                console.log(success);
-                                self.contacts = self.contacts.concat(success);
-                            },
-                            function (err) {
-                                console.log(err);
-                            }
-                        );
-                        console.log(success);
-                    });
-                },
-                set_opponent: function (user) {
-                    self.opponent = user;
-                    self.check_user_message_storage(user);
+                    },
+                    reject_user: function (user) {
+                        var promise_reject = self.roster.reject(user.id);
+                        promise_reject.then(function (success) {
+                            var index = self.storage.subscribers.indexOf(user);
+                            console.log(index, 'rejecting');
+                            self.storage.subscribers.splice(index, 1);
+                        });
+                    },
+                    unsubscribe_user: function (user) {
+                        var promise_remove = self.roster.remove(user.id);
+                        promise_remove.then(function (success) {
+                            var index = self.storage.contacts.indexOf(user);
+                            self.storage.contacts.splice(index, 1);
+                        });
+                    },
+                    subscribe_user: function (user) {
+                        var promise_add = self.roster.add(user.id);
+                        promise_add.then(function (success) {
+                            var promise_user = self.users.get(user.id);
+                            promise_user.then(function (success) {
+                                self.storage.contacts.push({
+                                    'user': success
+                                });
+                            });
+                        });
+                    },
                 },
                 send_message: function (dialog, body) {
                     var p_send = self.messages.send_occupants(dialog, body);
@@ -527,23 +432,74 @@ angular.module('chat.services', ['ngResource'])
                 broadcast: function (signal) {
                     $rootScope.$broadcast(signal);
                 },
-                user_storage: {
-                    current_page: 1,
-                    items: []
+                handlers: {
+                    on_dictonnected: function () {
+                        Chat.destroy_session({
+                            'token': self.credentials.token
+                        });
+                    },
+                    on_message: function (user_id, msg) {
+                        msg['message'] = msg.body;
+                        msg['sender_id'] = msg.extension.sender_id;
+                        msg['date_sent'] = msg.extension.date_sent;
+
+                        var check_arr = self.storage.dialogs.filter(function (element, index, arr) {
+                            return element._id == msg.dialog_id;
+                        });
+                        if (check_arr.length == 0) {
+                            var promise_create = self.dialogs.create_private(user_id);
+                            promise_create.then(function (success) {
+                                self.storage.messages[msg.dialog_id] = [];
+                                self.storage.messages[msg.dialog_id].push(msg);
+                            });
+                        } else {
+
+                            self.storage.messages[msg.dialog_id].push(msg);
+                            console.log(msg);
+                            self.broadcast('ChatMessage');
+                        }
+                    },
+                    on_delivered_status: function (message_id, dialog_id, user_id) {
+                        console.log(message_id, dialog_id, user_id);
+                    },
+                    on_subscribe: function (user_id) {
+                        // Works
+                        var promise_user = self.users.get(user_id);
+                        promise_user.then(function (success) {
+                            self.storage.subscribers.push({
+                                'id': success.id,
+                                'full_name': success.full_name
+                            });
+                        });
+                    },
+                    on_confirm_subscribe: function (user_id) {
+                        // TODO
+                    },
+                    on_reject_subscribe: function (user_id) {
+                        // TODO
+                    },
+                    on_contact_list: function (user_id, type) {
+                        // TODO
+                        /*
+                        Returns:
+                          *  (Integer) userId - The sender ID
+                          *  (String) type - If user leave the chat, type will be 'unavailable'
+                        */
+                    },
                 },
-                contacts: [],
-                subscribers: [],
-                message_storage: {},
-                opponent: null,
                 current_dialog: null,
-                opponent_storage: [],
                 storage: {
                     dialogs: [],
                     messages: [],
+                    subscribers: [],
+                    contacts: [],
+                    users: {
+                        current_page: 1,
+                        items: []
+                    },
                 },
 
             };
-            // DIRTY!!!
             Quickblox.init();
 
             return Quickblox;

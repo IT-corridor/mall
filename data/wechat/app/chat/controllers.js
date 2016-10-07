@@ -6,14 +6,14 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
             $scope.qb = Quickblox;
             $scope.qb.connect();
 
-            $scope.send_message = function(){
+            $scope.send_message = function () {
                 $scope.qb.send_message($scope.qb.current_dialog, $scope.message);
                 $scope.message = null;
             };
-            $scope.$on('ChatMessage', function() {
-               $scope.$apply();
-           });
-            $scope.open_user_list = function() {
+            $scope.$on('ChatMessage', function () {
+                $scope.$apply();
+            });
+            $scope.open_user_list = function () {
                 // TODO search
                 var modalInstance = $uibModal.open({
                     animation: true,
@@ -22,7 +22,7 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
                     size: 'sm',
                     resolve: {
                         qb: function () {
-                          return $scope.qb;
+                            return $scope.qb;
                         }
                     }
                 });
@@ -31,12 +31,12 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
 
         }
     ])
-    .controller('ChatUserListCtrl', ['$scope','$translate', '$uibModalInstance', 'qb',
-    function($scope, $translate, $uibModalInstance, qb) {
-        $scope.qb = qb;
-        $scope.cancel = function() {
-            $uibModalInstance.dismiss('cancel');
+    .controller('ChatUserListCtrl', ['$scope', '$translate', '$uibModalInstance', 'qb',
+        function ($scope, $translate, $uibModalInstance, qb) {
+            $scope.qb = qb;
+            $scope.cancel = function () {
+                $uibModalInstance.dismiss('cancel');
+            }
         }
-    }
 
-]);
+    ]);

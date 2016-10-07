@@ -7,14 +7,14 @@
     <div class="row">
         <div class="col-md-12 col-xs-12">
             <ul class="list-group">
-                <li class="list-group-item" data-ng-repeat="item in qb.user_storage.items">
+                <li class="list-group-item" data-ng-repeat="item in qb.storage.users.items">
                     {{ item.user.full_name }}
-                    <span class="pull-right" data-ng-click="qb.subscribe_user(item.user)">
+                    <span class="pull-right" data-ng-click="qb.roster.subscribe_user(item.user)">
                         <i class="fa fa-plus-circle text-success fa-lg" aria-hidden="true"></i>
                     </span>
                 </li>
-              </ul>
-            <p class="text-center"><a class="btn btn-info" data-ng-click="qb.get_users()">Get user list</a></p>
+            </ul>
+            <p class="text-center"><a class="btn btn-info" data-ng-click="qb.users.perform_list()">Get user list</a></p>
         </div>
     </div>
 </div>
