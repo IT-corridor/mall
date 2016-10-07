@@ -6,15 +6,31 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-12 col-xs-12">
-            <ul class="list-group">
-                <li class="list-group-item" data-ng-repeat="item in qb.storage.users.items">
-                    {{ item.user.full_name }}
-                    <span class="pull-right" data-ng-click="qb.roster.subscribe_user(item.user)">
-                        <i class="fa fa-plus-circle text-success fa-lg" aria-hidden="true"></i>
-                    </span>
-                </li>
-            </ul>
-            <p class="text-center"><a class="btn btn-info" data-ng-click="qb.users.perform_list()">Get user list</a></p>
+            <div style="overflow-y:scroll; max-height: 410px; margin-bottom: 10px;">
+                <form class="form-inline m-b-md">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="enter username" data-ng-model="full_name">
+                    </div>
+                    <button type="submit" class="btn btn-default"
+                            data-ng-click="qb.users.perform_list_by_full_name(full_name)"><i class="fa fa-search"></i>
+                    </button>
+                </form>
+                <p data-ng-if="qb.storage.users.items.length > 10" class="text-center">
+                    <a class="btn btn-info" data-ng-click="qb.users.perform_list()">Get user list</a>
+                </p>
+                <ul class="list-group">
+                    <li class="list-group-item" data-ng-repeat="item in qb.storage.users.items">
+                        {{ item.user.full_name }}
+                        <span class="pull-right" data-ng-click="qb.roster.subscribe_user(item.user)">
+                            <i class="fa fa-plus-circle text-success fa-lg" aria-hidden="true"></i>
+                        </span>
+                    </li>
+                </ul>
+                <p class="m-t-md text-center"><a class="btn btn-info" data-ng-click="qb.users.perform_list()">Get user list</a>
+                </p>
+            </div>
+
+
         </div>
     </div>
 </div>

@@ -30,9 +30,9 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="input-group">
-                                    <input data-ng-model="message" type="text" class="form-control" placeholder="start typing">
+                                    <input data-ng-disabled="!qb.current_dialog" data-ng-model="message" type="text" class="form-control" placeholder="start typing">
                                     <span class="input-group-btn">
-                                        <button type="submit" class="btn btn-primary">SEND</button>
+                                        <button  data-ng-disabled="!qb.current_dialog" type="submit" class="btn btn-primary">SEND</button>
                                     </span>
                                 </div>
                             </div>

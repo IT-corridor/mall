@@ -306,6 +306,14 @@ angular.module('chat.services', ['ngResource'])
                         }
                         return inner.promise;
                     },
+                    perform_list_by_full_name: function (full_name) {
+                        self.storage.users = {current_page: 1, items: []};
+
+                        var filter = {field: 'full_name', param: 'eq', value: full_name};
+                        var promise_list = self.users.perform_list(filter);
+
+                        return promise_list;
+                    },
                     perform_contacts: function (roster_ids) {
                         /* First we query roster, then users*/
                         var inner = $q.defer();
@@ -500,6 +508,7 @@ angular.module('chat.services', ['ngResource'])
                 },
 
             };
+            // DIRTY!!!
             Quickblox.init();
 
             return Quickblox;
