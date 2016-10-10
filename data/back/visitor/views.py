@@ -13,6 +13,7 @@ from django.conf import settings
 from django.http import HttpResponseRedirect, JsonResponse
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes, list_route
@@ -655,7 +656,7 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
         except KeyError:
             raise ValidationError({'detail': _('"q" param is required!')})
 
-        qs = Quickblox.objects.filter(user__username__icontains=q)
+        qs = Quickblox.objects.filter(full_name__icontains=q)
         ids = qs.values_list('qid', flat=True)
         return Response({'ids': ids})
 

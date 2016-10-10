@@ -76,6 +76,7 @@ class QuickbloxAPI(object):
 
         r = requests.post(url=url, headers=headers, json=payload)
         assert r.status_code == 202
+        return r.json()
 
     def sign_out(self, token):
         url = 'http://api.quickblox.com/login.json'
@@ -89,17 +90,29 @@ class QuickbloxAPI(object):
         r = requests.delete(url=url, headers=headers)
         assert r.status_code == 200
 
+    def update_user_data(self, qid, user_data, token):
+        """ user_data, expected a dict """
+        url = 'http://api.quickblox.com/users/{}.json'.format(qid)
+        headers = {"QB-Token": token}
+        payload = {'user': user_data}
+
+        r = requests.put(url=url, headers=headers, json=payload)
+        assert r.status_code == 200
+        return r.json()
+
 if __name__ == '__main__':
     app_id = '47642'
     auth_key = 'cPbb6XAAEgYwmF5'
     auth_secret = 'qcwkUf5dD73gLDS'
     api = QuickbloxAPI(app_id, auth_key, auth_secret)
-    token = api.get_token({'login': 'aty1', 'password': 'zECL6QhrDF'})
+    token = api.get_token()
     # 来去
-    print token
-    #password = 'asd112345!!'
-    #login = api.sign_up('woop1', 'Starky2', password, token)['user']['login']
-
-    #api.sign_in('aty1', 'zECL6QhrDF', token)
-    #api.sign_out(token)
+    # print token
+    # password = 'asd112345!!'
+    # #login = api.sign_up('woop1', 'Starky7', password, token)['user']['login']
+    #
+    # login = api.sign_in('atywoop1', password, token)
+    # api.update_user_data(login['user']['id'], {'full_name': 'Starky the Great'}, token)
+    #
+    api.sign_out(token)
     api.destroy_session(token)
