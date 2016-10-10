@@ -5,10 +5,11 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
             $rootScope.title = 'CHAT Yo-hoo';
             $scope.qb = Quickblox;
             $scope.qb.connect();
+            $scope.msg = {body: null};
 
             $scope.send_message = function () {
-                $scope.qb.send_message($scope.qb.current_dialog, $scope.message);
-                $scope.message = null;
+                $scope.qb.send_message($scope.qb.current_dialog, $scope.msg.body);
+                $scope.msg.body = null;
             };
             $scope.$on('ChatMessage', function () {
                 $scope.$apply();

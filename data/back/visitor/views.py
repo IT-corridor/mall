@@ -22,7 +22,7 @@ from .serializers import VisitorSerializer, VisitorExtraSerializer, \
     VisitorCreateSerializer, VisitorProfileSerializer, VisitorLoginSerializer, \
     PhoneSerializer, CodeSerializer, QuicbloxSerializer
 from .oauth2 import WeixinBackend, WeixinQRBackend
-from .models import Visitor, VisitorExtra
+from .models import Visitor, VisitorExtra, Quickblox
 from .permissions import IsVisitorSimple, IsVisitorOrReadOnly
 from .extra_handlers import PendingUserVault, PhonesVault
 from .sms import TaoSMSAPI
@@ -638,6 +638,26 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
                            settings.QUICKBLOX_AUTH_SECRET)
         api.destroy_session(token)
         return Response(status=204)
+
+    @list_route(methods=['get'])
+    def search(self, request):
+        """ Searches matches (icontains) through usernames
+        and returns its qid. This is a pre-search for Quickblox user filter.
+         ---
+        parameters:
+            - name: q
+              type: string
+              paramType: query
+        """
+
+        try:
+            q = request.query_params['q']
+        except KeyError:
+            raise ValidationError({'detail': _('"q" param is required!')})
+
+        qs = Quickblox.objects.filter(user__username__icontains=q)
+        ids = qs.values_list('qid', flat=True)
+        return Response({'ids': ids})
 
 
 def check_unread_notification(user):

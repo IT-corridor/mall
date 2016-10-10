@@ -17,12 +17,19 @@ angular.module('chat.services', ['ngResource'])
                     },
                     responseType: 'json'
                 },
+                search: {
+                    method: 'GET',
+                    params: {
+                        action: 'search',
+                    },
+                    responseType: 'json'
+                },
 
             });
         }
     ])
-    .factory('Quickblox', ['$rootScope', '$q', 'Chat',
-        function ($rootScope, $q, Chat) {
+    .factory('Quickblox', ['$rootScope', '$q', '$log', 'Chat',
+        function ($rootScope, $q, $log, Chat) {
             // TODO: make it cleaner
             /*This is a Angularjs factory for Quickblox API */
             var d = $q.defer(), // global defer for object
@@ -36,6 +43,7 @@ angular.module('chat.services', ['ngResource'])
                     // trick for storing self reference.
                     self = this;
                 },
+                is_connected: false,
                 credentials: Chat.create_session(function (success) {
                     QB.init(success.token, success.app_id);
                     d.resolve();
@@ -55,13 +63,14 @@ angular.module('chat.services', ['ngResource'])
                                 var ids = Object.keys(res);
                                 if (ids.length > 0) {
                                     self.users.perform_contacts(ids);
-                                    var p_dialogs = self.dialogs.get_list(null);
-                                    p_dialogs.then(function (success) {
-                                        self.storage.dialogs = success.items;
-                                    }, function (error) {
-                                        console.log(error);
-                                    });
                                 }
+                                var p_dialogs = self.dialogs.get_list(null);
+                                p_dialogs.then(function (success) {
+                                    self.storage.dialogs = success.items;
+                                }, function (error) {
+                                    console.log(error);
+                                });
+                                self.is_connected = true;
                             }
                         });
 
@@ -307,12 +316,32 @@ angular.module('chat.services', ['ngResource'])
                         return inner.promise;
                     },
                     perform_list_by_full_name: function (full_name) {
-                        self.storage.users = {current_page: 1, items: []};
+                        var inner = $q.defer();
+                        self.storage.users = {
+                            current_page: 1,
+                            items: []
+                        };
 
-                        var filter = {field: 'full_name', param: 'eq', value: full_name};
-                        var promise_list = self.users.perform_list(filter);
+                        Chat.search({
+                            'q': full_name
+                        }, function (success) {
+                            var filter = {
+                                field: 'id',
+                                param: 'in',
+                                value: success.ids
+                            };
+                            var promise_list = self.users.perform_list(filter);
+                            promise_list.then(function (success) {
+                                inner.resolve(success);
+                            }, function (error) {
+                                inner.reject(error);
+                            });
 
-                        return promise_list;
+                        }, function (error) {
+                            inner.reject(error);
+                        });
+
+                        return inner.promise;
                     },
                     perform_contacts: function (roster_ids) {
                         /* First we query roster, then users*/
@@ -341,7 +370,6 @@ angular.module('chat.services', ['ngResource'])
                         var inner = $q.defer();
                         pc.then(function (success) {
                             QB.chat.roster.get(function (res) {
-                                console.log(res);
                                 inner.resolve(res);
                             });
                         });
@@ -432,10 +460,12 @@ angular.module('chat.services', ['ngResource'])
                     },
                 },
                 send_message: function (dialog, body) {
-                    var p_send = self.messages.send_occupants(dialog, body);
-                    p_send.then(function (success) {
-                        // TODO
-                    });
+                    if (body.length > 0) {
+                        var p_send = self.messages.send_occupants(dialog, body);
+                        p_send.then(function (success) {
+                            // TODO
+                        });
+                    }
                 },
                 broadcast: function (signal) {
                     $rootScope.$broadcast(signal);
@@ -463,7 +493,6 @@ angular.module('chat.services', ['ngResource'])
                         } else {
 
                             self.storage.messages[msg.dialog_id].push(msg);
-                            console.log(msg);
                             self.broadcast('ChatMessage');
                         }
                     },

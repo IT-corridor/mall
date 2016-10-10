@@ -945,7 +945,7 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         try:
             q = request.query_params['q']
             qs = Visitor.objects.filter(~Q(pk=request.user.id) &
-                                        Q(user__username__startswith=q))[:5]
+                                        Q(user__username__icontains=q))[:5]
             serializer = VisitorShortSerializer(qs, many=True, context=context)
             data = serializer.data
             status = 200
@@ -961,7 +961,7 @@ class GroupViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         try:
             q = request.query_params['q']
             qs = Vendor.objects.filter(~Q(pk=request.user.id) &
-                                       Q(store__name__startswith=q))[:5]
+                                       Q(store__name__icontains=q))[:5]
 
             serializer = VendorStoreSerializer(qs, many=True, context=context)
             data = serializer.data

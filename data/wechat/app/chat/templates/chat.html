@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row">
+    <div data-ng-if="qb.is_connected" class="row">
         <div class="col-md-2">
             <p class="text-center"><a class="btn btn-info" data-ng-click="open_user_list()">Add users</a></p>
             <p class="text-center"><a class="btn btn-danger" data-ng-click="destroy_session()">Destroy chat session</a></p>
@@ -30,7 +30,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="input-group">
-                                    <input data-ng-disabled="!qb.current_dialog" data-ng-model="message" type="text" class="form-control" placeholder="start typing">
+                                    <input data-ng-disabled="!qb.current_dialog" data-ng-model="msg.body" type="text" class="form-control" placeholder="start typing">
                                     <span class="input-group-btn">
                                         <button  data-ng-disabled="!qb.current_dialog" type="submit" class="btn btn-primary">SEND</button>
                                     </span>
@@ -42,6 +42,11 @@
             </div>
         </div>
     </div>
-
+    <div data-ng-if="!qb.is_connected" class="row">
+        <div class="col-md-12 text-center">
+            <i class="text-info fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 
 </div>
