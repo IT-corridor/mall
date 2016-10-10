@@ -25,8 +25,9 @@ class Command(BaseCommand):
 
                     token = api.get_token()
                     api.sign_in(quickblox.login, quickblox.password, token)
+                    username = visitor.user if visitor.username else user.username
 
-                    user_data = {'full_name': visitor.username}
+                    user_data = {'full_name': username}
                     data = api.update_user_data(quickblox.qid, user_data,
                                                 token)
 
