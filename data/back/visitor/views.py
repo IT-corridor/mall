@@ -656,7 +656,8 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
         except KeyError:
             raise ValidationError({'detail': _('"q" param is required!')})
 
-        qs = Quickblox.objects.filter(full_name__icontains=q)
+        qs = Quickblox.objects.filter(Q(full_name__icontains=q) |
+                                      Q(user__visitor__username=q)).distinct()
         ids = qs.values_list('qid', flat=True)
         return Response({'ids': ids})
 

@@ -51,8 +51,8 @@ class QuickbloxAPI(object):
         """
         Login must be unique, And it will be a user PK
         """
-        if len(full_name) < 3:
-            full_name += '_' * (3 - len(full_name))
+        full_name = self.reformat_full_name(full_name)
+
         url = 'http://api.quickblox.com/users.json'
         headers = {"QB-Token": token}
 
@@ -68,6 +68,11 @@ class QuickbloxAPI(object):
 
         assert r.status_code == 201, r.text
         return r.json()
+
+    def reformat_full_name(self, full_name):
+        if len(full_name) < 3:
+            full_name += '_' * (3 - len(full_name))
+        return full_name
 
     def sign_in(self, login, password, token):
         url = 'http://api.quickblox.com/login.json'
@@ -93,6 +98,9 @@ class QuickbloxAPI(object):
     def update_user_data(self, qid, user_data, token):
         """ user_data, expected a dict """
         url = 'http://api.quickblox.com/users/{}.json'.format(qid)
+        if 'full_name' in user_data:
+            user_data['full_name'] = self.reformat_full_name(
+                user_data['full_name'])
         headers = {"QB-Token": token}
         payload = {'user': user_data}
 
