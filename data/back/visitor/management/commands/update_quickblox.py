@@ -18,11 +18,10 @@ class Command(BaseCommand):
         for n, visitor in enumerate(visitors):
             user = visitor.user
             if hasattr(user, 'quickblox'):
+                quickblox = user.quickblox
                 try:
                     self.stdout.write(
-                        'processing user {}, {}, {}'.format(user, user.id, n))
-
-                    quickblox = user.quickblox
+                        'processing user {}, {}, {}'.format(quickblox.full_name, quickblox.qid, n))
 
                     token = api.get_token()
                     api.sign_in(quickblox.login, quickblox.password, token)
@@ -34,7 +33,8 @@ class Command(BaseCommand):
                     quickblox.full_name = data['user']['full_name']
                     quickblox.save()
                     api.destroy_session(token)
-                except Exception:
+                except Exception as e:
+                    self.stdout.write(self.style.WARNING(e))
                     self.stdout.write(
                         self.style.WARNING('Error: {}-{},{}'.format(user, user.id, n)))
 
