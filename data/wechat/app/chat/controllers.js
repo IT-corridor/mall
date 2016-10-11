@@ -17,6 +17,7 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
             };
             $scope.$on('ChatMessage', function () {
                 $scope.$apply();
+                scroll_inbox();
             });
 
 
@@ -38,6 +39,10 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
                     }
                 });
 
+            };
+            function scroll_inbox(){
+                var inbox = document.getElementById('inbox');
+                inbox.scrollTop = inbox.scrollHeight;
             }
 
         }
