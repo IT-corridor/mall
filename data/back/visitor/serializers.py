@@ -177,6 +177,10 @@ class VisitorCreateSerializer(serializers.ModelSerializer):
         username = validated_data.get('username')
         User = get_user_model()
         try:
+            if User.objects.filter(username=username).exists():
+                # generating new username
+                username = username[0:24] + '_' + uuid4().hex[0:5]
+
             user = User(username=username)
             user.set_password(password)
             user.save()

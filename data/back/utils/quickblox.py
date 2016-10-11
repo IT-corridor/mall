@@ -51,7 +51,7 @@ class QuickbloxAPI(object):
         """
         Login must be unique, And it will be a user PK
         """
-        full_name = self.reformat_full_name(full_name)
+        cleaned_name = self.reformat_full_name(full_name)
 
         url = 'http://api.quickblox.com/users.json'
         headers = {"QB-Token": token}
@@ -60,7 +60,8 @@ class QuickbloxAPI(object):
             'user': {
                 'login': 'aty' + str(login),
                 'password': password,
-                'full_name': full_name
+                'full_name': cleaned_name,
+                'custom_data': {'full_name': full_name}
             }
         }
 
@@ -101,6 +102,7 @@ class QuickbloxAPI(object):
         if 'full_name' in user_data:
             user_data['full_name'] = self.reformat_full_name(
                 user_data['full_name'])
+            user_data['custom_data'] = {'full_name': user_data['full_name']}
         headers = {"QB-Token": token}
         payload = {'user': user_data}
 
