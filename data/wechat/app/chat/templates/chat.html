@@ -1,8 +1,17 @@
 <div class="container">
+    <div class="row m-t-md">
+        <div class="col-md-2">
+            <ul class="list-inline">
+                <li>
+                    <a class="btn btn-info" data-ng-click="open_user_list()"><i class="fa fa-user-plus"></i></a>
+                </li>
+                <li><a data-ng-disabled="!qb.is_connected" class="btn btn-danger" data-ng-click="qb.disconnect()"><i class="fa fa-plug"></i></a></li>
+                <li><a data-ng-disabled="qb.is_connected" class="btn btn-success" data-ng-click="qb.reconnect()"><i class="fa fa-refresh"></i></a></li>
+            </ul>
+        </div>
+    </div>
     <div data-ng-if="qb.is_connected" class="row">
         <div class="col-md-2">
-            <p class="text-center"><a class="btn btn-info" data-ng-click="open_user_list()">Add users</a></p>
-            <p class="text-center"><a class="btn btn-danger" data-ng-click="destroy_session()">Destroy chat session</a></p>
             <div data-ng-if="qb.storage.subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/subscribers.html'"></div>
             <div data-ng-if="qb.storage.contacts.length > 0" data-ng-include="PATH +'chat/templates/test/contacts.html'"></div>
             <div data-ng-if="qb.storage.dialogs.length > 0" data-ng-include="PATH +'chat/templates/test/dialogs.html'"></div>

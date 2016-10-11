@@ -4,7 +4,7 @@
     <!-- List group -->
     <ul class="list-group">
         <li class="list-group-item" data-ng-repeat="item in qb.storage.contacts">
-            {{ item.user.full_name }}
+            {{ item.user.custom_data ? item.user.custom_data : item.user.full_name }}
             <ul class="pull-right list-inline">
                 <li>
                     <span data-ng-click="qb.dialogs.create_private(item.user.id)">

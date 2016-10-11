@@ -3,8 +3,12 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
         function ($scope, $rootScope, $uibModal, PATH, Quickblox) {
 
             $rootScope.title = 'CHAT Yo-hoo';
-            $scope.qb = Quickblox;
-            $scope.qb.connect();
+            $scope.qb = new Quickblox();
+
+            if (!$scope.qb.is_connected){
+                $scope.qb.connect();
+            }
+
             $scope.msg = {body: null};
 
             $scope.send_message = function () {
@@ -13,6 +17,12 @@ angular.module('chat.controllers', ['chat.services', 'ngCookies'])
             };
             $scope.$on('ChatMessage', function () {
                 $scope.$apply();
+            });
+
+
+            $scope.$on('$routeChangeStart', function(next, current) {
+               $scope.qb.disconnect();
+               delete $scope.qb;
             });
             $scope.open_user_list = function () {
                 // TODO search

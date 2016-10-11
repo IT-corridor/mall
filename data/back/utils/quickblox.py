@@ -5,6 +5,7 @@ import time
 import operator
 import random
 import hmac
+import json
 import requests
 
 from hashlib import sha1
@@ -61,7 +62,7 @@ class QuickbloxAPI(object):
                 'login': 'aty' + str(login),
                 'password': password,
                 'full_name': cleaned_name,
-                'custom_data': {'full_name': full_name}
+                'custom_data': full_name
             }
         }
 
@@ -100,9 +101,10 @@ class QuickbloxAPI(object):
         """ user_data, expected a dict """
         url = 'http://api.quickblox.com/users/{}.json'.format(qid)
         if 'full_name' in user_data:
+            user_data['custom_data'] = user_data['full_name']
             user_data['full_name'] = self.reformat_full_name(
                 user_data['full_name'])
-            user_data['custom_data'] = {'full_name': user_data['full_name']}
+
         headers = {"QB-Token": token}
         payload = {'user': user_data}
 
