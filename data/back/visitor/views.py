@@ -661,6 +661,25 @@ class QuickbloxViewSet(viewsets.GenericViewSet):
         ids = qs.values_list('qid', flat=True)
         return Response({'ids': ids})
 
+    @list_route(methods=['get'])
+    def qid(self, request):
+        """ Returns a ID of the user by its qid.
+         ---
+        parameters:
+            - name: qid
+              type: string
+              paramType: query
+        """
+        try:
+            qid = request.query_params['qid']
+            qb = Quickblox.objects.get(qid=qid)
+        except KeyError:
+            raise ValidationError({'detail': _('"qid" param is required!')})
+        except Quickblox.DoesNotExist:
+            raise ValidationError({'detail': _('No match found')})
+        else:
+            return Response({'id': qb.pk})
+
 
 def check_unread_notification(user):
     """

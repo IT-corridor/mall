@@ -55,10 +55,15 @@ app.run(['$rootScope','$q','Visitor', 'Notification', function($rootScope, $q, V
             notificationsChannel.bind('new_notification', function(notification){
                 $rootScope.add_notification(notification);
                 var message = notification.message;
-                if (notification.type == 'success')
+                if (notification.type == 'success'){
                     toastr.success(message);
-                else
+                }
+                else if (notification.type == 'info'){
+                    toastr.info(message);
+                }
+                else{
                     toastr.warning(message);
+                }
                 // reply notification
                 Notification.reply_notification({pk: notification.id});
             });

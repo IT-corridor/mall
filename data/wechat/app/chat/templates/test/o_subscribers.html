@@ -1,18 +1,13 @@
 <div class="panel panel-default">
     <!-- Default panel contents -->
-    <div class="panel-heading">Friends</div>
+    <div class="panel-heading">Outgoing subscriptions</div>
     <!-- List group -->
     <ul class="list-group">
-        <li class="list-group-item" data-ng-repeat="item in qb.storage.contacts">
+        <li class="list-group-item" data-ng-repeat="item in qb.storage.o_subscribers">
             {{ item.user.custom_data ? item.user.custom_data : item.user.full_name }}
             <ul class="pull-right list-inline">
                 <li>
-                    <span data-ng-click="qb.dialogs.create_private(item.user.id)">
-                        <i class="fa fa-comment text-info fa-lg" aria-hidden="true"></i>
-                    </span>
-                </li>
-                <li>
-                    <span data-ng-click="qb.roster.unsubscribe_user(item.user)">
+                    <span data-ng-click="qb.roster.unsubscribe_user(item.user, 'o_subscribers')">
                         <i class="fa fa-times-circle text-danger fa-lg" aria-hidden="true"></i>
                     </span>
                 </li>

@@ -12,7 +12,8 @@
     </div>
     <div data-ng-if="qb.is_connected" class="row">
         <div class="col-md-2">
-            <div data-ng-if="qb.storage.subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/subscribers.html'"></div>
+            <div data-ng-if="qb.storage.o_subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/o_subscribers.html'"></div>
+            <div data-ng-if="qb.storage.i_subscribers.length > 0" data-ng-include="PATH +'chat/templates/test/i_subscribers.html'"></div>
             <div data-ng-if="qb.storage.contacts.length > 0" data-ng-include="PATH +'chat/templates/test/contacts.html'"></div>
             <div data-ng-if="qb.storage.dialogs.length > 0" data-ng-include="PATH +'chat/templates/test/dialogs.html'"></div>
         </div>

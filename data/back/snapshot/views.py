@@ -1172,14 +1172,16 @@ class VisitorViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
         return Response(data, status)
 
 
-class NotificationViewSet(OwnerCreateMixin, viewsets.ModelViewSet):
+class NotificationViewSet(viewsets.ModelViewSet):
     """ Notification logic"""
+    # this is BAD
     queryset = Notification.objects.all()
     permission_classes = (AllowAny,)
 
     def create(self, request, *args, **kwargs):
         data = request.data
-        Notification.objects.create(type=data['type'], message=data['message'],
+        msg_type = data.get('type', 'success')
+        Notification.objects.create(type=msg_type, message=data['message'],
                                     owner_id=int(data['user_id']))
         return Response('success', status=201)
 

@@ -17,8 +17,10 @@ snapshot_router.register(r'group', views.GroupViewSet, 'group')
 snapshot_router.register(r'group-photo', views.GroupPhotoViewSet,
                          'photo-g')
 snapshot_router.register(r'visitor', views.VisitorViewSet, 'visitor')
-snapshot_router.register(r'notification', views.NotificationViewSet, 'notification')
-snapshot_router.register(r'dashboard/(?P<year>\d{4})/(?P<month>\d{,2})', views.AnalyticsViewSet, 'dashboard')
+snapshot_router.register(r'notification', views.NotificationViewSet,
+                         'notification')
+snapshot_router.register(r'dashboard/(?P<year>\d{4})/(?P<month>\d{,2})',
+                         views.AnalyticsViewSet, 'dashboard')
 
 urlpatterns = [
     url(r'^signature/$', views.get_signature, name='signature'),
