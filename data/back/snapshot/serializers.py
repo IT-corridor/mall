@@ -154,10 +154,11 @@ class PhotoListSerializer(serializers.ModelSerializer):
             return truncatechars_html(obj.description, 150)
 
     def get_origin(self, obj):
-        serializer = PhotoOriginalSerializer(instance=obj.original,
-                                             read_only=True,
-                                             context=self.context)
-        return serializer.data
+        if obj.original:
+            serializer = PhotoOriginalSerializer(instance=obj.original,
+                                                 read_only=True,
+                                                 context=self.context)
+            return serializer.data
 
     def get_owner(self, obj):
         if hasattr(obj.visitor, 'visitor'):
@@ -193,20 +194,10 @@ class PhotoListSerializer(serializers.ModelSerializer):
 class PhotoDetailSerializer(PhotoListSerializer):
     comments = CommentSerializer(source='comment_set', many=True,
                                  read_only=True)
-    owner_thumb = serializers.SerializerMethodField(read_only=True)
     is_store = serializers.SerializerMethodField(read_only=True)
-    link_set = LinkSerializer(read_only=True, many=True)
+    link_set = serializers.SerializerMethodField(read_only=True)
     article = ArticleShortSerializer(instance='article', read_only=True)
     is_liked = serializers.SerializerMethodField(read_only=True)
-
-    def get_owner_thumb(self, obj):
-        if hasattr(obj.visitor, 'visitor'):
-            return serializers.ImageField(source='visitor.visitor.thumb',
-                                          read_only=True).initial
-        elif hasattr(obj.visitor, 'vendor'):
-            return serializers.ImageField(source='visitor.vendor.store.crop',
-                                          read_only=True).initial
-        return
 
     def get_is_store(self, obj):
         return hasattr(obj.visitor, 'vendor')
@@ -220,9 +211,17 @@ class PhotoDetailSerializer(PhotoListSerializer):
             return models.Like.objects.filter(visitor_id=user.pk, photo=obj) \
                 .exists()
 
+    def get_link_set(self, obj):
+        photo = obj.original if obj.original else obj
+        serializer = LinkSerializer(instance=photo.link_set.all(),
+                                    read_only=True, many=True,
+                                    context=self.context)
+        return serializer.data
+
     class Meta:
         model = models.Photo
         read_only_fields = ('thumb', 'crop', 'cover')
+        exclude = ('stamps',)
 
 
 class PhotoCropSerializer(serializers.ModelSerializer):
