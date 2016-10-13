@@ -1,8 +1,8 @@
 <div class="pinGrid" data-masonry='{ "transitionDuration" : "0.4s" , "itemSelector" : ".tile", "percentPosition": "true"}'>
     <div class="pin animate tile" data-masonry-tile data-ng-repeat="photo in r.results">
         <div class="b-b b-light m-b-xs wrapper-xs photo-owner">
-            <a data-ng-href="#!/group/?owner={{ photo.owner.pk }}" class="pull-left thumb-xs avatar m-r">
-                <img data-ng-src="{{ photo.owner.thumb }}" alt="{{ photo.owner.username }}" data-ng-class="{'img-circle': !photo.owner.is_store}">
+            <a data-ng-href="#!/group/?owner={{ photo.owner.pk }}" class="pull-left avatar thumb-xs m-r" data-ng-class="{'avatar-square': photo.owner.is_store}">
+                <img data-ng-src="{{ photo.owner.thumb }}" alt="{{ photo.owner.username }}">
             </a>
             <div class="clear">
                 <div id="photo-o-name">{{ photo.owner.username }}</div>
@@ -20,12 +20,12 @@
             </div>
         </a>
         <div data-ng-if="photo.original">
-            <div id="photo-origin-owner-section" class="b-b b-light m-b-xs wrapper-xs">
-                <a data-ng-href="#!/group/?owner={{ photo.origin.owner.pk }}" class="pull-left thumb-xs avatar m-r">
-                    <img data-ng-src="{{ photo.origin.owner.thumb }}" alt="{{ photo.origin.owner.username }}" id="img-square" data-ng-class="{'img-circle': !photo.origin.owner.is_store}">
+            <div class="photo-origin-owner-section b-b b-light m-b-xs wrapper-xs">
+                <a data-ng-href="#!/group/?owner={{ photo.origin.owner.pk }}" class="pull-left thumb-xs avatar m-r" data-ng-class="{'avatar-square': photo.origin.owner.is_store}">
+                    <img data-ng-src="{{ photo.origin.owner.thumb }}" alt="{{ photo.origin.owner.username }}">
                 </a>
                 <div class="clear">
-                    <div id="photo-origin-owner-username">{{ photo.origin.owner.username }}</div>
+                    <div class="photo-origin-owner-username">{{ photo.origin.owner.username }}</div>
                     <div class="user-follow-status">
                         <span data-ng-if="!photo.creator_followed" data-ng-click="follow_user(photo.origin.owner.pk, $index, true)"><i class="icon-user-follow"></i></span>
                         <span data-ng-if="photo.creator_followed" data-ng-click="unfollow_user(photo.origin.owner.pk, $index, true)"><i class="icon-user-following"></i></span>
@@ -35,12 +35,12 @@
         </div>
 
         <div data-ng-if="!photo.original">
-            <div id="photo-origin-owner-section" class="b-b b-light m-b-xs wrapper-xs">
-                <a data-ng-href="#!/group/?owner={{ photo.owner.pk }}" class="pull-left thumb-xs avatar m-r">
-                    <img data-ng-src="{{ photo.owner.thumb }}" alt="{{ photo.owner.username }}" id="img-square" data-ng-class="{'img-circle': !photo.owner.is_store}">
+            <div class="photo-origin-owner-section b-b b-light m-b-xs wrapper-xs">
+                <a data-ng-href="#!/group/?owner={{ photo.owner.pk }}" class="pull-left thumb-xs avatar m-r" data-ng-class="{'avatar-square': photo.owner.is_store}">
+                    <img data-ng-src="{{ photo.owner.thumb }}" alt="{{ photo.owner.username }}">
                 </a>
                 <div class="clear">
-                    <div id="photo-origin-owner-username">{{ photo.owner.username }}</div>
+                    <div class="photo-origin-owner-username">{{ photo.owner.username }}</div>
                     <div class="user-follow-status">
                         <span data-ng-if="!photo.owner_followed" data-ng-click="follow_user(photo.visitor, $index)"><i class="icon-user-follow"></i></span>
                         <span data-ng-if="photo.owner_followed" data-ng-click="unfollow_user(photo.visitor, $index)"><i class="icon-user-following"></i></span>
