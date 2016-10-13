@@ -1,4 +1,4 @@
-angular.module('article.controllers', ['article.services', 'common.services', 'checklist-model'])
+angular.module('article.controllers', ['article.services', 'common.services'])
 .controller('CtrlArticleCreate', ['$scope', '$rootScope','$http',
 '$location', '$translate', '$routeParams', 'Photo', 'Article',
     function($scope, $rootScope, $http, $location, $translate, $routeParams, Photo, Article) {
@@ -17,6 +17,16 @@ angular.module('article.controllers', ['article.services', 'common.services', 'c
             );
         };
 
+      $scope.tinymceOptions = {
+          height: 270,
+          plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table contextmenu paste code'
+          ],
+          toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+          menubar: false
+      };
     }
 ])
 .controller('CtrlArticleList', ['$scope', '$rootScope','$http', '$window',
